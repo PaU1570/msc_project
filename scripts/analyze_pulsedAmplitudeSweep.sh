@@ -4,8 +4,8 @@ SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 PARENT_DIR=$(dirname "$SCRIPT_DIR")
 ANALYSIS_SCRIPT_SOURCE="${PARENT_DIR}/MLP_NeuroSim_V3.0/nonlinear_fit.py"
 
-if [ $# -ne 2 ]; then
-    echo "Usage: $0 <directory> <output_directory>"
+if [ $# -ne 3 ]; then
+    echo "Usage: $0 <directory> <output_directory> <config_file>"
     exit 1
 fi
 
@@ -15,6 +15,9 @@ output_directory="$2"
 if [ ! -d "$output_directory" ]; then
     mkdir -p "$output_directory"
 fi
+
+cp "$3" "${output_directory}/ref-config.json"
+config_file="${output_directory}/ref-config.json"
 
 error_files="${output_directory}/error_files.txt"
 error_log="${output_directory}/error_log.log"
@@ -31,7 +34,7 @@ for file in $files; do
         mkdir -p "$file_output_dir"
     fi
 
-    if ! python ${ANALYSIS_SCRIPT_SOURCE} $file --plotmode saveplot --config --summary --dest ${file_output_dir} 2>> ${error_log} ; then
+    if ! python ${ANALYSIS_SCRIPT_SOURCE} $file --plotmode saveplot --configref ${config_file} --summary --dest ${file_output_dir} 2>> ${error_log} ; then
         echo -e "\e[31mError\e[0m analyzing file (see ${error_files} and ${error_log})"
         echo "$file" >> ${error_files}
     else
@@ -39,5 +42,4 @@ for file in $files; do
     fi
 done
 
-echo "Done."
 

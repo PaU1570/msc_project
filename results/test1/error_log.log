@@ -1,19 +1,19 @@
 Traceback (most recent call last):
-  File "/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py", line 456, in <module>
+  File "/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py", line 461, in <module>
     exp_LTP_norm = (exp_LTP_raw - min(exp_LTP_raw))/(max(exp_LTP_raw) - min(exp_LTP_raw))
                                   ^^^^^^^^^^^^^^^^
 ValueError: min() arg is an empty sequence
-Traceback (most recent call last):
-  File "/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py", line 456, in <module>
-    exp_LTP_norm = (exp_LTP_raw - min(exp_LTP_raw))/(max(exp_LTP_raw) - min(exp_LTP_raw))
-                                  ^^^^^^^^^^^^^^^^
-ValueError: min() arg is an empty sequence
-/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py:456: RuntimeWarning: invalid value encountered in divide
-  exp_LTP_norm = (exp_LTP_raw - min(exp_LTP_raw))/(max(exp_LTP_raw) - min(exp_LTP_raw))
-/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py:458: RuntimeWarning: invalid value encountered in divide
-  pulse_num_LTP_norm = pulse_num_LTP_raw / max(pulse_num_LTP_raw)
 Traceback (most recent call last):
   File "/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py", line 461, in <module>
+    exp_LTP_norm = (exp_LTP_raw - min(exp_LTP_raw))/(max(exp_LTP_raw) - min(exp_LTP_raw))
+                                  ^^^^^^^^^^^^^^^^
+ValueError: min() arg is an empty sequence
+/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py:461: RuntimeWarning: invalid value encountered in divide
+  exp_LTP_norm = (exp_LTP_raw - min(exp_LTP_raw))/(max(exp_LTP_raw) - min(exp_LTP_raw))
+/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py:463: RuntimeWarning: invalid value encountered in divide
+  pulse_num_LTP_norm = pulse_num_LTP_raw / max(pulse_num_LTP_raw)
+Traceback (most recent call last):
+  File "/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py", line 466, in <module>
     best_A_LTP, best_A_LTD = nonlinear_fit(pulse_num_LTP_norm, exp_LTP_norm, pulse_num_LTD_norm, exp_LTD_norm, plotmode=plotmode, filename=plot_filename)
                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py", line 97, in nonlinear_fit
@@ -26,17 +26,17 @@ Traceback (most recent call last):
     raise ValueError(
 ValueError: array must not contain infs or NaNs
 Traceback (most recent call last):
-  File "/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py", line 456, in <module>
+  File "/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py", line 461, in <module>
     exp_LTP_norm = (exp_LTP_raw - min(exp_LTP_raw))/(max(exp_LTP_raw) - min(exp_LTP_raw))
                                   ^^^^^^^^^^^^^^^^
 ValueError: min() arg is an empty sequence
 Traceback (most recent call last):
-  File "/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py", line 456, in <module>
+  File "/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py", line 461, in <module>
     exp_LTP_norm = (exp_LTP_raw - min(exp_LTP_raw))/(max(exp_LTP_raw) - min(exp_LTP_raw))
                                   ^^^^^^^^^^^^^^^^
 ValueError: min() arg is an empty sequence
 Traceback (most recent call last):
-  File "/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py", line 456, in <module>
+  File "/home/msc24h18/Documents/msc_project/MLP_NeuroSim_V3.0/nonlinear_fit.py", line 461, in <module>
     exp_LTP_norm = (exp_LTP_raw - min(exp_LTP_raw))/(max(exp_LTP_raw) - min(exp_LTP_raw))
                                   ^^^^^^^^^^^^^^^^
 ValueError: min() arg is an empty sequence
