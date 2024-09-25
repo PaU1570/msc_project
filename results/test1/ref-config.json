@@ -1,5 +1,6 @@
 {
     "simulation-params": {
+	"numThreads": 24,
         "mnist": {
             "numMnistTrainImages": 60000,
             "numMnistTestImages": 10000
