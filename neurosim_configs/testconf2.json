@@ -53,7 +53,7 @@
             "writePulseWidthLTP": 300e-6,
             "writePulseWidthLTD": 300e-6,
             "writeEnergy": 0,
-            "maxNumLevelLTP": 97,
+            "maxNumLevelLTP": 100,
             "maxNumLevelLTD": 100,
             "cmosAccess": true,
             "FeFET": false,
