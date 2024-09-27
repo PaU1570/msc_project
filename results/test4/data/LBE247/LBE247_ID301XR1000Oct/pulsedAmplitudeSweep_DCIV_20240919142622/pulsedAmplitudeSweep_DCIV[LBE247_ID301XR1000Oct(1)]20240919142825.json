@@ -1,0 +1,101 @@
+{
+    "simulation-params": {
+        "numThreads": 24,
+        "mnist": {
+            "numMnistTrainImages": 60000,
+            "numMnistTestImages": 10000
+        },
+        "algorithm": {
+            "numTrainImagesPerEpoch": 8000,
+            "numTrainImagesPerBatch": 1,
+            "totalNumEpochs": 25,
+            "interNumEpochs": 1,
+            "nInput": 400,
+            "nHide": 100,
+            "nOutput": 10,
+            "alpha1": 0.2,
+            "alpha2": 0.2,
+            "maxWeight": 1,
+            "minWeight": -1,
+            "optimization_type": "SGD"
+        },
+        "hardware": {
+            "useHardwareInTrainingFF": true,
+            "useHardwareInTrainingWU": true,
+            "useHardwareInTestingFF": true,
+            "numBitInput": 1,
+            "numBitPartialSum": 8,
+            "numWeightBit": 6,
+            "BWthreshold": 0.5,
+            "Hthreshold": 0.5,
+            "numColMuxed": 16,
+            "numWriteColMuxed": 16,
+            "writeEnergyReport": true,
+            "NeuroSimDynamicPerformance": true,
+            "relaxArrayCellHeight": 0,
+            "relaxArrayCellWidth": 0,
+            "arrayWireWidth": 100,
+            "processNode": 32,
+            "clkFreq": 2000000000.0
+        }
+    },
+    "device-params": {
+        "type": "RealDevice",
+        "RealDevice": {
+            "maxConductance": 1.7879999999999878e-10,
+            "minConductance": 5.210000000000015e-11,
+            "avgMaxConductance": 1.7879999999999878e-10,
+            "avgMinConductance": 5.210000000000015e-11,
+            "readVoltage": 0.1,
+            "readPulseWidth": 0.002,
+            "writeVoltageLTP": -1.4,
+            "writeVoltageLTD": 2.0,
+            "writePulseWidthLTP": 0.002,
+            "writePulseWidthLTD": 0.002,
+            "writeEnergy": 0,
+            "maxNumLevelLTP": 26,
+            "maxNumLevelLTD": 36,
+            "cmosAccess": true,
+            "FeFET": false,
+            "gateCapFeFET": 2.1717e-18,
+            "resistanceAccess": 15000.0,
+            "nonlinearIV": false,
+            "NL": 40,
+            "Vr_exp": 0.5,
+            "nonlinearWrite": true,
+            "nonIdenticalPulse": {
+                "enabled": true,
+                "VinitLTP": 0,
+                "VstepLTP": -0.1,
+                "VinitLTD": 0.1,
+                "VstepLTD": 0.1,
+                "PWinitLTP": 0.002,
+                "PWstepLTP": 0,
+                "PWinitLTD": 0.002,
+                "PWstepLTD": 0
+            },
+            "readNoise": false,
+            "sigmaReadNoise": 0,
+            "weightUpdateVariationParams": {
+                "NL_LTP": 0.04,
+                "NL_LTD": -4.23,
+                "sigmaDtoD": 0.05,
+                "sigmaCtoC": 0.05
+            },
+            "conductanceRangeVar": {
+                "enabled": false,
+                "maxConductanceVar": 0,
+                "minConductanceVar": 0
+            },
+            "heightInFeatureSize": {
+                "pseudo-crossbar": 4,
+                "cross-point": 2
+            },
+            "widthInFeatureSize": {
+                "FeFET": 6,
+                "pseudo-crossbar": 4,
+                "cross-point": 2
+            }
+        }
+    }
+}
