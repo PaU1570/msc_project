@@ -1,0 +1,145 @@
+test_date,test_time,device_name,device_id
+19.09.2024,15:44:58,LBE247,ID301XR1000Oct
+groundWGFMU,pulseWGFMU,startVolage1,endVoltage1,startVolage2,endVoltage2,stepSize,riseTime,fallTime,pulseWidth,pulseDelay,VpreCond1,VpreCond2,riseTimePrecond,fallTimePrecon,pulseWidthPreCond,bothSides,repetitions,preConEveryLoop,groundVoltageDuringPulse,measName
+SMU2,WGFMU1,0.0,4.5,0.0,-4.0,0.1,2e-08,2e-08,2e-07,0.001,0.0,0.0,0.0001,0.0001,0.005,1.0,2.0,0.0,0.0,2e-7s-4p5V-m4V
+VStartPos (V),VEndPos (V),VStartNeg (V),VEndNeg (V),twidth (s),onOffRatio
+0.1,4.1,0,-1.4,2e-07,8.162162162163034
+NeuroSim output:
+=================
+Config read from file: /home/msc24h18/Documents/msc_project/results/test3/data/LBE247/LBE247_ID301XR1000Oct/pulsedAmplitudeSweep_DCIV_20240919154101/pulsedAmplitudeSweep_DCIV[LBE247_ID301XR1000Oct(1)]20240919154458.json
+Device type: RealDevice
+Total SubArray (synaptic core) area=5.0841e-09 m^2
+Total Neuron (neuron peripheries) area=1.2082e-09 m^2
+Total area=6.2923e-09 m^2
+Leakage power of subArrayIH is : 7.1391e-05 W
+Leakage power of subArrayHO is : 1.6238e-05 W
+Leakage power of NeuronIH is : 1.5533e-05 W
+Leakage power of NeuronHO is : 2.4850e-06 W
+Total leakage power of subArray is : 8.7629e-05 W
+Total leakage power of Neuron is : 1.8018e-05 W
+Accuracy at 1 epochs is : 20.33%
+	Read latency=2.5298e+00 s
+	Write latency=3.2369e-02 s
+	Read energy=3.3028e-06 J
+	Write energy=8.4304e-06 J
+Accuracy at 2 epochs is : 11.44%
+	Read latency=5.0597e+00 s
+	Write latency=6.2320e-02 s
+	Read energy=6.6056e-06 J
+	Write energy=1.6782e-05 J
+Accuracy at 3 epochs is : 20.98%
+	Read latency=7.5895e+00 s
+	Write latency=9.3577e-02 s
+	Read energy=9.9084e-06 J
+	Write energy=2.5247e-05 J
+Accuracy at 4 epochs is : 22.93%
+	Read latency=1.0119e+01 s
+	Write latency=1.2352e-01 s
+	Read energy=1.3211e-05 J
+	Write energy=3.3675e-05 J
+Accuracy at 5 epochs is : 20.23%
+	Read latency=1.2649e+01 s
+	Write latency=1.4846e-01 s
+	Read energy=1.6514e-05 J
+	Write energy=4.2048e-05 J
+Accuracy at 6 epochs is : 21.60%
+	Read latency=1.5179e+01 s
+	Write latency=1.7278e-01 s
+	Read energy=1.9817e-05 J
+	Write energy=5.0340e-05 J
+Accuracy at 7 epochs is : 19.73%
+	Read latency=1.7709e+01 s
+	Write latency=1.9750e-01 s
+	Read energy=2.3120e-05 J
+	Write energy=5.8637e-05 J
+Accuracy at 8 epochs is : 23.47%
+	Read latency=2.0239e+01 s
+	Write latency=2.2200e-01 s
+	Read energy=2.6422e-05 J
+	Write energy=6.6934e-05 J
+Accuracy at 9 epochs is : 19.01%
+	Read latency=2.2769e+01 s
+	Write latency=2.5108e-01 s
+	Read energy=2.9725e-05 J
+	Write energy=7.5218e-05 J
+Accuracy at 10 epochs is : 13.78%
+	Read latency=2.5298e+01 s
+	Write latency=2.7775e-01 s
+	Read energy=3.3028e-05 J
+	Write energy=8.3515e-05 J
+Accuracy at 11 epochs is : 19.65%
+	Read latency=2.7828e+01 s
+	Write latency=3.0604e-01 s
+	Read energy=3.6331e-05 J
+	Write energy=9.1847e-05 J
+Accuracy at 12 epochs is : 21.13%
+	Read latency=3.0358e+01 s
+	Write latency=3.3163e-01 s
+	Read energy=3.9634e-05 J
+	Write energy=1.0015e-04 J
+Accuracy at 13 epochs is : 20.85%
+	Read latency=3.2888e+01 s
+	Write latency=3.5911e-01 s
+	Read energy=4.2936e-05 J
+	Write energy=1.0849e-04 J
+Accuracy at 14 epochs is : 19.96%
+	Read latency=3.5418e+01 s
+	Write latency=3.8801e-01 s
+	Read energy=4.6239e-05 J
+	Write energy=1.1687e-04 J
+Accuracy at 15 epochs is : 26.91%
+	Read latency=3.7948e+01 s
+	Write latency=4.1806e-01 s
+	Read energy=4.9542e-05 J
+	Write energy=1.2522e-04 J
+Accuracy at 16 epochs is : 23.84%
+	Read latency=4.0478e+01 s
+	Write latency=4.4935e-01 s
+	Read energy=5.2845e-05 J
+	Write energy=1.3358e-04 J
+Accuracy at 17 epochs is : 11.70%
+	Read latency=4.3007e+01 s
+	Write latency=4.7969e-01 s
+	Read energy=5.6148e-05 J
+	Write energy=1.4195e-04 J
+Accuracy at 18 epochs is : 25.44%
+	Read latency=4.5537e+01 s
+	Write latency=5.1210e-01 s
+	Read energy=5.9450e-05 J
+	Write energy=1.5032e-04 J
+Accuracy at 19 epochs is : 25.14%
+	Read latency=4.8067e+01 s
+	Write latency=5.4591e-01 s
+	Read energy=6.2753e-05 J
+	Write energy=1.5868e-04 J
+Accuracy at 20 epochs is : 17.36%
+	Read latency=5.0597e+01 s
+	Write latency=5.7445e-01 s
+	Read energy=6.6056e-05 J
+	Write energy=1.6710e-04 J
+Accuracy at 21 epochs is : 20.87%
+	Read latency=5.3127e+01 s
+	Write latency=6.0305e-01 s
+	Read energy=6.9359e-05 J
+	Write energy=1.7557e-04 J
+Accuracy at 22 epochs is : 18.45%
+	Read latency=5.5657e+01 s
+	Write latency=6.3265e-01 s
+	Read energy=7.2662e-05 J
+	Write energy=1.8402e-04 J
+Accuracy at 23 epochs is : 20.99%
+	Read latency=5.8186e+01 s
+	Write latency=6.6304e-01 s
+	Read energy=7.5964e-05 J
+	Write energy=1.9251e-04 J
+Accuracy at 24 epochs is : 26.35%
+	Read latency=6.0716e+01 s
+	Write latency=6.9499e-01 s
+	Read energy=7.9267e-05 J
+	Write energy=2.0101e-04 J
+Accuracy at 25 epochs is : 19.99%
+	Read latency=6.3246e+01 s
+	Write latency=7.2932e-01 s
+	Read energy=8.2570e-05 J
+	Write energy=2.0956e-04 J
+
