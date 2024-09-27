@@ -5,8 +5,8 @@
 # 19.09.2024,13:08:44,LBE247,ID300XR1000Oct
 # groundWGFMU,pulseWGFMU,startVolage1,endVoltage1,startVolage2,endVoltage2,stepSize,riseTime,fallTime,pulseWidth,pulseDelay,VpreCond1,VpreCond2,riseTimePrecond,fallTimePrecon,pulseWidthPreCond,bothSides,repetitions,preConEveryLoop,groundVoltageDuringPulse,measName
 # SMU2,WGFMU1,0.0,3.0,0.0,-2.0,0.1,2e-08,2e-08,0.0005,0.001,0.0,0.0,0.0001,0.0001,0.005,0.0,5.0,0.0,0.0,5e-4s-3V-m2V
-# VStartPos (V),VEndPos (V),VStartNeg (V),VEndNeg (V),twidth (s),onOffRatio
-# 0.1,3.0,0,-1.4,0.0005,5.662745098038989
+# VStartPos (V),VEndPos (V),VStartNeg (V),VEndNeg (V),twidth (s),onOffRatio,A_LTP,A_LTD,num_LTP,num_LTD
+# 0.1,3.0,0,-1.4,0.0005,5.662745098038989,2.4,-4.88,97,100
 # NeuroSim output:
 # =================
 # Config read from file: /home/msc24h18/Documents/msc_project/results/test1/data/LBE247/LBE247_ID300XR1000Oct/pulsedAmplitudeSweep_DCIV_20240919130717/pulsedAmplitudeSweep_DCIV[LBE247_ID300XR1000Oct(1)]20240919130844.json
