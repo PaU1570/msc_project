@@ -1,6 +1,6 @@
 {
     "simulation-params": {
-        "numThreads": 24,
+        "numThreads": 8,
         "mnist": {
             "numMnistTrainImages": 60000,
             "numMnistTestImages": 10000
@@ -8,16 +8,19 @@
         "algorithm": {
             "numTrainImagesPerEpoch": 8000,
             "numTrainImagesPerBatch": 1,
-            "totalNumEpochs": 25,
+            "totalNumEpochs": 125,
             "interNumEpochs": 1,
             "nInput": 400,
             "nHide": 100,
             "nOutput": 10,
-            "alpha1": 0.4,
-            "alpha2": 0.2,
+            "alpha1": 0.01,
+            "alpha2": 0.01,
+            "beta1": 0.9,
+            "beta2": 0.999,
+            "gamma": 0.3,
             "maxWeight": 1,
             "minWeight": -1,
-            "optimization_type": "SGD"
+            "optimization_type": "Adam"
         },
         "hardware": {
             "useHardwareInTrainingFF": true,
