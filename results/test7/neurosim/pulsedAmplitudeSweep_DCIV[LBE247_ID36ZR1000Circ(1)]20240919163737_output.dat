@@ -1,0 +1,645 @@
+test_date,test_time,device_name,device_id
+19.09.2024,16:37:37,LBE247,ID36ZR1000Circ
+groundWGFMU,pulseWGFMU,startVolage1,endVoltage1,startVolage2,endVoltage2,stepSize,riseTime,fallTime,pulseWidth,pulseDelay,VpreCond1,VpreCond2,riseTimePrecond,fallTimePrecon,pulseWidthPreCond,bothSides,repetitions,preConEveryLoop,groundVoltageDuringPulse,measName
+SMU2,WGFMU1,0.0,2.5,0.0,-2.0,0.1,2e-08,2e-08,0.0005,0.001,0.0,0.0,0.0001,0.0001,0.005,1.0,2.0,0.0,0.0,5e-4s-2p5V-m2V
+VStartPos (V),VEndPos (V),VStartNeg (V),VEndNeg (V),twidth (s),onOffRatio,A_LTP,A_LTD,num_LTP,num_LTD
+0.1,2.5,0,-1.4,0.0005,4.954314720812216,0.4175861773102241,-0.1318403077610268,26,46
+NeuroSim output:
+=================
+Config read from file: /home/msc24h18/Documents/msc_project/results/test7/data/LBE247/LBE247_ID36ZR1000Circ/pulsedAmplitudeSweep_DCIV_20240919163524/pulsedAmplitudeSweep_DCIV[LBE247_ID36ZR1000Circ(1)]20240919163737.json
+Device type: RealDevice
+Total SubArray (synaptic core) area=9.9710e-10 m^2
+Total Neuron (neuron peripheries) area=1.0093e-11 m^2
+Total area=1.0072e-09 m^2
+Leakage power of subArrayIH is : 7.1391e-05 W
+Leakage power of subArrayHO is : 1.6238e-05 W
+Leakage power of NeuronIH is : 1.5533e-05 W
+Leakage power of NeuronHO is : 2.4850e-06 W
+Total leakage power of subArray is : 8.7629e-05 W
+Total leakage power of Neuron is : 1.8018e-05 W
+Accuracy at 1 epochs is : 26.86%
+	Read latency=-nan s
+	Write latency=6.5211e+01 s
+	Read energy=3.2725e-06 J
+	Write energy=5.2654e-06 J
+Accuracy at 2 epochs is : 35.90%
+	Read latency=-nan s
+	Write latency=1.0666e+02 s
+	Read energy=6.5449e-06 J
+	Write energy=1.0470e-05 J
+Accuracy at 3 epochs is : 37.53%
+	Read latency=-nan s
+	Write latency=1.4089e+02 s
+	Read energy=9.8169e-06 J
+	Write energy=1.5636e-05 J
+Accuracy at 4 epochs is : 38.23%
+	Read latency=-nan s
+	Write latency=1.8494e+02 s
+	Read energy=1.3089e-05 J
+	Write energy=2.0837e-05 J
+Accuracy at 5 epochs is : 43.68%
+	Read latency=-nan s
+	Write latency=2.2417e+02 s
+	Read energy=1.6361e-05 J
+	Write energy=2.6013e-05 J
+Accuracy at 6 epochs is : 44.47%
+	Read latency=-nan s
+	Write latency=2.6740e+02 s
+	Read energy=1.9633e-05 J
+	Write energy=3.1206e-05 J
+Accuracy at 7 epochs is : 53.55%
+	Read latency=-nan s
+	Write latency=3.0974e+02 s
+	Read energy=2.2906e-05 J
+	Write energy=3.6393e-05 J
+Accuracy at 8 epochs is : 53.84%
+	Read latency=-nan s
+	Write latency=3.5593e+02 s
+	Read energy=2.6178e-05 J
+	Write energy=4.1609e-05 J
+Accuracy at 9 epochs is : 53.80%
+	Read latency=-nan s
+	Write latency=4.0257e+02 s
+	Read energy=2.9451e-05 J
+	Write energy=4.6821e-05 J
+Accuracy at 10 epochs is : 53.07%
+	Read latency=-nan s
+	Write latency=4.4812e+02 s
+	Read energy=3.2724e-05 J
+	Write energy=5.2034e-05 J
+Accuracy at 11 epochs is : 55.59%
+	Read latency=-nan s
+	Write latency=4.9547e+02 s
+	Read energy=3.5997e-05 J
+	Write energy=5.7255e-05 J
+Accuracy at 12 epochs is : 57.68%
+	Read latency=-nan s
+	Write latency=5.3703e+02 s
+	Read energy=3.9270e-05 J
+	Write energy=6.2447e-05 J
+Accuracy at 13 epochs is : 59.00%
+	Read latency=-nan s
+	Write latency=5.7607e+02 s
+	Read energy=4.2542e-05 J
+	Write energy=6.7631e-05 J
+Accuracy at 14 epochs is : 60.23%
+	Read latency=-nan s
+	Write latency=6.1953e+02 s
+	Read energy=4.5815e-05 J
+	Write energy=7.2833e-05 J
+Accuracy at 15 epochs is : 59.74%
+	Read latency=-nan s
+	Write latency=6.6189e+02 s
+	Read energy=4.9088e-05 J
+	Write energy=7.8033e-05 J
+Accuracy at 16 epochs is : 61.19%
+	Read latency=-nan s
+	Write latency=7.0306e+02 s
+	Read energy=5.2361e-05 J
+	Write energy=8.3226e-05 J
+Accuracy at 17 epochs is : 61.73%
+	Read latency=-nan s
+	Write latency=7.4475e+02 s
+	Read energy=5.5634e-05 J
+	Write energy=8.8421e-05 J
+Accuracy at 18 epochs is : 61.95%
+	Read latency=-nan s
+	Write latency=7.8657e+02 s
+	Read energy=5.8908e-05 J
+	Write energy=9.3604e-05 J
+Accuracy at 19 epochs is : 62.01%
+	Read latency=-nan s
+	Write latency=8.2429e+02 s
+	Read energy=6.2181e-05 J
+	Write energy=9.8785e-05 J
+Accuracy at 20 epochs is : 62.36%
+	Read latency=-nan s
+	Write latency=8.6197e+02 s
+	Read energy=6.5454e-05 J
+	Write energy=1.0397e-04 J
+Accuracy at 21 epochs is : 62.95%
+	Read latency=-nan s
+	Write latency=9.0351e+02 s
+	Read energy=6.8727e-05 J
+	Write energy=1.0917e-04 J
+Accuracy at 22 epochs is : 63.67%
+	Read latency=-nan s
+	Write latency=9.4767e+02 s
+	Read energy=7.2000e-05 J
+	Write energy=1.1437e-04 J
+Accuracy at 23 epochs is : 65.14%
+	Read latency=-nan s
+	Write latency=9.9184e+02 s
+	Read energy=7.5274e-05 J
+	Write energy=1.1959e-04 J
+Accuracy at 24 epochs is : 66.84%
+	Read latency=-nan s
+	Write latency=1.0318e+03 s
+	Read energy=7.8547e-05 J
+	Write energy=1.2478e-04 J
+Accuracy at 25 epochs is : 66.19%
+	Read latency=-nan s
+	Write latency=1.0729e+03 s
+	Read energy=8.1820e-05 J
+	Write energy=1.2997e-04 J
+Accuracy at 26 epochs is : 65.82%
+	Read latency=-nan s
+	Write latency=1.1147e+03 s
+	Read energy=8.5093e-05 J
+	Write energy=1.3517e-04 J
+Accuracy at 27 epochs is : 67.13%
+	Read latency=-nan s
+	Write latency=1.1549e+03 s
+	Read energy=8.8367e-05 J
+	Write energy=1.4036e-04 J
+Accuracy at 28 epochs is : 67.55%
+	Read latency=-nan s
+	Write latency=1.1966e+03 s
+	Read energy=9.1640e-05 J
+	Write energy=1.4554e-04 J
+Accuracy at 29 epochs is : 66.51%
+	Read latency=-nan s
+	Write latency=1.2424e+03 s
+	Read energy=9.4914e-05 J
+	Write energy=1.5076e-04 J
+Accuracy at 30 epochs is : 67.86%
+	Read latency=-nan s
+	Write latency=1.2910e+03 s
+	Read energy=9.8188e-05 J
+	Write energy=1.5598e-04 J
+Accuracy at 31 epochs is : 68.98%
+	Read latency=-nan s
+	Write latency=1.3377e+03 s
+	Read energy=1.0146e-04 J
+	Write energy=1.6120e-04 J
+Accuracy at 32 epochs is : 69.66%
+	Read latency=-nan s
+	Write latency=1.3810e+03 s
+	Read energy=1.0473e-04 J
+	Write energy=1.6640e-04 J
+Accuracy at 33 epochs is : 70.54%
+	Read latency=-nan s
+	Write latency=1.4272e+03 s
+	Read energy=1.0801e-04 J
+	Write energy=1.7161e-04 J
+Accuracy at 34 epochs is : 71.38%
+	Read latency=-nan s
+	Write latency=1.4737e+03 s
+	Read energy=1.1128e-04 J
+	Write energy=1.7682e-04 J
+Accuracy at 35 epochs is : 70.61%
+	Read latency=-nan s
+	Write latency=1.5195e+03 s
+	Read energy=1.1456e-04 J
+	Write energy=1.8204e-04 J
+Accuracy at 36 epochs is : 70.12%
+	Read latency=-nan s
+	Write latency=1.5666e+03 s
+	Read energy=1.1783e-04 J
+	Write energy=1.8727e-04 J
+Accuracy at 37 epochs is : 70.61%
+	Read latency=-nan s
+	Write latency=1.6128e+03 s
+	Read energy=1.2110e-04 J
+	Write energy=1.9248e-04 J
+Accuracy at 38 epochs is : 70.99%
+	Read latency=-nan s
+	Write latency=1.6611e+03 s
+	Read energy=1.2438e-04 J
+	Write energy=1.9771e-04 J
+Accuracy at 39 epochs is : 71.34%
+	Read latency=-nan s
+	Write latency=1.7122e+03 s
+	Read energy=1.2765e-04 J
+	Write energy=2.0295e-04 J
+Accuracy at 40 epochs is : 70.44%
+	Read latency=-nan s
+	Write latency=1.7601e+03 s
+	Read energy=1.3092e-04 J
+	Write energy=2.0817e-04 J
+Accuracy at 41 epochs is : 72.10%
+	Read latency=-nan s
+	Write latency=1.8089e+03 s
+	Read energy=1.3420e-04 J
+	Write energy=2.1339e-04 J
+Accuracy at 42 epochs is : 71.56%
+	Read latency=-nan s
+	Write latency=1.8589e+03 s
+	Read energy=1.3747e-04 J
+	Write energy=2.1862e-04 J
+Accuracy at 43 epochs is : 72.75%
+	Read latency=-nan s
+	Write latency=1.9080e+03 s
+	Read energy=1.4075e-04 J
+	Write energy=2.2385e-04 J
+Accuracy at 44 epochs is : 72.63%
+	Read latency=-nan s
+	Write latency=1.9581e+03 s
+	Read energy=1.4402e-04 J
+	Write energy=2.2909e-04 J
+Accuracy at 45 epochs is : 72.86%
+	Read latency=-nan s
+	Write latency=2.0064e+03 s
+	Read energy=1.4729e-04 J
+	Write energy=2.3432e-04 J
+Accuracy at 46 epochs is : 72.04%
+	Read latency=-nan s
+	Write latency=2.0532e+03 s
+	Read energy=1.5057e-04 J
+	Write energy=2.3954e-04 J
+Accuracy at 47 epochs is : 73.04%
+	Read latency=-nan s
+	Write latency=2.1011e+03 s
+	Read energy=1.5384e-04 J
+	Write energy=2.4477e-04 J
+Accuracy at 48 epochs is : 72.95%
+	Read latency=-nan s
+	Write latency=2.1473e+03 s
+	Read energy=1.5712e-04 J
+	Write energy=2.4999e-04 J
+Accuracy at 49 epochs is : 73.10%
+	Read latency=-nan s
+	Write latency=2.1926e+03 s
+	Read energy=1.6039e-04 J
+	Write energy=2.5522e-04 J
+Accuracy at 50 epochs is : 73.39%
+	Read latency=-nan s
+	Write latency=2.2414e+03 s
+	Read energy=1.6366e-04 J
+	Write energy=2.6044e-04 J
+Accuracy at 51 epochs is : 72.92%
+	Read latency=-nan s
+	Write latency=2.2908e+03 s
+	Read energy=1.6694e-04 J
+	Write energy=2.6567e-04 J
+Accuracy at 52 epochs is : 73.21%
+	Read latency=-nan s
+	Write latency=2.3404e+03 s
+	Read energy=1.7021e-04 J
+	Write energy=2.7090e-04 J
+Accuracy at 53 epochs is : 72.90%
+	Read latency=-nan s
+	Write latency=2.3908e+03 s
+	Read energy=1.7349e-04 J
+	Write energy=2.7613e-04 J
+Accuracy at 54 epochs is : 73.00%
+	Read latency=-nan s
+	Write latency=2.4428e+03 s
+	Read energy=1.7676e-04 J
+	Write energy=2.8136e-04 J
+Accuracy at 55 epochs is : 73.44%
+	Read latency=-nan s
+	Write latency=2.4934e+03 s
+	Read energy=1.8003e-04 J
+	Write energy=2.8659e-04 J
+Accuracy at 56 epochs is : 72.11%
+	Read latency=-nan s
+	Write latency=2.5457e+03 s
+	Read energy=1.8331e-04 J
+	Write energy=2.9183e-04 J
+Accuracy at 57 epochs is : 72.39%
+	Read latency=-nan s
+	Write latency=2.5957e+03 s
+	Read energy=1.8658e-04 J
+	Write energy=2.9706e-04 J
+Accuracy at 58 epochs is : 72.37%
+	Read latency=-nan s
+	Write latency=2.6463e+03 s
+	Read energy=1.8986e-04 J
+	Write energy=3.0231e-04 J
+Accuracy at 59 epochs is : 72.76%
+	Read latency=-nan s
+	Write latency=2.6986e+03 s
+	Read energy=1.9313e-04 J
+	Write energy=3.0755e-04 J
+Accuracy at 60 epochs is : 72.84%
+	Read latency=-nan s
+	Write latency=2.7517e+03 s
+	Read energy=1.9641e-04 J
+	Write energy=3.1278e-04 J
+Accuracy at 61 epochs is : 73.39%
+	Read latency=-nan s
+	Write latency=2.8047e+03 s
+	Read energy=1.9968e-04 J
+	Write energy=3.1803e-04 J
+Accuracy at 62 epochs is : 74.21%
+	Read latency=-nan s
+	Write latency=2.8591e+03 s
+	Read energy=2.0295e-04 J
+	Write energy=3.2327e-04 J
+Accuracy at 63 epochs is : 72.99%
+	Read latency=-nan s
+	Write latency=2.9092e+03 s
+	Read energy=2.0623e-04 J
+	Write energy=3.2849e-04 J
+Accuracy at 64 epochs is : 74.38%
+	Read latency=-nan s
+	Write latency=2.9609e+03 s
+	Read energy=2.0950e-04 J
+	Write energy=3.3373e-04 J
+Accuracy at 65 epochs is : 74.69%
+	Read latency=-nan s
+	Write latency=3.0124e+03 s
+	Read energy=2.1278e-04 J
+	Write energy=3.3895e-04 J
+Accuracy at 66 epochs is : 75.72%
+	Read latency=-nan s
+	Write latency=3.0640e+03 s
+	Read energy=2.1605e-04 J
+	Write energy=3.4417e-04 J
+Accuracy at 67 epochs is : 75.43%
+	Read latency=-nan s
+	Write latency=3.1179e+03 s
+	Read energy=2.1933e-04 J
+	Write energy=3.4941e-04 J
+Accuracy at 68 epochs is : 75.75%
+	Read latency=-nan s
+	Write latency=3.1697e+03 s
+	Read energy=2.2260e-04 J
+	Write energy=3.5464e-04 J
+Accuracy at 69 epochs is : 76.29%
+	Read latency=-nan s
+	Write latency=3.2206e+03 s
+	Read energy=2.2588e-04 J
+	Write energy=3.5986e-04 J
+Accuracy at 70 epochs is : 76.72%
+	Read latency=-nan s
+	Write latency=3.2738e+03 s
+	Read energy=2.2915e-04 J
+	Write energy=3.6510e-04 J
+Accuracy at 71 epochs is : 76.75%
+	Read latency=-nan s
+	Write latency=3.3232e+03 s
+	Read energy=2.3243e-04 J
+	Write energy=3.7033e-04 J
+Accuracy at 72 epochs is : 76.66%
+	Read latency=-nan s
+	Write latency=3.3739e+03 s
+	Read energy=2.3570e-04 J
+	Write energy=3.7556e-04 J
+Accuracy at 73 epochs is : 76.24%
+	Read latency=-nan s
+	Write latency=3.4268e+03 s
+	Read energy=2.3897e-04 J
+	Write energy=3.8081e-04 J
+Accuracy at 74 epochs is : 76.49%
+	Read latency=-nan s
+	Write latency=3.4784e+03 s
+	Read energy=2.4225e-04 J
+	Write energy=3.8605e-04 J
+Accuracy at 75 epochs is : 76.50%
+	Read latency=-nan s
+	Write latency=3.5311e+03 s
+	Read energy=2.4552e-04 J
+	Write energy=3.9121e-04 J
+Accuracy at 76 epochs is : 75.51%
+	Read latency=-nan s
+	Write latency=3.5815e+03 s
+	Read energy=2.4880e-04 J
+	Write energy=3.9639e-04 J
+Accuracy at 77 epochs is : 76.32%
+	Read latency=-nan s
+	Write latency=3.6343e+03 s
+	Read energy=2.5207e-04 J
+	Write energy=4.0157e-04 J
+Accuracy at 78 epochs is : 75.97%
+	Read latency=-nan s
+	Write latency=3.6864e+03 s
+	Read energy=2.5535e-04 J
+	Write energy=4.0675e-04 J
+Accuracy at 79 epochs is : 76.95%
+	Read latency=-nan s
+	Write latency=3.7415e+03 s
+	Read energy=2.5862e-04 J
+	Write energy=4.1194e-04 J
+Accuracy at 80 epochs is : 77.94%
+	Read latency=-nan s
+	Write latency=3.7931e+03 s
+	Read energy=2.6189e-04 J
+	Write energy=4.1712e-04 J
+Accuracy at 81 epochs is : 77.86%
+	Read latency=-nan s
+	Write latency=3.8466e+03 s
+	Read energy=2.6517e-04 J
+	Write energy=4.2231e-04 J
+Accuracy at 82 epochs is : 77.25%
+	Read latency=-nan s
+	Write latency=3.8989e+03 s
+	Read energy=2.6844e-04 J
+	Write energy=4.2749e-04 J
+Accuracy at 83 epochs is : 76.85%
+	Read latency=-nan s
+	Write latency=3.9534e+03 s
+	Read energy=2.7172e-04 J
+	Write energy=4.3266e-04 J
+Accuracy at 84 epochs is : 77.41%
+	Read latency=-nan s
+	Write latency=4.0064e+03 s
+	Read energy=2.7499e-04 J
+	Write energy=4.3782e-04 J
+Accuracy at 85 epochs is : 77.07%
+	Read latency=-nan s
+	Write latency=4.0568e+03 s
+	Read energy=2.7827e-04 J
+	Write energy=4.4295e-04 J
+Accuracy at 86 epochs is : 76.21%
+	Read latency=-nan s
+	Write latency=4.1109e+03 s
+	Read energy=2.8154e-04 J
+	Write energy=4.4811e-04 J
+Accuracy at 87 epochs is : 76.96%
+	Read latency=-nan s
+	Write latency=4.1631e+03 s
+	Read energy=2.8482e-04 J
+	Write energy=4.5324e-04 J
+Accuracy at 88 epochs is : 76.60%
+	Read latency=-nan s
+	Write latency=4.2148e+03 s
+	Read energy=2.8809e-04 J
+	Write energy=4.5838e-04 J
+Accuracy at 89 epochs is : 76.61%
+	Read latency=-nan s
+	Write latency=4.2675e+03 s
+	Read energy=2.9136e-04 J
+	Write energy=4.6353e-04 J
+Accuracy at 90 epochs is : 77.78%
+	Read latency=-nan s
+	Write latency=4.3215e+03 s
+	Read energy=2.9464e-04 J
+	Write energy=4.6876e-04 J
+Accuracy at 91 epochs is : 76.98%
+	Read latency=-nan s
+	Write latency=4.3743e+03 s
+	Read energy=2.9791e-04 J
+	Write energy=4.7407e-04 J
+Accuracy at 92 epochs is : 77.53%
+	Read latency=-nan s
+	Write latency=4.4290e+03 s
+	Read energy=3.0119e-04 J
+	Write energy=4.7943e-04 J
+Accuracy at 93 epochs is : 78.19%
+	Read latency=-nan s
+	Write latency=4.4836e+03 s
+	Read energy=3.0446e-04 J
+	Write energy=4.8477e-04 J
+Accuracy at 94 epochs is : 78.18%
+	Read latency=-nan s
+	Write latency=4.5399e+03 s
+	Read energy=3.0774e-04 J
+	Write energy=4.9010e-04 J
+Accuracy at 95 epochs is : 78.08%
+	Read latency=-nan s
+	Write latency=4.5938e+03 s
+	Read energy=3.1101e-04 J
+	Write energy=4.9544e-04 J
+Accuracy at 96 epochs is : 77.16%
+	Read latency=-nan s
+	Write latency=4.6501e+03 s
+	Read energy=3.1429e-04 J
+	Write energy=5.0081e-04 J
+Accuracy at 97 epochs is : 77.15%
+	Read latency=-nan s
+	Write latency=4.7077e+03 s
+	Read energy=3.1756e-04 J
+	Write energy=5.0618e-04 J
+Accuracy at 98 epochs is : 76.69%
+	Read latency=-nan s
+	Write latency=4.7645e+03 s
+	Read energy=3.2084e-04 J
+	Write energy=5.1154e-04 J
+Accuracy at 99 epochs is : 76.18%
+	Read latency=-nan s
+	Write latency=4.8195e+03 s
+	Read energy=3.2411e-04 J
+	Write energy=5.1690e-04 J
+Accuracy at 100 epochs is : 77.85%
+	Read latency=-nan s
+	Write latency=4.8775e+03 s
+	Read energy=3.2739e-04 J
+	Write energy=5.2225e-04 J
+Accuracy at 101 epochs is : 78.55%
+	Read latency=-nan s
+	Write latency=4.9393e+03 s
+	Read energy=3.3066e-04 J
+	Write energy=5.2761e-04 J
+Accuracy at 102 epochs is : 77.96%
+	Read latency=-nan s
+	Write latency=4.9987e+03 s
+	Read energy=3.3394e-04 J
+	Write energy=5.3295e-04 J
+Accuracy at 103 epochs is : 76.48%
+	Read latency=-nan s
+	Write latency=5.0577e+03 s
+	Read energy=3.3721e-04 J
+	Write energy=5.3831e-04 J
+Accuracy at 104 epochs is : 76.51%
+	Read latency=-nan s
+	Write latency=5.1180e+03 s
+	Read energy=3.4049e-04 J
+	Write energy=5.4367e-04 J
+Accuracy at 105 epochs is : 76.73%
+	Read latency=-nan s
+	Write latency=5.1780e+03 s
+	Read energy=3.4376e-04 J
+	Write energy=5.4904e-04 J
+Accuracy at 106 epochs is : 78.21%
+	Read latency=-nan s
+	Write latency=5.2366e+03 s
+	Read energy=3.4704e-04 J
+	Write energy=5.5440e-04 J
+Accuracy at 107 epochs is : 78.19%
+	Read latency=-nan s
+	Write latency=5.2973e+03 s
+	Read energy=3.5031e-04 J
+	Write energy=5.5978e-04 J
+Accuracy at 108 epochs is : 78.23%
+	Read latency=-nan s
+	Write latency=5.3558e+03 s
+	Read energy=3.5359e-04 J
+	Write energy=5.6516e-04 J
+Accuracy at 109 epochs is : 76.69%
+	Read latency=-nan s
+	Write latency=5.4117e+03 s
+	Read energy=3.5686e-04 J
+	Write energy=5.7053e-04 J
+Accuracy at 110 epochs is : 78.91%
+	Read latency=-nan s
+	Write latency=5.4696e+03 s
+	Read energy=3.6014e-04 J
+	Write energy=5.7589e-04 J
+Accuracy at 111 epochs is : 80.14%
+	Read latency=-nan s
+	Write latency=5.5275e+03 s
+	Read energy=3.6341e-04 J
+	Write energy=5.8126e-04 J
+Accuracy at 112 epochs is : 79.74%
+	Read latency=-nan s
+	Write latency=5.5840e+03 s
+	Read energy=3.6669e-04 J
+	Write energy=5.8663e-04 J
+Accuracy at 113 epochs is : 80.04%
+	Read latency=-nan s
+	Write latency=5.6413e+03 s
+	Read energy=3.6996e-04 J
+	Write energy=5.9197e-04 J
+Accuracy at 114 epochs is : 79.17%
+	Read latency=-nan s
+	Write latency=5.6959e+03 s
+	Read energy=3.7324e-04 J
+	Write energy=5.9730e-04 J
+Accuracy at 115 epochs is : 78.11%
+	Read latency=-nan s
+	Write latency=5.7560e+03 s
+	Read energy=3.7651e-04 J
+	Write energy=6.0264e-04 J
+Accuracy at 116 epochs is : 78.90%
+	Read latency=-nan s
+	Write latency=5.8132e+03 s
+	Read energy=3.7979e-04 J
+	Write energy=6.0799e-04 J
+Accuracy at 117 epochs is : 79.16%
+	Read latency=-nan s
+	Write latency=5.8716e+03 s
+	Read energy=3.8306e-04 J
+	Write energy=6.1336e-04 J
+Accuracy at 118 epochs is : 79.01%
+	Read latency=-nan s
+	Write latency=5.9290e+03 s
+	Read energy=3.8634e-04 J
+	Write energy=6.1872e-04 J
+Accuracy at 119 epochs is : 79.05%
+	Read latency=-nan s
+	Write latency=5.9848e+03 s
+	Read energy=3.8961e-04 J
+	Write energy=6.2407e-04 J
+Accuracy at 120 epochs is : 77.64%
+	Read latency=-nan s
+	Write latency=6.0429e+03 s
+	Read energy=3.9289e-04 J
+	Write energy=6.2943e-04 J
+Accuracy at 121 epochs is : 78.27%
+	Read latency=-nan s
+	Write latency=6.1033e+03 s
+	Read energy=3.9616e-04 J
+	Write energy=6.3481e-04 J
+Accuracy at 122 epochs is : 78.50%
+	Read latency=-nan s
+	Write latency=6.1598e+03 s
+	Read energy=3.9944e-04 J
+	Write energy=6.4019e-04 J
+Accuracy at 123 epochs is : 78.81%
+	Read latency=-nan s
+	Write latency=6.2173e+03 s
+	Read energy=4.0272e-04 J
+	Write energy=6.4556e-04 J
+Accuracy at 124 epochs is : 79.64%
+	Read latency=-nan s
+	Write latency=6.2745e+03 s
+	Read energy=4.0599e-04 J
+	Write energy=6.5092e-04 J
+Accuracy at 125 epochs is : 79.26%
+	Read latency=-nan s
+	Write latency=6.3319e+03 s
+	Read energy=4.0927e-04 J
+	Write energy=6.5629e-04 J
+
