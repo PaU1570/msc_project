@@ -16,6 +16,10 @@ if __name__ == '__main__':
     parser.add_argument('--savefig', type=str, help='Save the figure to a file', default=None)
     parser.add_argument('--scale', type=str, choices=['linear', 'log-log', 'log-lin', 'lin-log'], default='linear', help='Scale of the axes')
     parser.add_argument('--title', type=str, help='Title of the plot', default=None)
+    parser.add_argument('--hue', type=str, help='Which attribute to use for coloring the data points', default='device_id')
+    parser.add_argument('--aspect', type=str, help='Aspect ratio of the plot', default='auto')
+    parser.add_argument('--xlim', type=float, nargs=2, help='X axis limits', default=None)
+    parser.add_argument('--ylim', type=float, nargs=2, help='Y axis limits', default=None)
     args = parser.parse_args()
 
     if (args.x or args.y) and args.all:
@@ -46,15 +50,21 @@ if __name__ == '__main__':
 
         fig, ax = plt.subplots(figsize=(8, 6))
 
-        unique_devices = data['device_id'].unique()
-        colors = plt.cm.rainbow(np.linspace(0, 1, len(unique_devices)))
+        unique_types = data[args.hue].unique()
+        
+        if data[args.hue].dtype == 'float64':
+            scatter = ax.scatter(data[args.x], data[args.y], c=data[args.hue], cmap='plasma')
+            cbar = plt.colorbar(scatter)
+            cbar.set_label(args.hue)
+        else:
+            #colors = sns.color_palette('husl', len(unique_types))
+            colors = plt.cm.rainbow(np.linspace(0, 1, len(unique_types)))
+            for unique_type, color in zip(unique_types, colors):
+                type_data = data[data[args.hue] == unique_type]
+                ax.scatter(type_data[args.x], type_data[args.y], label=unique_type, color=color)
+            ax.legend(title=args.hue)
 
-        for device, color in zip(unique_devices, colors):
-            device_data = data[data['device_id'] == device]
-            ax.scatter(device_data[args.x], device_data[args.y], label=device, color=color)
-
-        ax.legend(title='Device ID')
-        ax.set(xlabel=args.x, ylabel=args.y, xscale=xscale, yscale=yscale, title=title)
+        ax.set(xlabel=args.x, ylabel=args.y, xscale=xscale, yscale=yscale, title=title, aspect=args.aspect, xlim=args.xlim, ylim=args.ylim)
         if args.savefig is not None:
             plt.tight_layout()
             plt.savefig(args.savefig, facecolor=fig.get_facecolor())
@@ -62,7 +72,7 @@ if __name__ == '__main__':
 
     if args.all:
         cols = ['stepSize','pulseWidth','onOffRatio','accuracy', 'A_LTP', 'A_LTD']
-        g = sns.pairplot(data, hue='device_id', vars=cols)
+        g = sns.pairplot(data, hue=args.hue, vars=cols)
         g.fig.suptitle(title)
         if args.savefig is not None:
             plt.tight_layout()
