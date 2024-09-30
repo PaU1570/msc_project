@@ -15,6 +15,7 @@ if __name__ == '__main__':
     parser.add_argument('--all', action='store_true', help='Plot all pairs of data points')
     parser.add_argument('--savefig', type=str, help='Save the figure to a file', default=None)
     parser.add_argument('--scale', type=str, choices=['linear', 'log-log', 'log-lin', 'lin-log'], default='linear', help='Scale of the axes')
+    parser.add_argument('--title', type=str, help='Title of the plot', default=None)
     args = parser.parse_args()
 
     if (args.x or args.y) and args.all:
@@ -30,6 +31,8 @@ if __name__ == '__main__':
 
     xscale = 'linear' if args.scale in ['linear', 'log-lin'] else 'log'
     yscale = 'linear' if args.scale in ['linear', 'lin-log'] else 'log'
+
+    title = args.title if args.title is not None else f'{args.input}'
 
     data = pd.read_csv(args.input)
 
@@ -51,7 +54,7 @@ if __name__ == '__main__':
             ax.scatter(device_data[args.x], device_data[args.y], label=device, color=color)
 
         ax.legend(title='Device ID')
-        ax.set(xlabel=args.x, ylabel=args.y, xscale=xscale, yscale=yscale)
+        ax.set(xlabel=args.x, ylabel=args.y, xscale=xscale, yscale=yscale, title=title)
         if args.savefig is not None:
             plt.tight_layout()
             plt.savefig(args.savefig, facecolor=fig.get_facecolor())
@@ -59,7 +62,8 @@ if __name__ == '__main__':
 
     if args.all:
         cols = ['stepSize','pulseWidth','onOffRatio','accuracy', 'A_LTP', 'A_LTD']
-        sns.pairplot(data, hue='device_id', vars=cols)
+        g = sns.pairplot(data, hue='device_id', vars=cols)
+        g.fig.suptitle(title)
         if args.savefig is not None:
             plt.tight_layout()
             plt.savefig(args.savefig)
