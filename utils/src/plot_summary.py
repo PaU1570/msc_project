@@ -44,7 +44,13 @@ if __name__ == '__main__':
         if args.filter[0] not in data.columns:
             print(f"Error: {args.filter[0]} is not a column in the data.")
             exit(1)
-        data = data[data[args.filter[0]] == args.filter[1]]
+        print(f'Filtering data based on {args.filter[0]} = {args.filter[1]}')
+        try:
+            filter_value = pd.to_numeric(args.filter[1])
+        except ValueError:
+            filter_value = args.filter[1]
+
+        data = data[data[args.filter[0]] == filter_value]
         if data.empty:
             print(f"Error: No data found for {args.filter[0]} = {args.filter[1]}.")
             exit(1)
