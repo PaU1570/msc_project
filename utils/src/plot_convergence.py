@@ -5,23 +5,15 @@ import matplotlib.cm as cm
 from matplotlib import colormaps
 from matplotlib.colors import LogNorm
 import seaborn as sns
-import argparse
+from plot_utils import create_parser
 import os
 from run_neurosim_to_csv import get_data_from_file
 
 plt.style.use('ggplot')
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Plot convergence")
-    parser.add_argument("input", type=str, help="Path to the directory containing _output.dat files")
-    parser.add_argument('--hue', type=str, help='Which attribute to use for coloring the data points', default='device_id')
-    parser.add_argument('--huescale', type=str, choices=['linear', 'log'], default='linear', help='Scale of the hue')
-    parser.add_argument('--title', type=str, help='Title of the plot', default=None)
-    parser.add_argument('--savefig', type=str, help='Save the figure to a file', default=None)
-    parser.add_argument('--filter', type=str, help='Filter the data based on a column', default=None, nargs=2)
-    parser.add_argument('-y', type=str, help='Y axis value', choices=['accuracy', 'read_latency', 'write_latency', 'read_energy', 'write_energy'], default='accuracy')
-
-    args = parser.parse_args()
+    
+    args = create_parser()
 
     files = os.listdir(args.input)
     files = [f for f in files if f.endswith('.dat')]
