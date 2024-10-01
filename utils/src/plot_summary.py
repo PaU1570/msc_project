@@ -20,6 +20,7 @@ if __name__ == '__main__':
     parser.add_argument('--aspect', type=str, help='Aspect ratio of the plot', default='auto')
     parser.add_argument('--xlim', type=float, nargs=2, help='X axis limits', default=None)
     parser.add_argument('--ylim', type=float, nargs=2, help='Y axis limits', default=None)
+    parser.add_argument('--filter', type=str, help='Filter the data based on a column', default=None, nargs=2)
     args = parser.parse_args()
 
     if (args.x or args.y) and args.all:
@@ -39,6 +40,15 @@ if __name__ == '__main__':
     title = args.title if args.title is not None else f'{args.input}'
 
     data = pd.read_csv(args.input)
+    if args.filter is not None:
+        if args.filter[0] not in data.columns:
+            print(f"Error: {args.filter[0]} is not a column in the data.")
+            exit(1)
+        data = data[data[args.filter[0]] == args.filter[1]]
+        if data.empty:
+            print(f"Error: No data found for {args.filter[0]} = {args.filter[1]}.")
+            exit(1)
+        data = data.reset_index(drop=True)
 
     if not args.all:
         if args.x not in data.columns :

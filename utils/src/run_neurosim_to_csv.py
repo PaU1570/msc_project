@@ -38,7 +38,7 @@ import csv
 import argparse
 import numpy as np
 
-def get_data_from_file(file):
+def get_data_from_file(file, energy=False):
     with open(file, 'r') as f:
         data = f.readlines()
 
@@ -61,21 +61,33 @@ def get_data_from_file(file):
         for key, val in zip(keys, line):
             d[key.strip()] = val.strip()
 
-        last_match = None
-        for line in data[::-1]:
+        epoch_num = []
+        accuracy = []
+        read_latency = []
+        write_latency = []
+        read_energy = []
+        write_energy = []
+        for line in data:
             if "Accuracy at" in line:
-                last_match = line.strip()
-                break
+                match = line.strip()
+                epoch_num.append(int(match.split(' ')[2]))
+                accuracy.append(float(match.split(' ')[-1][:-1]))
+            if "Read latency" in line:
+                read_latency.append(float(line.split('=')[-1].split(' ')[0]))
+            if "Write latency" in line:
+                write_latency.append(float(line.split('=')[-1].split(' ')[0]))
+            if "Read energy" in line:
+                read_energy.append(float(line.split('=')[-1].split(' ')[0]))
+            if "Write energy" in line:
+                write_energy.append(float(line.split('=')[-1].split(' ')[0]))
 
-        d['epochs'] = None
-        d['accuracy'] = None
-        if last_match is not None:
-            epoch_num = int(last_match.split(' ')[2])
-            accuracy = float(last_match.split(' ')[-1][:-1])
-            d['epochs'] = epoch_num
-            d['accuracy'] = accuracy
+        d['epochs'] = epoch_num[-1] if len(epoch_num) > 0 else None
+        d['accuracy'] = accuracy[-1] if len(accuracy) > 0 else None
 
-    return d
+    if energy:
+        return d, epoch_num, accuracy, read_latency, write_latency, read_energy, write_energy
+    else:
+        return d, epoch_num, accuracy
 
 
 if __name__ == "__main__":
@@ -89,7 +101,7 @@ if __name__ == "__main__":
     files = [f for f in files if f.endswith('.dat')]
     data = dict()
     for f in files:
-        tmp = get_data_from_file(os.path.join(args.input, f))
+        tmp, _, _ = get_data_from_file(os.path.join(args.input, f))
         if not data:
             data = {key: [value] for key, value in tmp.items()}
         else:
