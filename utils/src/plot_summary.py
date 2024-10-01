@@ -2,33 +2,14 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import argparse
 import os
+
+import plot_utils as pu
 
 plt.style.use('ggplot')
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Plot summary')
-    parser.add_argument('input', type=str, help='Summary file output by run_neurosim_to_csv.py')
-    parser.add_argument('-x', type=str, help='X axis value')
-    parser.add_argument('-y', type=str, help='Y axis value')
-    parser.add_argument('--all', action='store_true', help='Plot all pairs of data points')
-    parser.add_argument('--savefig', type=str, help='Save the figure to a file', default=None)
-    parser.add_argument('--scale', type=str, choices=['linear', 'log-log', 'log-lin', 'lin-log'], default='linear', help='Scale of the axes')
-    parser.add_argument('--title', type=str, help='Title of the plot', default=None)
-    parser.add_argument('--hue', type=str, help='Which attribute to use for coloring the data points', default='device_id')
-    parser.add_argument('--aspect', type=str, help='Aspect ratio of the plot', default='auto')
-    parser.add_argument('--xlim', type=float, nargs=2, help='X axis limits', default=None)
-    parser.add_argument('--ylim', type=float, nargs=2, help='Y axis limits', default=None)
-    parser.add_argument('--filter', type=str, help='Filter the data based on a column', default=None, nargs=2)
-    args = parser.parse_args()
-
-    if (args.x or args.y) and args.all:
-        parser.error("Cannot specify -x and -y when using --all")
-    if (args.x and not args.y) or (args.y and not args.x):
-        parser.error("Must specify both -x and -y")
-    if not (args.x or args.y) and not args.all:
-        parser.error("Must specify either -x and -y or --all")
+    args = pu.create_parser()
 
     if not os.path.isfile(args.input):
         print(f"Error: The file {args.input} does not exist.")
