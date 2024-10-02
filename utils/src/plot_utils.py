@@ -141,7 +141,7 @@ def plot_summary(args):
     if args.all:
         cols = ['stepSize','pulseWidth','onOffRatio','accuracy', 'A_LTP', 'A_LTD']
         g = sns.pairplot(data, hue=args.hue, vars=cols)
-        g.fig.suptitle(title)
+        g.figure.suptitle(title)
         if args.savefig is not None:
             plt.tight_layout()
             plt.savefig(args.savefig)
@@ -151,6 +151,9 @@ def plot_epochs(args):
     files = os.listdir(args.input)
     files = [f for f in files if f.endswith('.dat')]
 
+    xscale = 'linear' if args.scale in ['linear', 'log-lin'] else 'log'
+    yscale = 'linear' if args.scale in ['linear', 'lin-log'] else 'log'
+    
     title = args.title if args.title is not None else f'{args.input}'
 
     data = dict()
