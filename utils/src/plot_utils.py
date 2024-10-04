@@ -79,15 +79,24 @@ def filter_data(data, filter_column, filter_value, reset_index=True):
     if filter_column not in data.columns:
         print(f"Error: {filter_column} is not a column in the data.")
         exit(1)
-    print(f'Filtering data based on {filter_column} = {filter_value}')
+    
+    comp = '='
+    if filter_column == 'fit_R2_LTD' or filter_column == 'fit_R2_LTP':
+        comp = '>'
+
+    print(f'Filtering data based on {filter_column} {comp} {filter_value}')
     try:
         filter_value = pd.to_numeric(filter_value)
     except ValueError:
         pass
-    data = data[data[filter_column] == filter_value]
+    if comp == '=':
+        data = data[data[filter_column] == filter_value]
+    elif comp == '>':
+        data = data[data[filter_column] > filter_value]
     if data.empty:
-        print(f"Error: No data found for {filter_column} = {filter_value}.")
+        print(f"Error: No data found for {filter_column} {comp} {filter_value}.")
         exit(1)
+    
     if reset_index:
         data = data.reset_index(drop=True)
     return data
