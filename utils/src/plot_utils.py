@@ -92,10 +92,38 @@ def filter_data(data, filter_column, filter_value, reset_index=True):
         data = data.reset_index(drop=True)
     return data
 
+def read_average_data(path):
+    """
+    Read all the csv files in a directory into a dataframe with average values and standard deviations.
+
+    Args:
+        path (str): The path to the directory containing the csv files. All files are expected to have the same rows and columns.
+
+    Returns:
+        pd.DataFrame: The dataframe with average values and standard deviations
+    """
+    files = os.listdir(path)
+    files = [f for f in files if f.endswith('.csv')]
+    data = None
+    for f in files:
+        if data is None:
+            data = pd.read_csv(os.path.join(path, f))
+        else:
+            data = pd.concat([data, pd.read_csv(os.path.join(path, f))])
+
+    data['avgAccuracy'] = data.groupby(['device_id', 'test_date', 'test_time'])['accuracy'].transform('mean')
+    data['stdAccuracy'] = data.groupby(['device_id', 'test_date', 'test_time'])['accuracy'].transform('std')
+    data.drop_duplicates(subset=['device_id', 'test_date', 'test_time'], inplace=True)
+    data.drop(columns=['accuracy'], inplace=True)
+    data.rename(columns={'avgAccuracy': 'accuracy'}, inplace=True)
+    return data
+
 def plot_summary(args):
 
-    if not os.path.isfile(args.input):
-        print(f"Error: The file {args.input} does not exist.")
+    isFile = os.path.isfile(args.input)
+    isDir = os.path.isdir(args.input)
+    if not isFile and not isDir:
+        print(f"Error: The file or directory {args.input} does not exist.")
         exit(1)
 
     xscale = 'linear' if args.scale in ['linear', 'log-lin'] else 'log'
@@ -103,7 +131,11 @@ def plot_summary(args):
 
     title = args.title if args.title is not None else f'{args.input}'
 
-    data = pd.read_csv(args.input)
+    if isFile:
+        data = pd.read_csv(args.input)
+    elif isDir:
+        data = read_average_data(args.input)
+
     if args.filter is not None:
         data = filter_data(data, args.filter[0], args.filter[1])
 
@@ -115,21 +147,35 @@ def plot_summary(args):
             print(f"Error: {args.y} is not a column in the data.")
             exit(1)
 
+        xerr = data['stdAccuracy'].to_list() if args.x == 'accuracy' and isDir else None
+        yerr = data['stdAccuracy'].to_list() if args.y == 'accuracy' and isDir else None
+
         fig, ax = plt.subplots(figsize=(8, 6))
 
         unique_types = data[args.hue].unique()
         
         if data[args.hue].dtype == 'float64':
             norm = clr.LogNorm() if args.huescale == 'log' else clr.Normalize()       
-            scatter = ax.scatter(data[args.x], data[args.y], c=data[args.hue], cmap='plasma', norm=norm)
-            cbar = plt.colorbar(scatter)
+            cmap = plt.cm.plasma
+            colors = cmap(norm(data[args.hue].values))
+
+            cbar = plt.colorbar(cm.ScalarMappable(cmap=cmap, norm=norm), ax=ax)
             cbar.set_label(args.hue)
+
+            if xerr is None:
+                xerr = np.zeros(len(data[args.x]))
+            if yerr is None:
+                yerr = np.zeros(len(data[args.y]))
+
+            for x, y, ex, ey, color in zip(data[args.x], data[args.y], xerr, yerr, colors):
+                ax.errorbar(x, y, xerr=ex, yerr=ey, fmt='o', capsize=2, color=color, ecolor=color)
+
         else:
             #colors = sns.color_palette('husl', len(unique_types))
             colors = plt.cm.rainbow(np.linspace(0, 1, len(unique_types)))
             for unique_type, color in zip(unique_types, colors):
                 type_data = data[data[args.hue] == unique_type]
-                ax.scatter(type_data[args.x], type_data[args.y], label=unique_type, color=color)
+                ax.errorbar(type_data[args.x], type_data[args.y], xerr=xerr, yerr=yerr, fmt='o', capsize=2, color=color, ecolor=color, label=unique_type)
             ax.legend(title=args.hue)
 
         ax.set(xlabel=args.x, ylabel=args.y, xscale=xscale, yscale=yscale, title=title, aspect=args.aspect, xlim=args.xlim, ylim=args.ylim)
