@@ -97,11 +97,15 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    files = os.listdir(args.input)
-    files = [f for f in files if f.endswith('.dat')]
+    files = []
+    for root, dirnames, filenames in os.walk(args.input):
+        for filename in filenames:
+            if filename.endswith('.dat'):
+                files.append(os.path.join(root, filename))
+
     data = dict()
     for f in files:
-        tmp, _, _ = get_data_from_file(os.path.join(args.input, f))
+        tmp, _, _ = get_data_from_file(f)
         if not data:
             data = {key: [value] for key, value in tmp.items()}
         else:
