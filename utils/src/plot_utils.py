@@ -149,6 +149,8 @@ def plot_summary(args):
     elif isDir:
         data = read_average_data(args.input)
 
+    data = data.sort_values(by=['device_id', 'test_time'])
+
     if args.filter is not None:
         data = filter_data(data, args.filter)
 
@@ -236,9 +238,10 @@ def plot_epochs(args):
         read_energy.append(tmp_re)
         write_energy.append(tmp_we)
 
-    # dataframe order matches the order of epochs and accuracy (i.e. epoch[i], accuracy[i] correspond to the i-th row of data)
+    # dataframe order matches the order of epochs and accuracy (i.e. epoch[i], accuracy[i] correspond to the i-th index of data)
     data = pd.DataFrame(data)
-    data = data.apply(pd.to_numeric, errors='ignore')   
+    data = data.apply(pd.to_numeric, errors='ignore')
+    data = data.sort_values(by=['device_id', 'test_time'])
     epochs = np.array(epochs)
     # select the y-axis value
     if args.y == 'accuracy':
