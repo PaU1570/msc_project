@@ -76,12 +76,13 @@ def filter_data(data, filter_column, filter_value, reset_index=True):
     Returns:
         pd.DataFrame: The filtered data
     """
-    if filter_column not in data.columns:
+    #TODO: add support for multiple filters
+    if filter_column not in data.columns and filter_column != 'fit_R2':
         print(f"Error: {filter_column} is not a column in the data.")
         exit(1)
     
     comp = '='
-    if filter_column == 'fit_R2_LTD' or filter_column == 'fit_R2_LTP':
+    if filter_column == 'fit_R2_LTD' or filter_column == 'fit_R2_LTP' or filter_column == 'fit_R2':
         comp = '>'
 
     print(f'Filtering data based on {filter_column} {comp} {filter_value}')
@@ -92,7 +93,10 @@ def filter_data(data, filter_column, filter_value, reset_index=True):
     if comp == '=':
         data = data[data[filter_column] == filter_value]
     elif comp == '>':
-        data = data[data[filter_column] > filter_value]
+        if filter_column == 'fit_R2':
+            data = data[(data['fit_R2_LTD'] > filter_value) & (data['fit_R2_LTP'] > filter_value)]
+        else:
+            data = data[data[filter_column] > filter_value]
     if data.empty:
         print(f"Error: No data found for {filter_column} {comp} {filter_value}.")
         exit(1)
