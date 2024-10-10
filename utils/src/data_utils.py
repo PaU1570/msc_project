@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 
-def get_csv_files(folder_path):
+def get_pas_csv_files(folder_path):
     csv_files = []
     for root, dirs, files in os.walk(folder_path):
         for file in files:
@@ -10,6 +10,15 @@ def get_csv_files(folder_path):
                 csv_files.append(os.path.join(root, file))
 
     return csv_files
+
+def get_summary_files(folder_path):
+    summary_files = []
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            if file.endswith('_Summary.dat'):
+                summary_files.append(os.path.join(root, file))
+
+    return summary_files
 
 def read_file(filename):
 # read metadata and parameters from file
@@ -83,3 +92,38 @@ def get_df_2(meas_data, VStartPos, VEndPos, VStartNeg, VEndNeg):
     data = {"Normalized Pulse Number": np.concatenate((pulse_num_LTD_norm, pulse_num_LTP_norm)), "Normalized Conductance": np.concatenate((exp_LTD_norm, exp_LTP_norm)), "Type": np.concatenate((np.repeat("LTD", len(exp_LTD_norm)), np.repeat("LTP", len(exp_LTP_norm))) )}
     df = pd.DataFrame(data)
     return df
+
+def read_summary_file(filename):
+    """
+    Read summary file and return a dictionary and a pandas DataFrame.
+    
+    Args:
+        filename (str): Path to the summary file.
+    
+    Returns:
+        d (dict): Dictionary containing metadata and parameters.
+        exp_data (pd.DataFrame): DataFrame containing the experimental data.
+    """
+    d = dict()
+    with open(filename, 'r') as f:
+        data = f.readlines()
+        
+        # dictionaries keep insertion order since python 3.7
+        line = data[1].split(',')
+        d['device_name'] = line[2]
+        d['device_id'] = line[3].strip()
+        d['test_date'] = line[0]
+        d['test_time'] = line[1]
+
+        keys = data[2].split(',')
+        line = data[3].split(',')
+        for key, val in zip(keys, line):
+            d[key.strip()] = val.strip()
+
+        keys = data[4].split(',')
+        line = data[5].split(',')
+        for key, val in zip(keys, line):
+            d[key.strip()] = val.strip()
+
+    exp_data = pd.read_csv(filename, skiprows=6)
+    return d, exp_data
