@@ -23,19 +23,19 @@ error_files="${output_directory}/error_files.txt"
 files=$(find ${directory} -type f -name "*.json")
 for file in $files; do
     summary_file="$(dirname $file)/$(basename $file .json)_Summary.dat"
+    output_file="${output_directory}/$(basename $file .json)_output.dat"
     if [ -f "$summary_file" ]; then
         echo -e "\e[33m$file\e[0m"
-        output_file="${output_directory}/$(basename $file .json)_output.dat"
         head -n 6 "$summary_file" >> "$output_file"
-        echo "NeuroSim output:" >> "$output_file"
-        echo "=================" >> "$output_file"
-        if ! (cd ${NEUROSIM_DIR}; ./main $WORKING_DIR/$file >> "${WORKING_DIR}/${output_file}") ; then
-            echo -e "\e[31mError\e[0m analyzing file (see ${error_files})"
-            echo "$file" >> ${error_files}
-        else
-            echo -e "\e[32mDone\e[0m"
-        fi
     else
-        echo "\e[31mError\e[0m: Summary file for $file not found."
+        echo -e "\e[33mWarning\e[0m: Summary file for $file not found. Output will be incomplete."
+    fi
+    echo "NeuroSim output:" >> "$output_file"
+    echo "=================" >> "$output_file"
+    if ! (cd ${NEUROSIM_DIR}; ./main $WORKING_DIR/$file >> "${WORKING_DIR}/${output_file}") ; then
+        echo -e "\e[31mError\e[0m analyzing file (see ${error_files})"
+        echo "$file" >> ${error_files}
+    else
+        echo -e "\e[32mDone\e[0m"
     fi
 done
