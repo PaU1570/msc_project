@@ -100,7 +100,7 @@ def index():
     global output_file
 
     if files_list is None:       
-        files_list = du.get_csv_files(data_path)
+        files_list = du.get_pas_csv_files(data_path)
     return render_template('index.html', data_path=data_path, files_list=files_list, file_num=len(files_list))
 
 def graph1(meas_data, VStartPos, VEndPos, VStartNeg, VEndNeg):
