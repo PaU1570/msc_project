@@ -6,12 +6,76 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        function cb(VStartPos, VEndPos, VStartNeg, VEndNeg) {
+        // Global variables to store slider values
+        let VStartPos = {{VStartPos}};
+        let VEndPos = {{VEndPos}};
+        let VStartNeg = {{VStartNeg}};
+        let VEndNeg = {{VEndNeg}};
+
+        function updateSliderValue(sliderId, value) {
+            let labelValue = value;
+            if (sliderId === 'VStartPos') {
+                VStartPos = value;
+            } else if (sliderId === 'VEndPos') {
+                VEndPos = value;
+            } else if (sliderId === 'VStartNeg') {
+                VStartNeg = value;
+                labelValue *= -1;
+            } else if (sliderId === 'VEndNeg') {
+                VEndNeg = value;
+                labelValue *= -1;
+            }
+            document.getElementById(sliderId + 'Label').innerText = labelValue;
+            cb1();
+            cb2();
+        }
+
+        function cb1() {
             $.getJSON({
-                url: "/callback", data: { 'file_num': {{file_num}}, 'VStartPos': VStartPos, 'VEndPos': VEndPos, 'VStartNeg': VStartNeg, 'VEndNeg': VEndNeg }, success: function (result) {
-                    Plotly.react('chart1', result, {});;
-                    Plotly.react('chart2', result, {});;
-                }
+                url: "/callback1",
+                data: {
+                    'VStartPos': VStartPos,
+                    'VEndPos': VEndPos,
+                    'VStartNeg': VStartNeg,
+                    'VEndNeg': VEndNeg
+                    },
+                    success: function (result) {
+                        Plotly.react('chart1', result, {});
+                    }
+            });
+        }
+
+        function cb2() {
+            $.getJSON({
+                url: "/callback2",
+                data: {
+                    'VStartPos': VStartPos,
+                    'VEndPos': VEndPos,
+                    'VStartNeg': VStartNeg,
+                    'VEndNeg': VEndNeg
+                    },
+                    success: function (result) {
+                        Plotly.react('chart2', result, {});
+                    }
+            });
+        }
+
+        function save() {
+            $.getJSON({
+                url: "/save",
+                data: {
+                    'VStartPos': VStartPos,
+                    'VEndPos': VEndPos,
+                    'VStartNeg': VStartNeg,
+                    'VEndNeg': VEndNeg
+                    },
+                    success: function (result) {
+                        if (result.status === 'success') {
+                            alert('Saved!');
+                        } else {
+                            alert('Error saving file');
+                        }
+                    }
             });
         }
     </script>
@@ -50,34 +114,34 @@
                         <div class="input-group-prepend">
                             <span>V Start Positive</span>
                         </div>
-                        <input type="range" min="0" max="5" step="0.1" value="{{VStartPos}}" class="slider" id="VStartPos">
-                        <p>{{VStartPos}}</p>
+                        <input type="range" min="0" max="5" step="0.1" value="{{VStartPos}}" class="slider" id="VStartPos" oninput="updateSliderValue('VStartPos', this.value)">
+                        <p id="VStartPosLabel">{{VStartPos}}</p>
                     </div>
                     <div class="col-md-6">
                         <div class="input-group-prepend">
                             <span>V End Positive</span>
                         </div>
-                        <input type="range" min="0" max="5" step="0.1" value="{{VEndPos}}" class="slider" id="VEndPos">
-                        <p>{{VEndPos}}</p>
+                        <input type="range" min="0" max="5" step="0.1" value="{{VEndPos}}" class="slider" id="VEndPos" oninput="updateSliderValue('VEndPos', this.value)">
+                        <p id="VEndPosLabel">{{VEndPos}}</p>
                     </div>
                     <div class="col-md-6">
                         <div class="input-group-prepend">
                             <span>V Start Negative</span>
                         </div>
-                        <input type="range" min="-5" max="0" step="0.1" value="{{VStartNeg}}" class="slider" id="VStartNeg">
-                        <p>{{-VStartNeg}}</p>
+                        <input type="range" min="0" max="5" step="0.1" value="{{VStartNeg}}" class="slider" id="VStartNeg" oninput="updateSliderValue('VStartNeg', this.value)">
+                        </p><p id="VStartNegLabel">-{{VStartNeg}}</p>
                     </div>
                     <div class="col-md-6">
                         <div class="input-group-prepend">
                             <span>V End Negative</span>
                         </div>
-                        <input type="range" min="-5" max="0" step="0.1" value="{{VEndNeg}}" class="slider" id="VEndNeg">
-                        <p>{{-VEndNeg}}</p>
+                        <input type="range" min="0" max="5" step="0.1" value="{{VEndNeg}}" class="slider" id="VEndNeg" oninput="updateSliderValue('VEndNeg', this.value)">
+                        </p><p id="VEndNegLabel">-{{VEndNeg}}</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-            <h3>File {{file_num}}/{{total_file_num}}</h3>
+                <h3>File {{file_num}}/{{total_file_num}}</h3>
                 {% if file_num > 1 %}
                 <a href="{{url_for('file', file_num=(file_num-1))}}" class="btn btn-primary">Previous</a>
                 {% else %}
@@ -88,6 +152,9 @@
                 {% else %}
                 <a href="{{url_for('index')}}" class="btn btn-success ">Exit</a>
                 {% endif %}
+                <br>
+                <br>
+                <button class="btn btn-warning" onclick="save()">Save</button>
             </div>
         </div>
     </div>
