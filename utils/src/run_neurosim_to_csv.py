@@ -45,21 +45,24 @@ def get_data_from_file(file, energy=False):
         d = dict()
         
         # dictionaries keep insertion order since python 3.7
-        line = data[1].split(',')
-        d['device_name'] = line[2]
-        d['device_id'] = line[3].strip()
-        d['test_date'] = line[0]
-        d['test_time'] = line[1]
+        try:
+            line = data[1].split(',')
+            d['device_name'] = line[2]
+            d['device_id'] = line[3].strip()
+            d['test_date'] = line[0]
+            d['test_time'] = line[1]
 
-        keys = data[2].split(',')
-        line = data[3].split(',')
-        for key, val in zip(keys, line):
-            d[key.strip()] = val.strip()
+            keys = data[2].split(',')
+            line = data[3].split(',')
+            for key, val in zip(keys, line):
+                d[key.strip()] = val.strip()
 
-        keys = data[4].split(',')
-        line = data[5].split(',')
-        for key, val in zip(keys, line):
-            d[key.strip()] = val.strip()
+            keys = data[4].split(',')
+            line = data[5].split(',')
+            for key, val in zip(keys, line):
+                d[key.strip()] = val.strip()
+        except:
+            print(f"Header missing in file {file}. Output will be incomplete.")
 
         epoch_num = []
         accuracy = []
