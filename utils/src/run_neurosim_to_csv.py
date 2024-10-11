@@ -87,6 +87,8 @@ def get_data_from_file(file, energy=False):
         d['epochs'] = epoch_num[-1] if len(epoch_num) > 0 else None
         d['accuracy'] = accuracy[-1] if len(accuracy) > 0 else None
 
+        d['filename'] = os.path.basename(file)
+
     if energy:
         return d, epoch_num, accuracy, read_latency, write_latency, read_energy, write_energy
     else:
