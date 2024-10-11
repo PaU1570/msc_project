@@ -31,7 +31,7 @@ def create_parser():
     common_parser.add_argument('--aspect', type=str, help='Aspect ratio of the plot', default='auto')
     # data selection arguments
     common_parser.add_argument('--filter', type=str, help='Filter the data based on a column (multiple filters can be specified)', default=None, action='append', nargs='*')
-    common_parser.add_argument('--hue', type=str, help='Which attribute to use for coloring the data points', default='device_id')
+    common_parser.add_argument('--hue', type=str, help='Which attribute to use for coloring the data points', default=None)
     common_parser.add_argument('--huescale', type=str, choices=['linear', 'log'], default='linear', help='Scale of the hue')
     # save figure argument
     common_parser.add_argument('--savefig', type=str, help='Save the figure to a file', default=None)
@@ -165,9 +165,7 @@ def plot_summary(args):
 
         fig, ax = plt.subplots(figsize=(8, 6))
 
-        unique_types = data[args.hue].unique()
-        
-        if data[args.hue].dtype == 'float64':
+        if args.hue is not None and data[args.hue].dtype == 'float64':
             norm = clr.LogNorm() if args.huescale == 'log' else clr.Normalize()       
             cmap = plt.cm.plasma
             colors = cmap(norm(data[args.hue].values))
@@ -184,10 +182,11 @@ def plot_summary(args):
                 ax.errorbar(x, y, xerr=ex, yerr=ey, fmt='o', capsize=2, color=color, ecolor=color)
 
         else:
+            unique_types = data[args.hue].unique() if args.hue is not None else ['data']
             #colors = sns.color_palette('husl', len(unique_types))
             colors = plt.cm.rainbow(np.linspace(0, 1, len(unique_types)))
             for unique_type, color in zip(unique_types, colors):
-                type_data = data[data[args.hue] == unique_type]
+                type_data = data[data[args.hue] == unique_type] if args.hue is not None else data
                 ax.errorbar(type_data[args.x], type_data[args.y], xerr=xerr, yerr=yerr, fmt='o', capsize=2, color=color, ecolor=color, label=unique_type)
             ax.legend(title=args.hue)
 
