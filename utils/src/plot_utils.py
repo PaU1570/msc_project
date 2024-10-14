@@ -44,7 +44,17 @@ def create_parser():
     parser_summary.set_defaults(func=plot_summary)
 
     parser_epochs = subparsers.add_parser('epochs', help='Plot training evolution over epochs', parents=[common_parser])
-    parser_epochs.add_argument('-y', type=str, help='Y axis value', choices=['accuracy', 'read_latency', 'write_latency', 'read_energy', 'write_energy'], default='accuracy')
+    parser_epochs.add_argument('-y', type=str, help='Y axis value', choices=['accuracy',
+                                                                             'read_latency',
+                                                                             'write_latency',
+                                                                             'read_energy',
+                                                                             'write_energy',
+                                                                             'weight_update',
+                                                                             'pulse_number',
+                                                                             'actual_conductance_update',
+                                                                             'actual_pulse_number',
+                                                                             'actual_conductance_update_per_synapse',
+                                                                             'actual_pulse_number_per_synapse'], default='accuracy')
     parser_epochs.set_defaults(func=plot_epochs)
 
     args = parser.parse_args()
@@ -215,48 +225,53 @@ def plot_epochs(args):
     title = args.title if args.title is not None else f'{args.input}'
 
     data = dict()
-    epochs = []
-    accuracy = []
-    read_latency = []
-    write_latency = []
-    read_energy = []
-    write_energy = []
+    epoch_data = {"epochs": [],
+                  "accuracy": [],
+                  "read_latency": [],
+                  "write_latency": [],
+                  "read_energy": [],
+                  "write_energy": [],
+                  "weight_update": [],
+                  "pulse_number": [],
+                  "actual_conductance_update": [],
+                  "actual_pulse_number": [],
+                  "actual_conductance_update_per_synapse": [],
+                  "actual_pulse_number_per_synapse": []}
+    
     for f in files:
-        tmp, tmp_epoch_num, tmp_accuracy, tmp_rl, tmp_wl, tmp_re, tmp_we = get_data_from_file(os.path.join(args.input, f), energy=True)
+        tmp, tmp_epoch_num, tmp_accuracy, tmp_rl, tmp_wl, tmp_re, tmp_we, tmp_wu, tmp_pn, tmp_acu, tmp_apn, tmp_acups, tmp_apnps = get_data_from_file(os.path.join(args.input, f))
         if not data:
             data = {key: [value] for key, value in tmp.items()}
         else:
             for key, value in tmp.items():
                 data[key].append(value)
-        epochs.append(tmp_epoch_num)
-        accuracy.append(tmp_accuracy)
-        read_latency.append(tmp_rl)
-        write_latency.append(tmp_wl)
-        read_energy.append(tmp_re)
-        write_energy.append(tmp_we)
+        epoch_data['epochs'].append(tmp_epoch_num)
+        epoch_data['accuracy'].append(tmp_accuracy)
+        epoch_data['read_latency'].append(tmp_rl)
+        epoch_data['write_latency'].append(tmp_wl)
+        epoch_data['read_energy'].append(tmp_re)
+        epoch_data['write_energy'].append(tmp_we)
+        epoch_data['weight_update'].append(tmp_wu)
+        epoch_data['pulse_number'].append(tmp_pn)
+        epoch_data['actual_conductance_update'].append(tmp_acu)
+        epoch_data['actual_pulse_number'].append(tmp_apn)
+        epoch_data['actual_conductance_update_per_synapse'].append(tmp_acups)
+        epoch_data['actual_pulse_number_per_synapse'].append(tmp_apnps)
 
-    # dataframe order matches the order of epochs and accuracy (i.e. epoch[i], accuracy[i] correspond to the i-th row of data)
+    # dataframe order matches the order of epochs and accuracy (i.e. epoch_data['epochs'][i], epochs_data['accuracy'][i] correspond to the i-th row of data)
     data = pd.DataFrame(data)
     data = data.apply(pd.to_numeric, errors='ignore')   
-    epochs = np.array(epochs)
+    epochs = np.array(epoch_data['epochs'])
     # select the y-axis value
-    if args.y == 'accuracy':
-        yvals = np.array(accuracy)
-    elif args.y == 'read_latency':
-        yvals = np.array(read_latency)
-    elif args.y == 'write_latency':
-        yvals = np.array(write_latency)
-    elif args.y == 'read_energy':
-        yvals = np.array(read_energy)
-    elif args.y == 'write_energy':
-        yvals = np.array(write_energy)
+    yvals = np.array(epoch_data[args.y])
+
 
     if args.filter is not None:
         data = filter_data(data, args.filter, reset_index=False)
 
     fig, ax = plt.subplots(figsize=(8, 6))
 
-    if data[args.hue].dtype == 'float64':
+    if args.hue is not None and data[args.hue].dtype == 'float64':
         cmap = colormaps.get_cmap('plasma')
         if args.huescale == 'log':
             norm = clr.LogNorm(data[args.hue].min(), data[args.hue].max())
@@ -270,11 +285,11 @@ def plot_epochs(args):
         fig.colorbar(sm, label=args.hue, ax=ax)
 
     else:
-        unique_types = data[args.hue].unique()
+        unique_types = data[args.hue].unique() if args.hue is not None else ['data']
         #colors = sns.color_palette('husl', len(unique_types))
         colors = plt.cm.rainbow(np.linspace(0, 1, len(unique_types)))
         for unique_type, color in zip(unique_types, colors):
-            type_indices = data[data[args.hue] == unique_type].index
+            type_indices = data[data[args.hue] == unique_type].index if args.hue is not None else data.index
             for i in type_indices:
                 ax.plot(epochs[i], yvals[i], label=unique_type, color=color)
         # make sure repeated labels are only shown once
