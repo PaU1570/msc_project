@@ -54,7 +54,9 @@ def create_parser():
                                                                              'actual_conductance_update',
                                                                              'actual_pulse_number',
                                                                              'actual_conductance_update_per_synapse',
-                                                                             'actual_pulse_number_per_synapse'], default='accuracy')
+                                                                             'actual_pulse_number_per_synapse'], default='accuracy', nargs='*')
+    parser_epochs.add_argument('--notcumulative', action='store_true', help='Plot only the change per epoch, not the cumulative value')
+    parser_epochs.add_argument('--norm', action='store_true', help='Normalize the y-axis values')
     parser_epochs.set_defaults(func=plot_epochs)
 
     args = parser.parse_args()
@@ -216,8 +218,17 @@ def plot_summary(args):
         plt.show()
 
 def plot_epochs(args):
-    files = os.listdir(args.input)
-    files = [f for f in files if f.endswith('.dat')]
+
+    mode = 'dir'
+    if os.path.isdir(args.input):
+        files = os.listdir(args.input)
+        files = [f for f in files if f.endswith('.dat')]
+    elif os.path.isfile(args.input):
+        files = [args.input]
+        mode = 'file'
+    else:
+        print(f"Error: The file or directory {args.input} does not exist.")
+        exit(1)
 
     xscale = 'linear' if args.scale in ['linear', 'log-lin'] else 'log'
     yscale = 'linear' if args.scale in ['linear', 'lin-log'] else 'log'
@@ -239,7 +250,8 @@ def plot_epochs(args):
                   "actual_pulse_number_per_synapse": []}
     
     for f in files:
-        tmp, tmp_epoch_num, tmp_accuracy, tmp_rl, tmp_wl, tmp_re, tmp_we, tmp_wu, tmp_pn, tmp_acu, tmp_apn, tmp_acups, tmp_apnps = get_data_from_file(os.path.join(args.input, f))
+        filename = os.path.join(args.input, f) if mode == 'dir' else args.input
+        tmp, tmp_epoch_num, tmp_accuracy, tmp_rl, tmp_wl, tmp_re, tmp_we, tmp_wu, tmp_pn, tmp_acu, tmp_apn, tmp_acups, tmp_apnps = get_data_from_file(filename)
         if not data:
             data = {key: [value] for key, value in tmp.items()}
         else:
@@ -263,15 +275,23 @@ def plot_epochs(args):
     data = data.apply(pd.to_numeric, errors='ignore')   
     epochs = np.array(epoch_data['epochs'])
     # select the y-axis value
-    yvals = np.array(epoch_data[args.y])
-
+    if mode == 'dir' and len(args.y) > 1:
+        print("Error: Only one y-axis value can be selected when using a directory as input.")
+        exit(1)
+    yvals = np.array([epoch_data[a] for a in args.y])
+    epochs = np.squeeze(epochs)
+    yvals = np.squeeze(yvals)
+    if args.notcumulative:
+        yvals = np.diff(yvals, prepend=0, axis=1)
+    if args.norm:
+        yvals = yvals / np.max(yvals, axis=1)[:, np.newaxis]
 
     if args.filter is not None:
         data = filter_data(data, args.filter, reset_index=False)
 
     fig, ax = plt.subplots(figsize=(8, 6))
 
-    if args.hue is not None and data[args.hue].dtype == 'float64':
+    if args.hue is not None and data[args.hue].dtype == 'float64' and mode == 'dir':
         cmap = colormaps.get_cmap('plasma')
         if args.huescale == 'log':
             norm = clr.LogNorm(data[args.hue].min(), data[args.hue].max())
@@ -284,7 +304,7 @@ def plot_epochs(args):
         sm.set_array([])
         fig.colorbar(sm, label=args.hue, ax=ax)
 
-    else:
+    elif mode == 'dir':
         unique_types = data[args.hue].unique() if args.hue is not None else ['data']
         #colors = sns.color_palette('husl', len(unique_types))
         colors = plt.cm.rainbow(np.linspace(0, 1, len(unique_types)))
@@ -296,6 +316,13 @@ def plot_epochs(args):
         handles, labels = ax.get_legend_handles_labels()
         by_label = dict(zip(labels, handles))
         ax.legend(by_label.values(), by_label.keys(), title=args.hue)
+
+    else:
+        labels = args.y
+        for i in range(len(yvals)):
+            ax.plot(epochs, yvals[i], label=labels[i])
+        ax.legend()
+        
 
     ax.set(xlabel='Epoch', ylabel=args.y, xscale=xscale, yscale=yscale, title=title, aspect=args.aspect, xlim=args.xlim, ylim=args.ylim)
 
