@@ -280,12 +280,13 @@ def plot_epochs(args):
         exit(1)
     yvals = np.array([epoch_data[a] for a in args.y])
     epochs = np.squeeze(epochs)
-    yvals = np.squeeze(yvals)
+    yvals = np.squeeze(yvals, axis=1)
     if args.notcumulative:
         yvals = np.diff(yvals, prepend=0, axis=1)
     if args.norm:
-        yvals = yvals / np.max(yvals, axis=1)[:, np.newaxis]
-
+        max = np.max(yvals, axis=1)[:, np.newaxis]
+        min = np.min(yvals, axis=1)[:, np.newaxis]
+        yvals = (yvals - min) / (max - min)
     if args.filter is not None:
         data = filter_data(data, args.filter, reset_index=False)
 
