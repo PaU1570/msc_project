@@ -1,0 +1,17 @@
+epochs,accuracy,filename,test_date,test_time,num_LTD,num_LTP,alpha
+125,12.56,ltd10ltp10_0.25_output.dat,none,none,10,10,0.25
+125,54.63,ltd10ltp10_0.5_output.dat,none,none,10,10,0.5
+125,28.0,ltd10ltp10_0.75_output.dat,none,none,10,10,0.75
+125,63.43,ltd10ltp10_1_output.dat,none,none,10,10,1.0
+125,36.67,ltd15ltp15_0.25_output.dat,none,none,15,15,0.25
+125,25.84,ltd15ltp15_0.5_output.dat,none,none,15,15,0.5
+125,79.04,ltd15ltp15_0.75_output.dat,none,none,15,15,0.75
+125,83.04,ltd15ltp15_1_output.dat,none,none,15,15,1.0
+125,54.71,ltd20ltp20_0.25_output.dat,none,none,20,20,0.25
+125,69.76,ltd20ltp20_0.5_output.dat,none,none,20,20,0.5
+125,85.67,ltd20ltp20_0.75_output.dat,none,none,20,20,0.75
+125,84.61,ltd20ltp20_1_output.dat,none,none,20,20,1.0
+125,12.56,ltd5ltp5_0.25_output.dat,none,none,5,5,0.25
+125,12.56,ltd5ltp5_0.5_output.dat,none,none,5,5,0.5
+125,34.05,ltd5ltp5_0.75_output.dat,none,none,5,5,0.75
+125,24.3,ltd5ltp5_1_output.dat,none,none,5,5,1.0
