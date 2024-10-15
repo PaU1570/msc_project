@@ -136,9 +136,17 @@ def read_average_data(path):
         else:
             data = pd.concat([data, pd.read_csv(os.path.join(path, f))])
 
-    data['avgAccuracy'] = data.groupby(['device_id', 'test_date', 'test_time'])['accuracy'].transform('mean')
-    data['stdAccuracy'] = data.groupby(['device_id', 'test_date', 'test_time'])['accuracy'].transform('std')
-    data.drop_duplicates(subset=['device_id', 'test_date', 'test_time'], inplace=True)
+    if ('device_id' in data.columns) and ('test_date' in data.columns) and ('test_time' in data.columns):
+        groupby_cols = ['device_id', 'test_date', 'test_time']
+    elif 'filename' in data.columns:
+        groupby_cols = ['filename']
+    else:
+        print("Error: Can't match data between files. The data does not contain columns ['device_id', 'test_date', 'test_time'] or ['filename'].")
+        exit(1)
+
+    data['avgAccuracy'] = data.groupby(groupby_cols)['accuracy'].transform('mean')
+    data['stdAccuracy'] = data.groupby(groupby_cols)['accuracy'].transform('std')
+    data.drop_duplicates(subset=groupby_cols, inplace=True)
     data.drop(columns=['accuracy'], inplace=True)
     data.rename(columns={'avgAccuracy': 'accuracy'}, inplace=True)
     return data
@@ -280,7 +288,7 @@ def plot_epochs(args):
         exit(1)
     yvals = np.array([epoch_data[a] for a in args.y])
     epochs = np.squeeze(epochs)
-    yvals = np.squeeze(yvals, axis=1)
+    yvals = np.squeeze(yvals, axis=0 if mode == 'dir' else 1)
     if args.notcumulative:
         yvals = np.diff(yvals, prepend=0, axis=1)
     if args.norm:
