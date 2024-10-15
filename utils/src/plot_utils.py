@@ -31,6 +31,7 @@ def create_parser():
     common_parser.add_argument('--aspect', type=str, help='Aspect ratio of the plot', default='auto')
     # data selection arguments
     common_parser.add_argument('--filter', type=str, help='Filter the data based on a column (multiple filters can be specified)', default=None, action='append', nargs='*')
+    common_parser.add_argument('--exclude', type=str, help='Exclude the data based on a column (multiple filters can be specified)', default=None, action='append', nargs='*')
     common_parser.add_argument('--hue', type=str, help='Which attribute to use for coloring the data points', default=None)
     common_parser.add_argument('--huescale', type=str, choices=['linear', 'log'], default='linear', help='Scale of the hue')
     # save figure argument
@@ -76,42 +77,51 @@ def create_parser():
 
     return args
 
-def filter_data(data, filter_list, reset_index=True):
+def filter_data(data, filter_list, exclusion_list, reset_index=True):
     """
     Filter the data based on a column and a value.
 
     Args:
         data (pd.DataFrame): The data to filter
         filter_list (list): A list of filters, each containing a column name and a value. I.e. [['column1', 'value1'], ['column2', 'value2'], ...]
-
+        exclusion_list (list): A list of exclusions, each containing a column name and a value. I.e. [['column1', 'value1'], ['column2', 'value2'], ...].
+        
     Returns:
         pd.DataFrame: The filtered data
     """
 
-    for filter_column, filter_value in filter_list:
-        if filter_column not in data.columns and filter_column != 'fit_R2':
-            print(f"Error: {filter_column} is not a column in the data.")
-            exit(1)
-        
-        comp = '='
-        if filter_column == 'fit_R2_LTD' or filter_column == 'fit_R2_LTP' or filter_column == 'fit_R2':
-            comp = '>'
+    if filter_list is not None:
+        for filter_column, filter_value in filter_list:
+            if filter_column not in data.columns and filter_column != 'fit_R2':
+                print(f"Error: {filter_column} is not a column in the data.")
+                exit(1)
+            
+            comp = '='
+            if filter_column == 'fit_R2_LTD' or filter_column == 'fit_R2_LTP' or filter_column == 'fit_R2':
+                comp = '>'
 
-        print(f'Filtering data based on {filter_column} {comp} {filter_value}')
-        try:
-            filter_value = pd.to_numeric(filter_value)
-        except ValueError:
-            pass
-        if comp == '=':
-            data = data[data[filter_column] == filter_value]
-        elif comp == '>':
-            if filter_column == 'fit_R2':
-                data = data[(data['fit_R2_LTD'] > filter_value) & (data['fit_R2_LTP'] > filter_value)]
-            else:
-                data = data[data[filter_column] > filter_value]
-        if data.empty:
-            print(f"Error: No data found for {filter_column} {comp} {filter_value}.")
-            exit(1)
+            print(f'Filtering data based on {filter_column} {comp} {filter_value}')
+            try:
+                filter_value = pd.to_numeric(filter_value)
+            except ValueError:
+                pass
+            if comp == '=':
+                data = data[data[filter_column] == filter_value]
+            elif comp == '>':
+                if filter_column == 'fit_R2':
+                    data = data[(data['fit_R2_LTD'] > filter_value) & (data['fit_R2_LTP'] > filter_value)]
+                else:
+                    data = data[data[filter_column] > filter_value]
+            if data.empty:
+                print(f"Error: No data found for {filter_column} {comp} {filter_value}.")
+                exit(1)
+
+    if exclusion_list is not None:
+        for exclusion_column, exclusion_value in exclusion_list:
+            if exclusion_column not in data.columns:
+                print(f"Warning: {exclusion_column} is not a column in the data. No data will be excluded based on this column.")
+            print(f'Excluding data based on {exclusion_column} = {exclusion_value}')
+            data = data[data[exclusion_column] != exclusion_value]
     
     if reset_index:
         data = data.reset_index(drop=True)
@@ -169,8 +179,8 @@ def plot_summary(args):
     elif isDir:
         data = read_average_data(args.input)
 
-    if args.filter is not None:
-        data = filter_data(data, args.filter)
+    data = filter_data(data, args.filter, args.exclude)
+    data = data.sort_values(by=['device_id', 'test_time'])
 
     if not args.all:
         if args.x not in data.columns :
@@ -283,6 +293,8 @@ def plot_epochs(args):
     data = data.apply(pd.to_numeric, errors='ignore')   
     epochs = np.array(epoch_data['epochs'])
     # select the y-axis value
+    if args.y == 'accuracy':
+        args.y = ['accuracy']
     if mode == 'dir' and len(args.y) > 1:
         print("Error: Only one y-axis value can be selected when using a directory as input.")
         exit(1)
@@ -295,8 +307,9 @@ def plot_epochs(args):
         max = np.max(yvals, axis=1)[:, np.newaxis]
         min = np.min(yvals, axis=1)[:, np.newaxis]
         yvals = (yvals - min) / (max - min)
-    if args.filter is not None:
-        data = filter_data(data, args.filter, reset_index=False)
+
+    data = filter_data(data, args.filter, args.exclude, reset_index=False)
+    data = data.sort_values(by=['device_id', 'test_time'])
 
     fig, ax = plt.subplots(figsize=(8, 6))
 
