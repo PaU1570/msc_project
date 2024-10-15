@@ -25,6 +25,9 @@ def create_parser():
     common_parser.add_argument("input", type=str, help="Path to the input file or directory")
     # plot appearance arguments
     common_parser.add_argument('--title', type=str, help='Title of the plot', default=None)
+    common_parser.add_argument('--xlabel', type=str, help='X axis label', default=None)
+    common_parser.add_argument('--ylabel', type=str, help='Y axis label', default=None)
+    common_parser.add_argument('--huelabel', type=str, help='Hue label', default=None)
     common_parser.add_argument('--xlim', type=float, nargs=2, help='X axis limits', default=None)
     common_parser.add_argument('--ylim', type=float, nargs=2, help='Y axis limits', default=None)
     common_parser.add_argument('--scale', type=str, choices=['linear', 'log-log', 'log-lin', 'lin-log'], default='linear', help='Scale of the axes')
@@ -161,6 +164,31 @@ def read_average_data(path):
     data.rename(columns={'avgAccuracy': 'accuracy'}, inplace=True)
     return data
 
+def set_axis_properties(ax, args):
+    """
+    Set the properties of the axis based on the arguments.
+
+    Args:
+        ax (matplotlib.axes.Axes): The axis to set the properties for
+        args (argparse.Namespace): The arguments passed to the function
+
+    Returns:
+        None
+    """
+    if type(ax) is not plt.Axes:
+        print("Error: ax argument to set_axis_properties() must be a matplotlib Axes object.")
+        exit(1)
+    
+    xscale = 'linear' if args.scale in ['linear', 'log-lin'] else 'log'
+    yscale = 'linear' if args.scale in ['linear', 'lin-log'] else 'log'
+    title = args.title if args.title is not None else f'{args.input}'
+    xlabel = args.xlabel if args.xlabel is not None else args.x
+    ylabel = args.ylabel if args.ylabel is not None else args.y
+    if type(ylabel) is list:
+        ylabel = ', '.join(ylabel)
+
+    ax.set(xlabel=xlabel, ylabel=ylabel, xscale=xscale, yscale=yscale, title=title, aspect=args.aspect, xlim=args.xlim, ylim=args.ylim)
+
 def plot_summary(args):
 
     isFile = os.path.isfile(args.input)
@@ -168,11 +196,6 @@ def plot_summary(args):
     if not isFile and not isDir:
         print(f"Error: The file or directory {args.input} does not exist.")
         exit(1)
-
-    xscale = 'linear' if args.scale in ['linear', 'log-lin'] else 'log'
-    yscale = 'linear' if args.scale in ['linear', 'lin-log'] else 'log'
-
-    title = args.title if args.title is not None else f'{args.input}'
 
     if isFile:
         data = pd.read_csv(args.input)
@@ -195,13 +218,14 @@ def plot_summary(args):
 
         fig, ax = plt.subplots(figsize=(8, 6))
 
+        huelabel = args.huelabel if args.huelabel is not None else args.hue
         if args.hue is not None and data[args.hue].dtype == 'float64':
             norm = clr.LogNorm() if args.huescale == 'log' else clr.Normalize()       
             cmap = plt.cm.plasma
             colors = cmap(norm(data[args.hue].values))
 
             cbar = plt.colorbar(cm.ScalarMappable(cmap=cmap, norm=norm), ax=ax)
-            cbar.set_label(args.hue)
+            cbar.set_label(huelabel)
 
             if xerr is None:
                 xerr = np.zeros(len(data[args.x]))
@@ -218,9 +242,10 @@ def plot_summary(args):
             for unique_type, color in zip(unique_types, colors):
                 type_data = data[data[args.hue] == unique_type] if args.hue is not None else data
                 ax.errorbar(type_data[args.x], type_data[args.y], xerr=xerr, yerr=yerr, fmt='o', capsize=2, color=color, ecolor=color, label=unique_type)
-            ax.legend(title=args.hue)
+            ax.legend(title=huelabel)
 
-        ax.set(xlabel=args.x, ylabel=args.y, xscale=xscale, yscale=yscale, title=title, aspect=args.aspect, xlim=args.xlim, ylim=args.ylim)
+        set_axis_properties(ax, args)
+
         if args.savefig is not None:
             plt.tight_layout()
             plt.savefig(args.savefig, facecolor=fig.get_facecolor())
@@ -229,7 +254,7 @@ def plot_summary(args):
     if args.all:
         cols = ['stepSize','pulseWidth','onOffRatio','accuracy', 'A_LTP', 'A_LTD']
         g = sns.pairplot(data, hue=args.hue, vars=cols)
-        g.figure.suptitle(title)
+        g.figure.suptitle(args.title if args.title is not None else f'{args.input}')
         if args.savefig is not None:
             plt.tight_layout()
             plt.savefig(args.savefig)
@@ -247,11 +272,6 @@ def plot_epochs(args):
     else:
         print(f"Error: The file or directory {args.input} does not exist.")
         exit(1)
-
-    xscale = 'linear' if args.scale in ['linear', 'log-lin'] else 'log'
-    yscale = 'linear' if args.scale in ['linear', 'lin-log'] else 'log'
-    
-    title = args.title if args.title is not None else f'{args.input}'
 
     data = dict()
     epoch_data = {"epochs": [],
@@ -313,6 +333,7 @@ def plot_epochs(args):
 
     fig, ax = plt.subplots(figsize=(8, 6))
 
+    huelabel = args.huelabel if args.huelabel is not None else args.hue
     if args.hue is not None and data[args.hue].dtype == 'float64' and mode == 'dir':
         cmap = colormaps.get_cmap('plasma')
         if args.huescale == 'log':
@@ -324,7 +345,7 @@ def plot_epochs(args):
             ax.plot(epochs[i], yvals[i], color=color)
         sm = cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
-        fig.colorbar(sm, label=args.hue, ax=ax)
+        fig.colorbar(sm, label=huelabel, ax=ax)
 
     elif mode == 'dir':
         unique_types = data[args.hue].unique() if args.hue is not None else ['data']
@@ -337,16 +358,16 @@ def plot_epochs(args):
         # make sure repeated labels are only shown once
         handles, labels = ax.get_legend_handles_labels()
         by_label = dict(zip(labels, handles))
-        ax.legend(by_label.values(), by_label.keys(), title=args.hue)
+        ax.legend(by_label.values(), by_label.keys(), title=huelabel)
 
     else:
         labels = args.y
         for i in range(len(yvals)):
             ax.plot(epochs, yvals[i], label=labels[i])
-        ax.legend()
+        ax.legend(title=huelabel)
         
-
-    ax.set(xlabel='Epoch', ylabel=args.y, xscale=xscale, yscale=yscale, title=title, aspect=args.aspect, xlim=args.xlim, ylim=args.ylim)
+    args.xlabel = 'Epochs'
+    set_axis_properties(ax, args)
 
     if args.savefig is not None:
         plt.tight_layout()

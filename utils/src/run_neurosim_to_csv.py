@@ -49,6 +49,7 @@ import os
 import csv
 import argparse
 import numpy as np
+import re
 
 def get_data_from_file(file, d_only=False):
     with open(file, 'r') as f:
@@ -75,6 +76,15 @@ def get_data_from_file(file, d_only=False):
                 d[key.strip()] = val.strip()
         except:
             print(f"Header missing in file {file}. Output will be incomplete.")
+            d['device_name'] = None
+            d['device_id'] = None
+            d['test_date'] = None
+            d['test_time'] = None
+            # find all numeric values in the filename and put them in the dictionary as val1, val2, ...
+            filename = os.path.basename(file)
+            numeric_values = re.findall(r'\d+\.\d+|\d+', filename)
+            for i,val in enumerate(numeric_values):
+                d[f'val{i+1}'] = float(val)
 
         epoch_num = []
         accuracy = []
