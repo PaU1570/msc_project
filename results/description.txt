@@ -1,0 +1,13 @@
+test1:
+test2:
+test3:
+test4:
+test5:
+test6:
+test7: Adam optimizer, alpha=0.01, beta1=0.8, beta2=0.999. Number of levels = number of points. Data badly truncated.
+test8: ID301XR1000Oct 10 runs. Same optimizer params as test7.
+test9: Accuracy vs nonlinearity parameter, 0 to 1 with 0.1 steps and 1 to 9 with unit steps. 3 runs.
+test10: Accuravy vs number of LTP and LTD levels.
+test11: Adam optimizer, same parameters as test7, 30 LTP and LTD levels for all devices. Data properly truncated.
+test12: Accuracy vs number of levels (numLTP=numLTD, 5 to 20 with steps of 5) and SGD learning rate (0.25 to 1 with 0.25 step).
+test13: Accuracy vs min/max conductance. ID294YR 2024.09.19 11:21:56 as reference. Adam optimizer with previous parameters.
