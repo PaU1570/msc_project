@@ -1,0 +1,10 @@
+device_name,device_id,test_date,test_time,minConductance,maxConductance,epochs,accuracy,filename
+,,,,1e-11,1e-10,125,80.9,min1max10_output.dat
+,,,,1e-11,2e-11,125,78.27,min1max2_output.dat
+,,,,1e-11,3e-11,125,79.96,min1max3_output.dat
+,,,,1e-11,4e-11,125,81.89,min1max4_output.dat
+,,,,1e-11,5e-11,125,81.58,min1max5_output.dat
+,,,,1e-11,6e-11,125,82.21,min1max6_output.dat
+,,,,1e-11,7e-11,125,80.2,min1max7_output.dat
+,,,,1e-11,8e-11,125,81.91,min1max8_output.dat
+,,,,1e-11,9e-11,125,82.53,min1max9_output.dat
