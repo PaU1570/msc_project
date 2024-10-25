@@ -11,6 +11,15 @@ def get_pas_csv_files(folder_path):
 
     return csv_files
 
+def get_metrics_csv_files(folder_path):
+    csv_files = []
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            if file.endswith('.csv') and 'metrics' in file:
+                csv_files.append(os.path.join(root, file))
+
+    return csv_files
+
 def get_summary_files(folder_path):
     summary_files = []
     for root, dirs, files in os.walk(folder_path):
@@ -127,3 +136,42 @@ def read_summary_file(filename):
 
     exp_data = pd.read_csv(filename, skiprows=6)
     return d, exp_data
+
+def read_rpu_txt(filename):
+    d = {
+        'dw_min_dtod': 0.3,
+        'dw_min_std': 0.3,
+        'w_min_dtod': 0.3,
+        'w_max_dtod': 0.3,
+        'up_down_dtod': 0.1,
+        'reference_std': 0.05,
+        'write_noise_std': 0.0
+    }
+
+    if not os.path.exists(filename):
+        print(f"File {filename} does not exist.")
+        return None
+
+    with open(filename, 'r') as f:
+        data = f.readlines()
+
+        def get_float(line):
+            return float(line.split('=')[1].strip().strip(','))
+        
+        for line in data:
+            if "dw_min_std=" in line:
+                d['dw_min_std'] = get_float(line)
+            if "dw_min_dtod=" in line:
+                d['dw_min_dtod'] = get_float(line)
+            if "w_min_dtod=" in line:
+                d['w_min_dtod'] = get_float(line)
+            if "w_max_dtod=" in line:
+                d['w_max_dtod'] = get_float(line)
+            if "up_down_dtod=" in line:
+                d['up_down_dtod'] = get_float(line)
+            if "reference_std=" in line:
+                d['reference_std'] = get_float(line)
+            if "write_noise_std=" in line:
+                d['write_noise_std'] = get_float(line)
+    
+    return d

@@ -9,6 +9,7 @@ from matplotlib import colormaps
 import seaborn as sns
 
 from run_neurosim_to_csv import get_data_from_file
+import data_utils as du
 
 def create_parser():
     """
@@ -63,6 +64,24 @@ def create_parser():
     parser_epochs.add_argument('--norm', action='store_true', help='Normalize the y-axis values')
     parser_epochs.set_defaults(func=plot_epochs)
 
+    parser_pytorch = subparsers.add_parser('pytorch', help='Plot training evolution from a pytorch log file', parents=[common_parser])
+    parser_pytorch.add_argument('-x', type=str, help='X axis value', choices=['epoch',
+                                                                              'step',
+                                                                              'test_acc',
+                                                                              'test_loss',
+                                                                              'train_loss',
+                                                                              'val_acc',
+                                                                              'val_loss'], default='step')
+    parser_pytorch.add_argument('-y', type=str, help='Y axis value', choices=['epoch',
+                                                                              'step',
+                                                                              'test_acc',
+                                                                              'test_loss',
+                                                                              'train_loss',
+                                                                              'val_acc',
+                                                                              'val_loss'], default='train_loss', nargs='*')
+    parser_pytorch.add_argument('--smooth', type=int, help='Number of points to use for smoothing')
+    parser_pytorch.set_defaults(func=plot_pytorch)
+
     args = parser.parse_args()
 
     # check summary args
@@ -73,7 +92,7 @@ def create_parser():
             parser.error("Must specify both -x and -y")
         if not (args.x or args.y) and not args.all:
             parser.error("Must specify either -x and -y or --all")
-    elif args.subcommand == 'epochs':
+    elif args.subcommand == 'epochs' or args.subcommand == 'pytorch':
         pass # no checks yet
     else:
         parser.error("Please specify a subcommand")
@@ -373,6 +392,82 @@ def plot_epochs(args):
         plt.tight_layout()
         plt.savefig(args.savefig)
     plt.show()
+
+def plot_pytorch(args):
+    mode = 'dir'
+    if os.path.isdir(args.input):
+        files = du.get_metrics_csv_files(args.input)
+        print(files)
+    elif os.path.isfile(args.input):
+        files = [args.input]
+        mode = 'file'
+    else:
+        print(f"Error: The file or directory {args.input} does not exist.")
+        exit(1)
+
+    if type(args.y) is not list:
+        args.y = [args.y]
+    if mode == 'dir' and len(args.y) > 1:
+        print("Error: Only one y-axis value can be selected when using a directory as input.")
+        exit(1)
+
+    metrics = [pd.read_csv(f) for f in files]
+    metrics = [m[m[args.x].notna()] for m in metrics]
+
+    # get corresponding RPU_Config.txt files by going up three levels
+    rpu_config_files = [os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(f))), 'RPU_Config.txt') for f in files]
+    rpu_configs = [du.read_rpu_txt(rpu) for rpu in rpu_config_files]
+    rpu_configs = {key: np.array([d[key] for d in rpu_configs]) for key in rpu_configs[0]}
+    if args.hue is not None and args.hue not in rpu_configs.keys():
+        print(f"Error: {args.hue} is not a valid hue. Options are {list(rpu_configs.keys())}")
+        exit(1)
+    
+    fig, ax = plt.subplots(figsize=(8, 6))
+
+    huelabel = args.huelabel if args.huelabel is not None else args.hue
+    if mode == 'file':
+        colors = plt.cm.rainbow(np.linspace(0, 1, len(args.y)))
+        for metric in metrics:
+            for i,y in enumerate(args.y):
+                m = metric[(metric[y].notna()) & (metric[args.x].notna())]
+                m = m.groupby(args.x).mean().reset_index()
+                ax.plot(m[args.x], m[y], color=colors[i], alpha=0.5 if args.smooth else 1, label=y)
+                if args.smooth is not None:
+                    smoothed_metrics = m.rolling(window=args.smooth).mean()
+                    ax.plot(smoothed_metrics[args.x], smoothed_metrics[y], color=colors[i])
+        ax.legend()
+    else:
+        if args.hue is not None:
+            cmap = colormaps.get_cmap('plasma')
+            if args.huescale == 'log':
+                norm = clr.LogNorm(rpu_configs[args.hue].min(), rpu_configs[args.hue].max())
+            else:
+                norm = clr.Normalize(rpu_configs[args.hue].min(), rpu_configs[args.hue].max())
+        else:
+            colors = plt.cm.rainbow(np.linspace(0, 1, len(metrics)))
+        for i,metric in enumerate(metrics):
+            m = metric[(metric[args.y[0]].notna()) & (metric[args.x].notna())]
+            m = m.groupby(args.x).mean().reset_index()
+            if args.hue is not None:
+                color = cmap(norm(rpu_configs[args.hue][i]))
+            else:
+                color = colors[i]
+            ax.plot(m[args.x], m[args.y[0]], color=color, alpha=0.5 if args.smooth else 1)
+            if args.smooth is not None:
+                smoothed_metrics = m.rolling(window=args.smooth).mean()
+                ax.plot(smoothed_metrics[args.x], smoothed_metrics[args.y[0]], color=color)
+        if args.hue is not None:
+            sm = cm.ScalarMappable(cmap=cmap, norm=norm)
+            sm.set_array([])
+            fig.colorbar(sm, label=huelabel, ax=ax)
+
+    set_axis_properties(ax, args)
+
+    if args.savefig is not None:
+        plt.tight_layout()
+        plt.savefig(args.savefig)
+    plt.show()
+    
 
 if __name__ == '__main__':
     plt.style.use('ggplot')
