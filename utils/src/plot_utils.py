@@ -397,7 +397,6 @@ def plot_pytorch(args):
     mode = 'dir'
     if os.path.isdir(args.input):
         files = du.get_metrics_csv_files(args.input)
-        print(files)
     elif os.path.isfile(args.input):
         files = [args.input]
         mode = 'file'
@@ -418,8 +417,21 @@ def plot_pytorch(args):
     rpu_config_files = [os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(f))), 'RPU_Config.txt') for f in files]
     rpu_configs = [du.read_rpu_txt(rpu) for rpu in rpu_config_files]
     rpu_configs = {key: np.array([d[key] for d in rpu_configs]) for key in rpu_configs[0]}
-    if args.hue is not None and args.hue not in rpu_configs.keys():
-        print(f"Error: {args.hue} is not a valid hue. Options are {list(rpu_configs.keys())}")
+
+    # get metadata from Summary.dat files
+    summary_files = [os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(f))), 'Summary.dat') for f in files]
+    summaries = [du.read_summary_file(s)[0] for s in summary_files]
+    keys = ['device_name', 'device_id', 'test_date', 'test_time', 'stepSize', 'pulseWidth', 'onOffRatio']
+    summaries = {key: [d[key] for d in summaries] for key in keys}
+
+    metadata = {**summaries, **rpu_configs}
+    metadata = pd.DataFrame(metadata)
+    metadata = metadata.apply(pd.to_numeric, errors='ignore')
+    metadata = filter_data(metadata, args.filter, args.exclude, reset_index=False)
+    metadata = metadata.sort_values(by=['device_id', 'test_time'])
+
+    if args.hue is not None and args.hue not in metadata.keys():
+        print(f"Error: {args.hue} is not a valid hue. Options are {list(metadata.keys())}")
         exit(1)
     
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -437,29 +449,48 @@ def plot_pytorch(args):
                     ax.plot(smoothed_metrics[args.x], smoothed_metrics[y], color=colors[i])
         ax.legend()
     else:
-        if args.hue is not None:
+        hue_type = 'none' if args.hue is None else 'numeric' if metadata[args.hue].dtype == 'float64' else 'categorical'
+        if hue_type == 'none':
+            colors = plt.cm.rainbow(np.linspace(0, 1, len(metrics)))
+        elif hue_type == 'numeric':
             cmap = colormaps.get_cmap('plasma')
             if args.huescale == 'log':
-                norm = clr.LogNorm(rpu_configs[args.hue].min(), rpu_configs[args.hue].max())
+                norm = clr.LogNorm(metadata[args.hue].min(), metadata[args.hue].max())
             else:
-                norm = clr.Normalize(rpu_configs[args.hue].min(), rpu_configs[args.hue].max())
+                norm = clr.Normalize(metadata[args.hue].min(), metadata[args.hue].max())
         else:
-            colors = plt.cm.rainbow(np.linspace(0, 1, len(metrics)))
-        for i,metric in enumerate(metrics):
+            unique_types = metadata[args.hue].unique()
+            colors = plt.cm.rainbow(np.linspace(0, 1, len(unique_types)))
+            color_dict = {unique_type: color for unique_type, color in zip(unique_types, colors)}
+
+        for i in metadata.index:
+            metric = metrics[i]
             m = metric[(metric[args.y[0]].notna()) & (metric[args.x].notna())]
             m = m.groupby(args.x).mean().reset_index()
-            if args.hue is not None:
-                color = cmap(norm(rpu_configs[args.hue][i]))
-            else:
+
+            if hue_type == 'none':
                 color = colors[i]
-            ax.plot(m[args.x], m[args.y[0]], color=color, alpha=0.5 if args.smooth else 1)
+            elif hue_type == 'numeric':
+                color = cmap(norm(metadata[args.hue][i]))
+            else:
+                color = color_dict[metadata[args.hue][i]]
+
+            alpha = 0.5 if args.smooth else 1
+            label = metadata[args.hue][i] if hue_type == 'categorical' else None
+            ax.plot(m[args.x], m[args.y[0]], color=color, alpha=alpha, label=label)
             if args.smooth is not None:
                 smoothed_metrics = m.rolling(window=args.smooth).mean()
                 ax.plot(smoothed_metrics[args.x], smoothed_metrics[args.y[0]], color=color)
-        if args.hue is not None:
+
+        if hue_type == 'numeric':
             sm = cm.ScalarMappable(cmap=cmap, norm=norm)
             sm.set_array([])
             fig.colorbar(sm, label=huelabel, ax=ax)
+        elif hue_type == 'categorical':
+            # make sure repeated labels are only shown once
+            handles, labels = ax.get_legend_handles_labels()
+            by_label = dict(zip(labels, handles))
+            ax.legend(by_label.values(), by_label.keys(), title=huelabel)
 
     set_axis_properties(ax, args)
 
