@@ -13,8 +13,6 @@ config_directory="$1"
 output_directory="$2"
 num_runs="$3"
 
-# Create the output directory if it doesn't exist
-
 for ((i=1; i<=$num_runs; i++)); do
     run_directory="$output_directory/run_$i"
     if [ ! -d "$run_directory" ]; then

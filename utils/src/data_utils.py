@@ -138,12 +138,12 @@ def read_summary_file(filename):
     return d, exp_data
 
 def read_rpu_txt(filename):
-    d = {
+    d = { # default values from aihwkit
         'dw_min_dtod': 0.3,
         'dw_min_std': 0.3,
         'w_min_dtod': 0.3,
         'w_max_dtod': 0.3,
-        'up_down_dtod': 0.1,
+        'up_down_dtod': 0.01,
         'reference_std': 0.05,
         'write_noise_std': 0.0
     }

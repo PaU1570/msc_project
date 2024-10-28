@@ -13,3 +13,4 @@ test12: Accuracy vs number of levels (numLTP=numLTD, 5 to 20 with steps of 5) an
 test13: Accuracy vs min/max conductance. ID294YR 2024.09.19 11:21:56 as reference. Adam optimizer with previous parameters.
 test14: Same as test13, max conductance range from 1e-11 to 1e-10 with 1e-11 steps.
 test15: aihwkit noise test. Tests done on ID301XR1000Oct 2024.09.19 14:41:43.
+test16: aihwkit on all analyzed data. Noise values: default
