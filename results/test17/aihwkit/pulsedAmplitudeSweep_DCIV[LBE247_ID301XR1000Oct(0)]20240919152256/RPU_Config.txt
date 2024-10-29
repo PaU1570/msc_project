@@ -1,0 +1,19 @@
+SingleRPUConfig(
+    runtime=RuntimeParameter(),
+    pre_post=PrePostProcessingParameter(input_range=InputRangeParameter(enable=False)),
+    mapping=MappingParameter(),
+    forward=IOParameters(),
+    backward=IOParameters(),
+    update=UpdateParameters(),
+    device=SoftBoundsReferenceDevice(
+        construction_seed=2024,
+        dw_min=0.10805336270301706,
+        reset_std=0.0,
+        up_down=0.2509297965507935,
+        w_max=1.7933424335335837,
+        w_min=-1.999999966844622,
+        write_noise_std=4.6819063794414095,
+        reference_std=0.05,
+        subtract_symmetry_point=True
+    )
+)

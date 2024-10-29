@@ -21,11 +21,11 @@ files=$(find ${data_directory} -type f -name "*_Summary.dat")
 for file in $files; do
     echo -e "\e[33m$file\e[0m"
 
-    #if ! python ${ANALYSIS_SCRIPT_SOURCE} $file --output_dir ${output_directory} --epochs 25 --early_stopping ; then
-    #    echo -e "\e[31mError\e[0m analyzing file"
-    #else
-    #    echo -e "\e[32mDone\e[0m"
-    #fi
+    if ! python ${ANALYSIS_SCRIPT_SOURCE} $file --output_dir ${output_directory} --epochs 25 --early_stopping --algorithm sgd ; then
+        echo -e "\e[31mError\e[0m analyzing file"
+    else
+        echo -e "\e[32mDone\e[0m"
+    fi
 done
 
 echo "All done!"
