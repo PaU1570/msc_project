@@ -2,32 +2,40 @@ import numpy as np
 import pandas as pd
 import os
 
-def get_pas_csv_files(folder_path):
-    csv_files = []
-    for root, dirs, files in os.walk(folder_path):
-        for file in files:
-            if file.endswith('.csv') and 'pulsedAmplitudeSweep' in file and '(ALL)' not in file:
-                csv_files.append(os.path.join(root, file))
+def get_files(folder_path, extension, contains=None, exclude=None):
+    """
+    Get a list of all the files in a directory and subdirectories with a specific extension. Order is guaranteed.
 
-    return csv_files
+    Args:
+        folder_path (str): Path to the directory.
+        extension (str): File extension to search for.
+        contains (str): String that the file name must contain (optional).
+        exclude (str): String that the file name must not contain (optional).
+
+    Returns:
+        res (list): List of file paths
+    """
+    res = []
+    for root, dirs, files in os.walk(folder_path):
+        dirs.sort()
+        files.sort()
+        for file in files:
+            if file.endswith(extension) and (contains is None or contains in file) and (exclude is None or exclude not in file):
+                res.append(os.path.join(root, file))
+
+    return res
+
+def get_pas_csv_files(folder_path):
+    return get_files(folder_path, '.csv', contains='pulsedAmplitudeSweep', exclude='(ALL)')
 
 def get_metrics_csv_files(folder_path):
-    csv_files = []
-    for root, dirs, files in os.walk(folder_path):
-        for file in files:
-            if file.endswith('.csv') and 'metrics' in file:
-                csv_files.append(os.path.join(root, file))
-
-    return csv_files
+    return get_files(folder_path, '.csv', contains='metrics')
 
 def get_summary_files(folder_path):
-    summary_files = []
-    for root, dirs, files in os.walk(folder_path):
-        for file in files:
-            if file.endswith('_Summary.dat'):
-                summary_files.append(os.path.join(root, file))
+    return get_files(folder_path, 'Summary.dat')
 
-    return summary_files
+def get_rpu_txt_files(folder_path):
+    return get_files(folder_path, 'RPU_Config.txt')
 
 def read_file(filename):
 # read metadata and parameters from file
@@ -175,3 +183,62 @@ def read_rpu_txt(filename):
                 d['write_noise_std'] = get_float(line)
     
     return d
+
+def _get_shared_keys(dict_list):
+    """
+    Get the keys that are shared by all dictionaries in a list.
+
+    Args:
+        dict_list (list): List of dictionaries.
+    Returns:
+        shared_keys (set): Set of keys shared by all dictionaries.
+    """
+    # use dict instead of set to preserve order (python 3.7+)
+    shared_keys = dict.fromkeys(dict_list[0].keys())
+    for d in dict_list[1:]:
+        shared_keys = dict((k, None) for k in shared_keys if k in d)
+
+    return shared_keys
+
+def _get_final_metrics(metrics_files):
+    """
+    Get the final metrics from the metrics files.
+
+    Args:
+        metrics_files (list): List of metrics files.
+    Returns:
+        final_metrics (dict): Dictionary containing the final metrics (epochs, steps, test_acc, test_loss) in the same order as the files.
+    """
+    read_keys = ["epoch", "step", "test_acc", "test_loss", "val_acc", "val_loss", "train_loss"]
+    write_keys = ["epochs", "steps", "test_acc", "test_loss", "val_acc", "val_loss", "train_loss"]
+    final_metrics = dict.fromkeys(write_keys, None)
+    for file in metrics_files:
+        metrics = pd.read_csv(file)
+        for rk, wk in zip(read_keys, write_keys):
+            value = metrics[rk].dropna().iloc[-1] if not metrics[rk].dropna().empty else None
+            if final_metrics[wk] is None:
+                final_metrics[wk] = [value]
+            else:
+                final_metrics[wk].append(value)
+
+    return final_metrics
+
+def get_pytorch_df(directory):
+    metrics_files = get_metrics_csv_files(directory)
+    summary_files = get_summary_files(directory)
+    rpu_config_files = get_rpu_txt_files(directory)
+
+    final_metrics = _get_final_metrics(metrics_files)
+
+    summaries = [read_summary_file(s)[0] for s in summary_files]
+    summaries = {key: np.array([d[key] for d in summaries]) for key in _get_shared_keys(summaries)}
+
+    rpu_configs = [read_rpu_txt(rpu) for rpu in rpu_config_files]
+    rpu_configs = {key: np.array([d[key] for d in rpu_configs]) for key in _get_shared_keys(rpu_configs)}
+
+    data = {**summaries, **rpu_configs, **final_metrics}
+
+    df = pd.DataFrame(data)
+    df = df.apply(pd.to_numeric, errors='ignore')
+
+    return df

@@ -413,16 +413,22 @@ def plot_pytorch(args):
     metrics = [pd.read_csv(f) for f in files]
     metrics = [m[m[args.x].notna()] for m in metrics]
 
-    # get corresponding RPU_Config.txt files by going up three levels
-    rpu_config_files = [os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(f))), 'RPU_Config.txt') for f in files]
+    # get metadata from RPU_Config.txt files
+    rpu_config_files = du.get_rpu_txt_files(args.input)
     rpu_configs = [du.read_rpu_txt(rpu) for rpu in rpu_config_files]
     rpu_configs = {key: np.array([d[key] for d in rpu_configs]) for key in rpu_configs[0]}
 
     # get metadata from Summary.dat files
-    summary_files = [os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(f))), 'Summary.dat') for f in files]
+    summary_files = du.get_summary_files(args.input)
     summaries = [du.read_summary_file(s)[0] for s in summary_files]
-    keys = ['device_name', 'device_id', 'test_date', 'test_time', 'stepSize', 'pulseWidth', 'onOffRatio']
-    summaries = {key: [d[key] for d in summaries] for key in keys}
+
+    try:
+        summaries = {key: [d[key] for d in summaries] for key in summaries[0].keys()}
+    except KeyError: # due to a mistake some files in test16 are older than others and have different keys, so use only a few keys that all files have
+        keys = ['device_name', 'device_id', 'test_date', 'test_time', 'stepSize', 'pulseWidth', 'onOffRatio']
+        print("Using only the following keys from the Summary.dat files:", keys)
+        summaries = {key: [d[key] for d in summaries] for key in keys}
+        
 
     metadata = {**summaries, **rpu_configs}
     metadata = pd.DataFrame(metadata)

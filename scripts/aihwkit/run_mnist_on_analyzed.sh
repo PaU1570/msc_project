@@ -37,4 +37,7 @@ for file in $files; do
     fi
 done
 
+# run python script to create csv file
+python ${PARENT_DIR}/utils/src/run_aihwkit_to_csv.py "${output_directory}" "${output_directory}"/$(basename $output_directory).csv
+
 echo "All done!"
