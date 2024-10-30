@@ -42,22 +42,26 @@ def read_file(filename):
     with open(filename, 'r') as file:
         lines = file.readlines()
         # Extract metadata
-        test_date = lines[1].split('\t')[1].strip()
-        test_time = lines[2].split('\t')[1].strip()
-        device = lines[3].split('\t')[1].strip()
-        device_name, device_id = device.split('_')
-        metadata = {'test_date': test_date, 'test_time': test_time, 'device_name': device_name, 'device_id': device_id}
+        try:
+            test_date = lines[1].split('\t')[1].strip()
+            test_time = lines[2].split('\t')[1].strip()
+            device = lines[3].split('\t')[1].strip()
+            device_name, device_id = device.split('_')
+            metadata = {'test_date': test_date, 'test_time': test_time, 'device_name': device_name, 'device_id': device_id}
 
-        # Extract measurement parameters
-        param_line = lines[8].strip().split(',')
-        value_line = lines[9].strip().split(',')
-        meas_params = dict()
-        for param, value in zip(param_line, value_line):
-            if len(param) > 0:
-                try:
-                    meas_params[param] = float(value)
-                except ValueError:
-                    meas_params[param] = value
+            # Extract measurement parameters
+            param_line = lines[8].strip().split(',')
+            value_line = lines[9].strip().split(',')
+            meas_params = dict()
+            for param, value in zip(param_line, value_line):
+                if len(param) > 0:
+                    try:
+                        meas_params[param] = float(value)
+                    except ValueError:
+                        meas_params[param] = value
+
+        except:
+            return None, None, None
 
     # read measurement data
     meas_data = np.loadtxt(filename, delimiter=',', skiprows=12)

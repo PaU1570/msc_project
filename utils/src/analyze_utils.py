@@ -34,6 +34,9 @@ def analyze_pulseAmplitudeSweep(args):
     for file in csv_files:
         # read file
         metadata, meas_params, meas_data = du.read_file(file)
+        if metadata is None or meas_params is None:
+            print(f"Error reading file {file}. Skipping...")
+            continue
 
         if cutoffs is None:
             VStartPos = meas_params['startVolage1'] # (sic)
