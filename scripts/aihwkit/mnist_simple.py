@@ -179,7 +179,7 @@ class LitAnalogModel(pl.LightningModule):
         optimizer = AnalogSGD(self.analog_model.parameters(), lr=self.lr)
         return optimizer
     
-def get_dataset(batch_size=5, num_workers=23, split=[0.8, 0.2]):
+def get_dataset(batch_size=64, num_workers=23, split=[0.8, 0.2]):
     trainval_set = MNIST(PATH_DATASET, train=True, download=True, transform=ToTensor())
     test_set = MNIST(PATH_DATASET, train=False, download=True, transform=ToTensor())
     
@@ -278,7 +278,7 @@ if __name__ == "__main__":
     # Save the device configuration
     if output_dir is not None:
         with open(os.path.join(output_dir, 'RPU_Config.txt'), 'w') as f:
-            f.write(str(rpu_config))
+            f.write(repr(rpu_config))
 
 
     # Create lightning model    
