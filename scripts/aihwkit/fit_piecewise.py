@@ -88,7 +88,8 @@ def fit_piecewise_device(conductance, pulses, degree=DEFAULT_FIT_DEGREE):
     fit_grad_ltd, fit_grad_ltp = fit_conductance_change(conductance, pulses, degree)
 
     # extract piecewise update vectors
-    cond_steps = np.linspace(np.min(conductance), np.max(conductance), N_ELEMENTS)
+    #cond_steps = np.linspace(np.min(conductance), np.max(conductance), N_ELEMENTS)
+    cond_steps = np.linspace(-1, 1, N_ELEMENTS)
     piecewise_up = list(np.abs(fit_grad_ltp(cond_steps)))
     piecewise_down = list(np.abs(fit_grad_ltd(cond_steps)))
 

@@ -71,14 +71,14 @@ def create_parser():
                                                                               'test_loss',
                                                                               'train_loss',
                                                                               'val_acc',
-                                                                              'val_loss'], default='step')
+                                                                              'val_loss'], default='epoch')
     parser_pytorch.add_argument('-y', type=str, help='Y axis value', choices=['epoch',
                                                                               'step',
                                                                               'test_acc',
                                                                               'test_loss',
                                                                               'train_loss',
                                                                               'val_acc',
-                                                                              'val_loss'], default='train_loss', nargs='*')
+                                                                              'val_loss'], default='val_acc', nargs='*')
     parser_pytorch.add_argument('--smooth', type=int, help='Number of points to use for smoothing')
     parser_pytorch.set_defaults(func=plot_pytorch)
 
@@ -470,23 +470,27 @@ def plot_pytorch(args):
             color_dict = {unique_type: color for unique_type, color in zip(unique_types, colors)}
 
         for i in metadata.index:
-            metric = metrics[i]
-            m = metric[(metric[args.y[0]].notna()) & (metric[args.x].notna())]
-            m = m.groupby(args.x).mean().reset_index()
+            try:
+                metric = metrics[i]
+                m = metric[(metric[args.y[0]].notna()) & (metric[args.x].notna())]
+                m = m.groupby(args.x).mean().reset_index()
 
-            if hue_type == 'none':
-                color = colors[i]
-            elif hue_type == 'numeric':
-                color = cmap(norm(metadata[args.hue][i]))
-            else:
-                color = color_dict[metadata[args.hue][i]]
+                if hue_type == 'none':
+                    color = colors[i]
+                elif hue_type == 'numeric':
+                    color = cmap(norm(metadata[args.hue][i]))
+                else:
+                    color = color_dict[metadata[args.hue][i]]
 
-            alpha = 0.5 if args.smooth else 1
-            label = metadata[args.hue][i] if hue_type == 'categorical' else None
-            ax.plot(m[args.x], m[args.y[0]], color=color, alpha=alpha, label=label)
-            if args.smooth is not None:
-                smoothed_metrics = m.rolling(window=args.smooth).mean()
-                ax.plot(smoothed_metrics[args.x], smoothed_metrics[args.y[0]], color=color)
+                alpha = 0.5 if args.smooth else 1
+                label = metadata[args.hue][i] if hue_type == 'categorical' else None
+                ax.plot(m[args.x], m[args.y[0]], color=color, alpha=alpha, label=label)
+                if args.smooth is not None:
+                    smoothed_metrics = m.rolling(window=args.smooth).mean()
+                    ax.plot(smoothed_metrics[args.x], smoothed_metrics[args.y[0]], color=color)
+            except IndexError:
+                print(f"Error: No data found for index {i}")
+                pass
 
         if hue_type == 'numeric':
             sm = cm.ScalarMappable(cmap=cmap, norm=norm)
