@@ -16,3 +16,4 @@ test15: aihwkit noise test. Tests done on ID301XR1000Oct 2024.09.19 14:41:43.
 test16: aihwkit on all analyzed data. Noise values: default
 test17: same as test16, but with SGD instead of ttv2
 test18: like test16 but with more noise: { dw_min_dtod = 0.5, dw_min_std = 1.0, }
+test19: aihwkit ttv2 with varying noises: { 0.3, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1 } for dw_min_dtod or dw_min_std while keeping the other at 0.3

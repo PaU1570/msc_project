@@ -1,0 +1,42 @@
+UnitCellRPUConfig(
+    runtime=RuntimeParameter(),
+    pre_post=PrePostProcessingParameter(input_range=InputRangeParameter(enable=False)),
+    mapping=MappingParameter(weight_scaling_omega=0.6, weight_scaling_columnwise=True, learn_out_scaling=True),
+    forward=IOParameters(),
+    backward=IOParameters(),
+    update=UpdateParameters(desired_bl=5),
+    device=ChoppedTransferCompound(
+        unit_cell_devices=[
+            SoftBoundsReferenceDevice(
+                construction_seed=2024,
+                dw_min=0.13718250397816395,
+                dw_min_std=0.5,
+                reset_std=0.0,
+                up_down=0.1674426933071862,
+                w_max=1.2250248754883963,
+                w_min=-1.5900590423300296,
+                write_noise_std=3.8584955738334603,
+                reference_std=0.05,
+                subtract_symmetry_point=True
+            ),
+            SoftBoundsReferenceDevice(
+                construction_seed=2024,
+                dw_min=0.13718250397816395,
+                dw_min_std=0.5,
+                reset_std=0.0,
+                up_down=0.1674426933071862,
+                w_max=1.2250248754883963,
+                w_min=-1.5900590423300296,
+                write_noise_std=3.8584955738334603,
+                reference_std=0.05,
+                subtract_symmetry_point=True
+            )
+        ],
+        construction_seed=2024,
+        fast_lr=0.01,
+        transfer_forward=IOParameters(bound_management=BoundManagementType.NONE, noise_management=NoiseManagementType.NONE),
+        transfer_update=UpdateParameters(desired_bl=1, update_bl_management=False, update_management=False),
+        in_chop_prob=0.0,
+        auto_granularity=15000
+    )
+)
