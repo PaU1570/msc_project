@@ -151,10 +151,14 @@ def read_summary_file(filename):
 
 def read_rpu_txt(filename):
     d = { # default values from aihwkit
+        'dw_min': 0.001,
         'dw_min_dtod': 0.3,
         'dw_min_std': 0.3,
+        'w_min': -0.6,
         'w_min_dtod': 0.3,
+        'w_max': 0.6,
         'w_max_dtod': 0.3,
+        'up_down': 0.0,
         'up_down_dtod': 0.01,
         'reference_std': 0.05,
         'write_noise_std': 0.0
@@ -171,14 +175,22 @@ def read_rpu_txt(filename):
             return float(line.split('=')[1].strip().strip(','))
         
         for line in data:
+            if "dw_min=" in line:
+                d['dw_min'] = get_float(line)
             if "dw_min_std=" in line:
                 d['dw_min_std'] = get_float(line)
             if "dw_min_dtod=" in line:
                 d['dw_min_dtod'] = get_float(line)
+            if "w_min=" in line:
+                d['w_min'] = get_float(line)
             if "w_min_dtod=" in line:
                 d['w_min_dtod'] = get_float(line)
+            if "w_max=" in line:
+                d['w_max'] = get_float(line)
             if "w_max_dtod=" in line:
                 d['w_max_dtod'] = get_float(line)
+            if "up_down=" in line:
+                d['up_down'] = get_float(line)
             if "up_down_dtod=" in line:
                 d['up_down_dtod'] = get_float(line)
             if "reference_std=" in line:
@@ -215,15 +227,18 @@ def _get_final_metrics(metrics_files):
     """
     read_keys = ["epoch", "step", "test_acc", "test_loss", "val_acc", "val_loss", "train_loss"]
     write_keys = ["epochs", "steps", "test_acc", "test_loss", "val_acc", "val_loss", "train_loss"]
-    final_metrics = dict.fromkeys(write_keys, None)
+    final_metrics = dict() # dict.fromkeys(write_keys, None)
     for file in metrics_files:
         metrics = pd.read_csv(file)
         for rk, wk in zip(read_keys, write_keys):
-            value = metrics[rk].dropna().iloc[-1] if not metrics[rk].dropna().empty else None
-            if final_metrics[wk] is None:
-                final_metrics[wk] = [value]
-            else:
-                final_metrics[wk].append(value)
+            try:
+                value = metrics[rk].dropna().iloc[-1] if not metrics[rk].dropna().empty else None
+                if wk not in final_metrics.keys():
+                    final_metrics[wk] = [value]
+                else:
+                    final_metrics[wk].append(value)
+            except:
+                pass
 
     return final_metrics
 

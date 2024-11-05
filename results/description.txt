@@ -16,3 +16,4 @@ test15: aihwkit noise test. Tests done on ID301XR1000Oct 2024.09.19 14:41:43.
 test16: aihwkit on all analyzed data. Noise values: default
 test17: same as test16, but with SGD instead of ttv2
 test18: like test16 but with more noise: { dw_min_dtod = 0.5, dw_min_std = 1.0, }
+test20: mixed precision with SGD on 'pulsedAmplitudeSweep_DCIV[LBE247_ID301XR1000Oct(1)]20240919144143' with varying each noise parameter while keeping the others constant (at default)
