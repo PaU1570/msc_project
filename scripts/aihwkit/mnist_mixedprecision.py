@@ -12,10 +12,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import argparse
+import pickle
 
 # pytorch/lightning imports
-import pytorch_lightning as pl
-from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 import torch
 from torch import Generator, argmax
 from torch import nn
@@ -24,7 +23,6 @@ from torch.nn.functional import nll_loss
 from torchvision.datasets import MNIST
 from torchvision.transforms import ToTensor
 from torch.utils.data import DataLoader, random_split
-from torchmetrics.functional import accuracy
 
 # aihwkit imports
 from aihwkit.simulator.configs import build_config
@@ -39,8 +37,9 @@ from fit_piecewise import read_conductance_data, fit_piecewise_device
 # Check device
 USE_CUDA = 0
 if cuda.is_compiled():
-    USE_CUDA = 1
+   USE_CUDA = 1
 DEVICE = torch.device("cuda" if USE_CUDA else "cpu")
+# DEVICE = torch.device("cpu")
 print(f'Using device: {DEVICE}')
 
 # Define directory where dataset is stored
@@ -109,18 +108,22 @@ def get_dataset(batch_size=64, num_workers=23, split=[0.8, 0.2]):
     return train_loader, valid_loader, test_loader
 
 # train and test routines
-def train(model, train_set, valid_set, optimizer, scheduler, epochs=3):
+def train(model, train_set, valid_set, optimizer, scheduler, epochs=3, save_weights=False):
     """Train the network.
 
     Args:
         model (nn.Module): model to be trained.
         train_set (DataLoader): dataset of elements to use as input for training.
         valid_set (DataLoader): dataset of elements to use as input for validation.
+        epochs (int): number of epochs to train the model.
+        save_weights (bool): if True, save the weights at each epoch.
 
     Returns:
         metrics (np.ndarray): array with the following values in the columns: epoch, train_loss, valid_loss, valid_accuracy.
+        weights (list): list of weights at each epoch (if save_weigths=True), otherwise only the initial weights.
     """
     metrics = np.zeros((epochs, 4))
+    weights = [model.get_weights()]
 
     classifier = nn.NLLLoss()
 
@@ -147,6 +150,10 @@ def train(model, train_set, valid_set, optimizer, scheduler, epochs=3):
             total_loss += loss.item()
 
         print("\t- Training loss: {:.16f}".format(total_loss / len(train_set)))
+
+        # Save weights.
+        if save_weights:
+            weights.append(model.get_weights())
 
         # Evaluate the model.
         predicted_ok = 0
@@ -179,8 +186,7 @@ def train(model, train_set, valid_set, optimizer, scheduler, epochs=3):
         metrics[epoch_number, 2] = val_loss / len(valid_set) # valid_loss
         metrics[epoch_number, 3] = predicted_ok / total_images # valid_accuracy
 
-    return metrics
-
+    return metrics, weights
 
 def test(model, test_set):
     """Test trained network
@@ -231,6 +237,7 @@ if __name__ == "__main__":
     parser.add_argument('--up_down_dtod', type=float, default=0.01, help='Device-to-device variation of the up/down asymmetry')
     parser.add_argument('--write_noise_std_mult', type=float, default=1, help='Multiplier for the write noise standard deviation')
     parser.add_argument('--pulse_type', type=str, choices=['none', 'noneWithDevice', 'stochastic'], default='stochastic', help='Pulse type to use')
+    parser.add_argument('--save_weights', action='store_true', help='Save the weights at each epoch')
     args = parser.parse_args()
 
     filename = args.filename
@@ -305,11 +312,12 @@ if __name__ == "__main__":
 
 
     # Train the model
-    optimizer = AnalogSGD(model.parameters(), lr=0.05)
+    optimizer = AnalogSGD(model.parameters(), lr=0.5)
+    # optimizer = AnalogAdam(model.parameters(), lr=0.05, betas=(0.9, 0.999), eps=1e-8)
     optimizer.regroup_param_groups(model)
     scheduler = StepLR(optimizer, step_size=10, gamma=0.5)
 
-    metrics = train(model, train_loader, valid_loader, optimizer, scheduler, epochs=args.epochs)
+    metrics, weights = train(model, train_loader, valid_loader, optimizer, scheduler, epochs=args.epochs, save_weights=args.save_weights)
 
     # Test the model
     test(model, test_loader)
@@ -318,6 +326,11 @@ if __name__ == "__main__":
     df = pd.DataFrame(metrics, columns=['epoch', 'train_loss', 'val_loss', 'val_acc'])
     if output_dir is not None:
         df.to_csv(os.path.join(output_dir, 'metrics.csv'), index=False)
+
+    if args.save_weights:
+        with open(os.path.join(output_dir, 'weights.pkl'), 'wb') as f:
+            pickle.dump(weights, f)
+
 
     if output_dir is not None:
         print(f'Output files saved in {output_dir}')

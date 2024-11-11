@@ -27,16 +27,20 @@ if [ ! -d "$output_directory" ]; then
     mkdir -p "$output_directory"
 fi
 
+N_BATCH=4
+
 # find all Summary.dat files in the directory
 files=$(find ${data_directory} -type f -name "*_Summary.dat")
 for file in $files; do
+    ((i=i%N_BATCH)); ((i++==0)) && wait
+
     echo -e "\e[33m$file\e[0m"
 
-    if ! python ${ANALYSIS_SCRIPT_SOURCE} $file --output_dir ${output_directory} --epochs ${epochs} --dw_min_dtod ${dw_min_dtod} --dw_min_std ${dw_min_std} --write_noise_std_mult ${write_noise_std_mult} ; then
+    if ! python ${ANALYSIS_SCRIPT_SOURCE} $file --output_dir ${output_directory} --epochs ${epochs} --dw_min_dtod ${dw_min_dtod} --dw_min_std ${dw_min_std} --write_noise_std_mult ${write_noise_std_mult} --save_weights ; then
         echo -e "\e[31mError\e[0m analyzing file"
     else
         echo -e "\e[32mDone\e[0m"
-    fi
+    fi &
 done
 
 # run python script to create csv file
