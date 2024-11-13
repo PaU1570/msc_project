@@ -22,8 +22,8 @@ MYGRIDSIZE = 1E-9  # in principle, it should be set by TECH.METRICS.GRID, but it
 #----------------------------------------------------------------------------------
 
 # filename
-FILENAMEPREFIX = "Paul_FeCaps"
-Version = 4
+FILENAMEPREFIX = "Gao_FeCaps_LBSO"
+Version = 1
 FILENAME = "%s_V%0.f.gds" % (FILENAMEPREFIX, Version)  # name of gds file
 # define fine structures < 1.0 um
 fineLimit = 1.0
@@ -563,7 +563,8 @@ class psFTJs(Structure):
         p11 = Coord2(self.viaDistance, self.FEcontactSize + self.islandCcl)
         p12 = Coord2(- self.FEcontactSize - self.islandCcl, self.FEcontactSize + self.islandCcl)      
       
-
+        elems += Boundary(layer=ProcessPurposeLayer(process=MET_CH_1, purpose=ETCH),
+                          shape=Shape(points=[p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12], closed=True))        
         
         #Generate the left pad 
         q1 = Coord2(- 2*self.viaDistance , -(p2.y-17.5)/2.0)
@@ -769,7 +770,7 @@ class psFTJs(Structure):
         
         
         elems += Rectangle(layer=ProcessPurposeLayer(process=MET_M1_6, purpose=ETCH),
-                               center=Coord2(0, -79.75), box_size=(300, 17.5))        
+                               center=Coord2(0, -78.75), box_size=(300, 17.5))        
 
         return elems
     
@@ -958,12 +959,13 @@ output_data = []
 # ---------------------------------------------psFTJs starts here-----------------------------------------------
 
 # add structure
-my_PETs_ps = Structure(name="psFTJs")
+my_PETs_ps1 = Structure(name="psFTJs_1")
+my_PETs_ps2 = Structure(name="psFTJs_2")
 
 # ---------------------------------- Parameter Definitions Reference Structures
 # FE_contact are all contact sizes for the metal directly on the ferroelectric material (FE) where the junction is
 #FE_Contact_Sizes = [30.0,20.0,10.0,5.0,2.0,1.0,0.8,0.6,0.5,0.4,0.3,0.2,0.15]
-FE_Contact_Sizes = [30.0,28.0,26.0,25.0,24.0,22.0,21.0,20.0,19.0,18.0,16.0,15.0,14.0,12.0,10.0,8.0,7.0,6.0]
+FE_Contact_Sizes = [30.0,28.0,26.0,24.0,22.0,20.0]
 numberOfDevices = 5
 
 
@@ -1010,7 +1012,50 @@ for i in range(numberOfDevices):
                            EBLCcl = EBLCcl_value,  # clearance (e-beam)
                            label = textLabel,
                            label_full = full_textLabel)
-            my_PETs_ps += SRef(temp1, position=(curX, curY))
+            my_PETs_ps1 += SRef(temp1, position=(curX, curY))
+            curX += dX
+            deviceNbr += 1
+    curY += dY
+    nY += 1       
+
+
+FE_Contact_Sizes = [16.0,14.0,12.0,10.0,8.0,6.0]
+numberOfDevices = 5
+
+# Position
+curX = 0.0
+curY = 0.0
+nX = 0
+nY = 0
+
+for i in range(numberOfDevices):
+    curX = 0
+    for FESize in FE_Contact_Sizes:
+        #Determine the appropriate EBLCcl value based on FE_Contact_Sizes
+        EBLCcl_value=0.2
+        if FESize <= 0.2:
+            EBLCcl_value = 0.05
+        elif FESize == 0.3:
+            EBLCcl_value = 0.1              
+        elif FESize == 0.4:
+            EBLCcl_value = 0.1      
+        elif FESize == 0.5:
+            EBLCcl_value = 0.1         
+
+        #else:
+            #EBLCcl_value = EBLCcl_values[nX % len(EBLCcl_values)]
+        
+        for island_value in islandCcl_values: 
+            full_textLabel = 'ID%i %.0f EBcl=%.2f iscl=%.2f' % (deviceNbr, FESize * 1000, EBLCcl_value, island_value) 
+            textLabel = '%i' % (deviceNbr)    
+            temp1 = psFTJs(FEcontactSize = FESize / 2.0,  # radius
+                           MOcontactSize = 5.0,
+                           viaDistance = 10.0,
+                           islandCcl = island_value,
+                           EBLCcl = EBLCcl_value,  # clearance (e-beam)
+                           label = textLabel,
+                           label_full = full_textLabel)
+            my_PETs_ps2 += SRef(temp1, position=(curX, curY))
             curX += dX
             deviceNbr += 1
     curY += dY
@@ -1021,11 +1066,12 @@ for i in range(numberOfDevices):
 # ---------------------------------------------PicoProbe starts here-----------------------------------------------
 
 # add structure
-my_PETs_O = Structure(name="PicoProbe")
+my_PETs_O1 = Structure(name="PicoProbe_1")
+my_PETs_O2 = Structure(name="PicoProbe_2")
 
 # ---------------------------------- Parameter Definitions Reference Structures
 # FE_contact are all contact sizes for the metal directly on the ferroelectric material (FE) where the junction is
-FE_Contact_Sizes = [120.0,100.0,80.0,60.0,50.0,40.0,20.0]
+FE_Contact_Sizes = [120.0,110.0,100.0,80.0,70.0]
 #FE_Contact_Sizes = [120.0,80.0,40.0]
 #numberOfDevices = 7
 numberOfDevices = 3
@@ -1047,14 +1093,43 @@ for i in range(numberOfDevices):
         #Determine the appropriate Ccl value based on FE_Contact_Sizes
         #EBLCcl_value=0.2
        
-        for n in range(3):
+        for n in range(2):
             full_textLabel = 'ID{0} D{1}'.format(deviceNbr, FESize)
             textLabel = '%i' % (deviceNbr)    
             output_data.append([deviceNbr, "PicoProbe", 'D{0}'.format(FESize)])         
             temp1 = PicoProbe(FEcontactSize = FESize / 2.0,  # radius
                            label = textLabel,
                            label_full = full_textLabel)
-            my_PETs_O += SRef(temp1, position=(curX, curY))
+            my_PETs_O1 += SRef(temp1, position=(curX, curY))
+            curX += dX
+            deviceNbr += 1
+    curY += dY
+    nY += 1 
+
+
+FE_Contact_Sizes = [60.0,50.0,40.0,30.0,20.0]
+numberOfDevices = 3
+
+# Position
+curX = 0.0
+curY = 0.0
+nX = 0
+nY = 0
+
+for i in range(numberOfDevices):
+    curX = 0
+    for FESize in FE_Contact_Sizes:
+        #Determine the appropriate Ccl value based on FE_Contact_Sizes
+        #EBLCcl_value=0.2
+       
+        for n in range(2):
+            full_textLabel = 'ID{0} D{1}'.format(deviceNbr, FESize)
+            textLabel = '%i' % (deviceNbr)    
+            output_data.append([deviceNbr, "PicoProbe", 'D{0}'.format(FESize)])         
+            temp1 = PicoProbe(FEcontactSize = FESize / 2.0,  # radius
+                           label = textLabel,
+                           label_full = full_textLabel)
+            my_PETs_O2 += SRef(temp1, position=(curX, curY))
             curX += dX
             deviceNbr += 1
     curY += dY
@@ -1067,13 +1142,12 @@ for i in range(numberOfDevices):
 # ---------------------------------------------FeCAP starts here-----------------------------------------------
 
 # add structure
-my_PETs_50CAP = Structure(name="FeCAP_50")
-my_PETs_10CAP = Structure(name="FeCAP_10")
+my_PETs_CAP = Structure(name="FeCAP")
 
 # ---------------------------------- Parameter Definitions Reference Structures
 # FE_contact are all contact sizes for the metal directly on the ferroelectric material (FE) where the junction is
-FE_Contact_Sizes = [50.0] * 32
-numberOfDevices = 22
+FE_Contact_Sizes = [50.0,50.0,50.0,40.0,40.0,40.0,30.0,30.0,30.0,20.0,20.0,20.0,10.0,10.0,10.0,6.0,6.0,6.0]
+numberOfDevices = 8
 
 # Position
 dX = 304
@@ -1112,7 +1186,7 @@ for i in range(numberOfDevices):
         for island_value in islandCcl_values:
             full_textLabel = 'ID%i %.0f' % (deviceNbr, FESize)
             textLabel = 'ID%i' % (deviceNbr)
-            output_data.append([deviceNbr, "FeCAP_50", '%.0f' % (FESize * 1000)]) 
+            output_data.append([deviceNbr, "FeCAP", '%.0f' % (FESize * 1000)]) 
             temp1 = FeCAP(FEcontactSize = FESize / 2.0,  # radius
                            MOcontactSize = 5.0,
                            viaDistance = 10.0,
@@ -1120,52 +1194,7 @@ for i in range(numberOfDevices):
                            #Ccl = EBLCcl_value,  # clearance (e-beam)
                            label = textLabel,
                            label_full = full_textLabel)
-            my_PETs_50CAP += SRef(temp1, position=(curX, curY))
-            curX += dX
-            deviceNbr += 1
-    curY += dY
-    nY += 1       
-
-
-FE_Contact_Sizes = [10.0] * 32
-numberOfDevices = 22
-
-curX = 0.0
-curY = 0.0
-nX = 0
-nY = 0
-
-for i in range(numberOfDevices):
-    curX = 0
-    for FESize in FE_Contact_Sizes:
-        #Determine the appropriate Ccl value based on FE_Contact_Sizes
-        '''
-        EBLCcl_value=0.2
-        if FESize <= 0.2:
-            EBLCcl_value = 0.05
-        elif FESize == 0.3:
-            EBLCcl_value = 0.1              
-        elif FESize == 0.4:
-            EBLCcl_value = 0.1      
-        elif FESize == 0.5:
-            EBLCcl_value = 0.1         
-
-        #else:
-            #EBLCcl_value = EBLCcl_values[nX % len(EBLCcl_values)]
-        '''
-        for island_value in islandCcl_values:
-            full_textLabel = 'ID%i %.0f' % (deviceNbr, FESize)
-            textLabel = 'ID%i' % (deviceNbr)
-            output_data.append([deviceNbr, "FeCAP_10", '%.0f' % (FESize * 1000)]) 
-            temp1 = FeCAP(FEcontactSize = FESize / 2.0,  # radius
-                           MOcontactSize = 5.0,
-                           viaDistance = 10.0,
-                           islandCcl = island_value,
-                           #Ccl = EBLCcl_value,  # clearance (e-beam)
-                           label = textLabel,
-                           label_full = full_textLabel)
-            if deviceNbr not in [1032,1033,1000,1001,968,969]:
-                my_PETs_10CAP += SRef(temp1, position=(curX, curY))           
+            my_PETs_CAP += SRef(temp1, position=(curX, curY))
             curX += dX
             deviceNbr += 1
     curY += dY
@@ -1261,49 +1290,49 @@ labelMain = Structure(name="LabelMain")
 font1 = TEXT_FONT_STANDARD.modified_copy()
 font1.spacing = 0.1
 font1.line_width = 0.1
-temp = PolygonText(layer=ProcessPurposeLayer(process=LABEL, purpose=COMMENT), text="Paul",
+temp = PolygonText(layer=ProcessPurposeLayer(process=LABEL, purpose=COMMENT), text="GAO",
                    coordinate=Coord2(0,80), alignment=(TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM),
                    font=font1, height=140.0)
 labelMain += temp
-#temp = PolygonText(layer=ProcessPurposeLayer(process=LABEL, purpose=COMMENT), text="SecondLineText",
-                   #coordinate=Coord2(0,-30), alignment=(TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM),
-                   #font=font1, height=90.0)
-#labelMain += temp
+temp = PolygonText(layer=ProcessPurposeLayer(process=LABEL, purpose=COMMENT), text="LBSO",
+                   coordinate=Coord2(0,-60), alignment=(TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM),
+                   font=font1, height=90.0)
+labelMain += temp
 #------------------------------------------------Main Label ends HERE----------------------------------------------
 
 # Import die bounding box (BRNC template)
 DWL_Marker = placeGDSonWafer(GDSfilePath="laserwriter_markers/DWL_AlignmentMarks.gds", process_layer_map={DWLMARKS: 1},
                              purpose_datatype_map={VIEW: 0})
-my_layout += ARef(DWL_Marker, origin=(-5000.0, -5000), period=(5000.0, 5000.0), n_o_periods=(3, 3))
+my_layout += ARef(DWL_Marker, origin=(-3000.0, -2000), period=(3000.0, 2000.0), n_o_periods=(3, 3))
 
 # Define the positions for optical markers
 OPT_Marker = placeGDSonWafer(GDSfilePath="laserwriter_markers/optical_markers.gds", process_layer_map={OPTMARKS_L1: 1, OPTMARKS_L2: 2},
                              purpose_datatype_map={VIEW: 0})
 optical_marker_positions = [ 
-    (-500, 5200), (-2500, 5200), (-1500, 5200), (-500, -5200), (-2500, -5200), (-1500, -5200), (-5200, 500), (-5200, 2500), (-5200, 1500), 
-    (-5200, -500), (-5200, -2500), (-5200, -1500), (500, 5200), (2500, 5200), (1500, 5200), (500, -5200), (2500, -5200), (1500, -5200), (5200, 500), (5200, 2500), (5200, 1500), (5200, -500), (5200, -2500), (5200, -1500),
-    (-5200, -3500), (-5200, -4500), (-5200, 3500), (-5200, 4500), (5200, -3500), (5200, -4500), (5200, 3500), (5200, 4500), (-3500, -5200), (-4500, -5200), (4500, -5200), (3500, -5200),(-3500, 5200), (-4500, 5200), (4500, 5200), (3500, 5200)
-]  # markers if needed:(-150, 400), (-150, -400),
+    (-500, 2200), (-2500, 2200), (-1500, 2200), (-500, -2200), (-2500, -2200), (-1500, -2200), (-3200, 500), (-3200, 1500), 
+    (-3200, -500), (-3200, -1500), (500, 2200), (2500, 2200), (1500, 2200), (500, -2200), (2500, -2200), (1500, -2200), (3200, 500), (3200, 1500), (3200, -500), (3200, -1500)
+]
 for pos in optical_marker_positions:
     my_layout += SRef(OPT_Marker, position=pos)
 
 #Position  FeCAP devices in top cell
-my_layout += SRef(my_PETs_10CAP, position = Coord2(-4700, -635.00))
-my_layout += SRef(my_PETs_50CAP, position = Coord2(-4700, -4535.00))
+my_layout += SRef(my_PETs_CAP, position = Coord2(-2600, -1735.00))
 
 #Position PicoProbe
-my_layout += SRef(my_PETs_O, position=Coord2(-750.0, 4200))
+my_layout += SRef(my_PETs_O1, position=Coord2(-2700.0, -285))
+my_layout += SRef(my_PETs_O2, position=Coord2(300.0, -285))
 
 #Position  ps FTJ devices in top cell
-my_layout += SRef(my_PETs_ps, position = Coord2(-650.0, 3300))
+my_layout += SRef(my_PETs_ps1, position = Coord2(1050.0, 1190))
+my_layout += SRef(my_PETs_ps2, position = Coord2(1050.0, 370))
 
 #Position metal lines
-my_layout += SRef(my_PETs_ML, position=Coord2(1200,-2080))
+my_layout += SRef(my_PETs_ML, position=Coord2(3200,-5080))
 
 #Position Labels
-my_layout += SRef(labelMain, position=(-1125,3250)) # , transformation=Rotation(rotation=90.0)
+my_layout += SRef(labelMain, position=(680,1650)) # , transformation=Rotation(rotation=90.0)
 #Position Profiles
-my_layout += SRef(PROFILES, position=(-1250,3600), transformation=Rotation(rotation=90.0))
+my_layout += SRef(PROFILES, position=(650,400), transformation=Rotation(rotation=90.0))
 
 #my_layout += ARef(reference=GroundPads, origin=Coord2(-9565,-4120), period=Coord2(252, 0), n_o_periods=(36, 0))
 

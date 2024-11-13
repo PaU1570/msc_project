@@ -770,7 +770,7 @@ class psFTJs(Structure):
         
         
         elems += Rectangle(layer=ProcessPurposeLayer(process=MET_M1_6, purpose=ETCH),
-                               center=Coord2(0, -79.75), box_size=(300, 17.5))        
+                               center=Coord2(0, -78.75), box_size=(300, 17.5))        
 
         return elems
     
