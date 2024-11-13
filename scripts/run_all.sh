@@ -23,5 +23,5 @@ ${SCRIPT_DIR}/analyze_pulsedAmplitudeSweep.sh $data_directory $output_directory 
 ${SCRIPT_DIR}/run_neurosim.sh "${output_directory}/${data_directory}" "${output_directory}/neurosim"
 
 # run python script to collect results into one csv
-python ${PARENT_DIR}/utils/src/run_neurosim_to_csv.py "${output_directory}/neurosim" "${output_directory}"/$(basename $output_directory).csv
+python ${PARENT_DIR}/src/msc_project/utils/run_neurosim_to_csv.py "${output_directory}/neurosim" "${output_directory}"/$(basename $output_directory).csv
 echo "All done!"
