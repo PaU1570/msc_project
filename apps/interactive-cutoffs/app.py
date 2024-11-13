@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template, redirect
 import plotly.express as px
-import data_utils as du
+from msc_project.utils import data_utils as du
 import sys
 import csv
 

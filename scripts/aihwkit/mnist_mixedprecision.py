@@ -14,15 +14,8 @@ import matplotlib.pyplot as plt
 import argparse
 import pickle
 
-# pytorch/lightning imports
-import torch
-from torch import Generator, argmax
 from torch import nn
 from torch.optim.lr_scheduler import StepLR
-from torch.nn.functional import nll_loss
-from torchvision.datasets import MNIST
-from torchvision.transforms import ToTensor
-from torch.utils.data import DataLoader, random_split
 
 # aihwkit imports
 from aihwkit.simulator.configs import build_config
@@ -32,18 +25,8 @@ from aihwkit.optim import AnalogSGD, AnalogAdam
 from aihwkit.simulator.rpu_base import cuda
 from aihwkit.simulator.configs import IOParameters, UpdateParameters, PulseType
 
-from fit_piecewise import read_conductance_data, fit_piecewise_device
-
-# Check device
-USE_CUDA = 0
-if cuda.is_compiled():
-   USE_CUDA = 1
-DEVICE = torch.device("cuda" if USE_CUDA else "cpu")
-# DEVICE = torch.device("cpu")
-print(f'Using device: {DEVICE}')
-
-# Define directory where dataset is stored
-PATH_DATASET = os.path.join("/scratch/msc24h18/msc_project/data", "DATASET")
+from msc_project.utils.fit_piecewise import read_conductance_data, fit_piecewise_device
+from msc_project.models.base import BaseMNIST
 
 SEED = 2024
 
@@ -94,127 +77,6 @@ def fig_fit(pulses, measured, fit, filename):
     ax.legend()
 
     plt.savefig(filename)
-    
-def get_dataset(batch_size=64, num_workers=23, split=[0.8, 0.2]):
-    trainval_set = MNIST(PATH_DATASET, train=True, download=True, transform=ToTensor())
-    test_set = MNIST(PATH_DATASET, train=False, download=True, transform=ToTensor())
-    
-    train_set, valid_set = random_split(trainval_set, split, generator=Generator().manual_seed(SEED))
-    
-    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers)
-    valid_loader = DataLoader(valid_set, batch_size=batch_size, shuffle=False, num_workers=num_workers)
-    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False, num_workers=num_workers)
-
-    return train_loader, valid_loader, test_loader
-
-# train and test routines
-def train(model, train_set, valid_set, optimizer, scheduler, epochs=3, save_weights=False):
-    """Train the network.
-
-    Args:
-        model (nn.Module): model to be trained.
-        train_set (DataLoader): dataset of elements to use as input for training.
-        valid_set (DataLoader): dataset of elements to use as input for validation.
-        epochs (int): number of epochs to train the model.
-        save_weights (bool): if True, save the weights at each epoch.
-
-    Returns:
-        metrics (np.ndarray): array with the following values in the columns: epoch, train_loss, valid_loss, valid_accuracy.
-        weights (list): list of weights at each epoch (if save_weigths=True), otherwise only the initial weights.
-    """
-    metrics = np.zeros((epochs, 4))
-    weights = [model.get_weights()]
-
-    classifier = nn.NLLLoss()
-
-    for epoch_number in range(epochs):
-        print(f"Epoch {epoch_number}:")
-        total_loss = 0
-        for i, (images, labels) in enumerate(train_set):
-            images = images.to(DEVICE)
-            labels = labels.to(DEVICE)
-            # Flatten MNIST images into a 784 vector.
-            images = images.view(images.shape[0], -1)
-
-            optimizer.zero_grad()
-            # Add training Tensor to the model (input).
-            output = model(images)
-            loss = classifier(output, labels)
-
-            # Run training (backward propagation).
-            loss.backward()
-
-            # Optimize weights.
-            optimizer.step()
-
-            total_loss += loss.item()
-
-        print("\t- Training loss: {:.16f}".format(total_loss / len(train_set)))
-
-        # Save weights.
-        if save_weights:
-            weights.append(model.get_weights())
-
-        # Evaluate the model.
-        predicted_ok = 0
-        total_images = 0
-        val_loss = 0
-        with torch.no_grad():
-            for images, labels in valid_set:
-                # Predict image.
-                images = images.to(DEVICE)
-                labels = labels.to(DEVICE)
-
-                images = images.view(images.shape[0], -1)
-                pred = model(images)
-                loss = classifier(pred, labels)
-                val_loss += loss.item()
-
-                _, predicted = torch.max(pred.data, 1)
-                total_images += labels.size(0)
-                predicted_ok += (predicted == labels).sum().item()
-
-            print(f"\t- Validation loss: {val_loss / len(valid_set):.16f}")
-            print(f"\t- Validation accuracy: {predicted_ok / total_images:.4f}")
-
-        # Decay learning rate if needed.
-        scheduler.step()
-
-        # Update metrics.
-        metrics[epoch_number, 0] = epoch_number
-        metrics[epoch_number, 1] = total_loss / len(train_set) # train_loss
-        metrics[epoch_number, 2] = val_loss / len(valid_set) # valid_loss
-        metrics[epoch_number, 3] = predicted_ok / total_images # valid_accuracy
-
-    return metrics, weights
-
-def test(model, test_set):
-    """Test trained network
-
-    Args:
-        model (nn.Model): Trained model to be evaluated
-        test_set (DataLoader): Test set to perform the evaluation
-    """
-    # Setup counter of images predicted to 0.
-    predicted_ok = 0
-    total_images = 0
-
-    model.eval()
-
-    for images, labels in test_set:
-        # Predict image.
-        images = images.to(DEVICE)
-        labels = labels.to(DEVICE)
-
-        images = images.view(images.shape[0], -1)
-        pred = model(images)
-
-        _, predicted = torch.max(pred.data, 1)
-        total_images += labels.size(0)
-        predicted_ok += (predicted == labels).sum().item()
-
-    print("\nNumber Of Images Tested = {}".format(total_images))
-    print("Model Accuracy = {}".format(predicted_ok / total_images))
 
 if __name__ == "__main__":
     plt.style.use('ggplot')
@@ -272,9 +134,6 @@ if __name__ == "__main__":
     if output_dir is not None:
         fig_fit(pulses, conductance, model_response, os.path.join(output_dir, 'fit.png'))
 
-    # Define the training dataset
-    train_loader, valid_loader, test_loader = get_dataset()
-
     # Define the model
     input_size = 784
     hidden_sizes = [256, 128]
@@ -299,10 +158,13 @@ if __name__ == "__main__":
     rpu_config.update = up_params
     model = convert_to_analog_mapped(model, rpu_config=rpu_config)
 
-    if USE_CUDA:
-        model.cuda()
+    # Create the MNIST model
+    mnist_model = BaseMNIST(model, seed=SEED)
 
-    print(model)
+    # Define the training dataset
+    train_loader, valid_loader, test_loader = mnist_model.get_dataset()
+
+    print(mnist_model.model)
     print('-' * 80)
 
     # Save the device configuration
@@ -310,17 +172,19 @@ if __name__ == "__main__":
         with open(os.path.join(output_dir, 'RPU_Config.txt'), 'w') as f:
             f.write(str(rpu_config))
 
-
     # Train the model
     optimizer = AnalogSGD(model.parameters(), lr=0.5)
     # optimizer = AnalogAdam(model.parameters(), lr=0.05, betas=(0.9, 0.999), eps=1e-8)
     optimizer.regroup_param_groups(model)
     scheduler = StepLR(optimizer, step_size=10, gamma=0.5)
 
-    metrics, weights = train(model, train_loader, valid_loader, optimizer, scheduler, epochs=args.epochs, save_weights=args.save_weights)
+    mnist_model.optimizer = optimizer
+    mnist_model.scheduler = scheduler
+
+    metrics, weights = mnist_model.train(train_loader, valid_loader, epochs=args.epochs, save_weights=args.save_weights)
 
     # Test the model
-    test(model, test_loader)
+    mnist_model.test(test_loader)
 
     # Save training metrics
     df = pd.DataFrame(metrics, columns=['epoch', 'train_loss', 'val_loss', 'val_acc'])

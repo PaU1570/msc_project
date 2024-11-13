@@ -21,7 +21,7 @@ for ((i=1; i<=$num_runs; i++)); do
 
     ${SCRIPT_DIR}/run_neurosim.sh "${config_directory}" "${run_directory}/neurosim"
     # run python script to collect results into one csv
-    python ${PARENT_DIR}/utils/src/run_neurosim_to_csv.py "${run_directory}/neurosim" "${output_directory}"/$(basename $run_directory).csv
+    python ${PARENT_DIR}/src/msc_project/utils/run_neurosim_to_csv.py "${run_directory}/neurosim" "${output_directory}"/$(basename $run_directory).csv
     echo "Run $i done!"
 done
 echo "All done!"
