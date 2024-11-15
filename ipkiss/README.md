@@ -23,3 +23,16 @@ cd ipkiss
 pip install .
 ```
 You should see a message saying "Successfully installed IPKISS-2.4-ce".
+
+## Step 3: Install other required packages
+Use pip to install the rest of the required packages:
+```
+pip install numpy shapely descartes
+```
+
+## Step 4: Run
+Now we should be able to successfuly run scripts to generate gds files.
+```
+python your_script.py
+```
+__Note:__ Every new session, make sure to activate the environment with ```conda activate ipkiss_env```. To go back to your normal python environment, deactivate with ```conda deactivate```.
