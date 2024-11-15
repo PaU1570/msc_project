@@ -22,9 +22,11 @@ from aihwkit.simulator.configs import build_config
 from aihwkit.nn.conversion import convert_to_analog_mapped
 from aihwkit.optim import AnalogSGD, AnalogAdam
 from aihwkit.simulator.configs import IOParameters, UpdateParameters, PulseType
+from aihwkit.simulator.configs.compounds import MixedPrecisionCompound
 
 from msc_project.utils.fit_piecewise import read_conductance_data, fit_piecewise_device
 from msc_project.models.base import BaseMNIST
+from msc_project.custom_aihwkit.asymmetric_update import AsymmetricUpdateTile, AsymmetricUpdateRPUConfig
 
 SEED = 2024
 
@@ -146,14 +148,16 @@ if __name__ == "__main__":
         nn.LogSoftmax(dim=1)
     )
 
-    rpu_config = build_config('mp', device=device_config, construction_seed=SEED)
     up_params = UpdateParameters()
     if args.pulse_type == 'none':
         up_params.pulse_type = PulseType.NONE
     elif args.pulse_type == 'noneWithDevice':
         up_params.pulse_type = PulseType.NONE_WITH_DEVICE
 
-    rpu_config.update = up_params
+    up_params.gradient_noise = 0
+
+    rpu_config = AsymmetricUpdateRPUConfig(device=MixedPrecisionCompound(device=device_config),
+                                           update=up_params)
     model = convert_to_analog_mapped(model, rpu_config=rpu_config)
 
     # Create the MNIST model

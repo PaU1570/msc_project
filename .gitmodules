@@ -7,3 +7,6 @@
 [submodule "ipkiss/ipkiss"]
 	path = ipkiss/ipkiss
 	url = https://github.com/jtambasco/ipkiss.git
+[submodule "aihwkit"]
+	path = aihwkit
+	url = git@github.com:PaU1570/aihwkit.git

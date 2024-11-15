@@ -11,6 +11,9 @@ TODO:
 - Check that implemented mixed-precision gives similar results to the native implementation (DigitalRankUpdate).
 """
 
+from torch import Tensor
+
+from aihwkit.exceptions import TileError
 from aihwkit.simulator.tiles.custom import CustomSimulatorTile, CustomRPUConfig, CustomUpdateParameters
 from aihwkit.simulator.configs.compounds import MixedPrecisionCompound
 from typing import ClassVar, Type
@@ -21,6 +24,35 @@ class AsymmetricUpdateTile(CustomSimulatorTile):
 
     def __init__(self, x_size: int, d_size: int, rpu_config: "AsymmetricUpdateRPUConfig", bias: bool = False):
         super().__init__(x_size, d_size, rpu_config, bias)
+
+    def update(
+        self,
+        x_input: Tensor,
+        d_input: Tensor,
+        bias: bool = False,
+        in_trans: bool = False,
+        out_trans: bool = False,
+        non_blocking: bool = False,
+    ) -> Tensor:
+        """Update with mixed-precision scheme.
+
+        Note:
+            Ignores additional arguments
+
+        Raises:
+            TileError: in case transposed input / output or bias is requested
+        """
+        if bias or in_trans or out_trans or non_blocking:
+            raise TileError("transposed inputs or analog bias not supported")
+
+        # ORIGINAL IMPLEMENTATION:
+        # delta_w = d_input.view(-1, d_input.size(-1)).T @ x_input.view(-1, x_input.size(-1))
+
+        # if self._update.gradient_noise:
+        #     delta_w += self._update.gradient_noise * randn_like(delta_w)
+
+        # self._analog_weight = self._analog_weight - self.learning_rate * delta_w  # type: ignore
+        # END ORIGINAL IMPLEMENTATION
 
 @dataclass
 class AsymmetricUpdateRPUConfig(CustomRPUConfig):
