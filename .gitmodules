@@ -1,12 +1,12 @@
 [submodule "MLP_NeuroSim_V3.0"]
 	path = MLP_NeuroSim_V3.0
 	url = git@github.com:PaU1570/MLP_NeuroSim_V3.0.git
-[submodule "aihwkit"]
-	path = aihwkit
-	url = https://github.com/IBM/aihwkit.git
 [submodule "DNN_NeuroSim_V2.1"]
 	path = DNN_NeuroSim_V2.1
 	url = git@github.com:PaU1570/DNN_NeuroSim_V2.1.git
 [submodule "ipkiss/ipkiss"]
 	path = ipkiss/ipkiss
 	url = https://github.com/jtambasco/ipkiss.git
+[submodule "aihwkit"]
+	path = aihwkit
+	url = git@github.com:PaU1570/aihwkit.git

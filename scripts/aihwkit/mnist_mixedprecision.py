@@ -19,11 +19,10 @@ from torch.optim.lr_scheduler import StepLR
 
 # aihwkit imports
 from aihwkit.simulator.configs import build_config
-from aihwkit.utils.fitting import fit_measurements
 from aihwkit.nn.conversion import convert_to_analog_mapped
 from aihwkit.optim import AnalogSGD, AnalogAdam
-from aihwkit.simulator.rpu_base import cuda
 from aihwkit.simulator.configs import IOParameters, UpdateParameters, PulseType
+from aihwkit.simulator.parameters.enums import AsymmetricPulseType
 
 from msc_project.utils.fit_piecewise import read_conductance_data, fit_piecewise_device
 from msc_project.models.base import BaseMNIST
@@ -100,6 +99,9 @@ if __name__ == "__main__":
     parser.add_argument('--write_noise_std_mult', type=float, default=1, help='Multiplier for the write noise standard deviation')
     parser.add_argument('--pulse_type', type=str, choices=['none', 'noneWithDevice', 'stochastic'], default='stochastic', help='Pulse type to use')
     parser.add_argument('--save_weights', action='store_true', help='Save the weights at each epoch')
+    parser.add_argument('--asymmetric_pulsing_dir', type=str, choices=['Up', 'Down', 'None'], default='None', help='Asymmetric pulsing direction')
+    parser.add_argument('--asymmetric_pulsing_up', type=int, default=1, help='Asymmetric pulsing up number')
+    parser.add_argument('--asymmetric_pulsing_down', type=int, default=1, help='Asymmetric pulsing down number')
     args = parser.parse_args()
 
     filename = args.filename
@@ -154,8 +156,12 @@ if __name__ == "__main__":
         up_params.pulse_type = PulseType.NONE
     elif args.pulse_type == 'noneWithDevice':
         up_params.pulse_type = PulseType.NONE_WITH_DEVICE
-
     rpu_config.update = up_params
+
+    rpu_config.device.asymmetric_pulsing_dir = AsymmetricPulseType(args.asymmetric_pulsing_dir)
+    rpu_config.device.asymmetric_pulsing_up = args.asymmetric_pulsing_up
+    rpu_config.device.asymmetric_pulsing_down = args.asymmetric_pulsing_down
+
     model = convert_to_analog_mapped(model, rpu_config=rpu_config)
 
     # Create the MNIST model
