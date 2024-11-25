@@ -21,11 +21,13 @@ from torch.optim.lr_scheduler import StepLR
 from aihwkit.simulator.configs import build_config
 from aihwkit.nn.conversion import convert_to_analog_mapped
 from aihwkit.optim import AnalogSGD, AnalogAdam
-from aihwkit.simulator.configs import IOParameters, UpdateParameters, PulseType
+from aihwkit.simulator.configs import IOParameters, UpdateParameters, PulseType, DigitalRankUpdateRPUConfig
 from aihwkit.simulator.parameters.enums import AsymmetricPulseType
+from aihwkit.simulator.configs.compounds import ReferenceUnitCell, MixedPrecisionCompound
 
 from msc_project.utils.fit_piecewise import read_conductance_data, fit_piecewise_device
 from msc_project.models.base import BaseMNIST
+from msc_project.utils.asymmetric_pulsing import plot_symmetry_point
 
 SEED = 2024
 
@@ -102,6 +104,7 @@ if __name__ == "__main__":
     parser.add_argument('--asymmetric_pulsing_dir', type=str, choices=['Up', 'Down', 'None'], default='None', help='Asymmetric pulsing direction')
     parser.add_argument('--asymmetric_pulsing_up', type=int, default=1, help='Asymmetric pulsing up number')
     parser.add_argument('--asymmetric_pulsing_down', type=int, default=1, help='Asymmetric pulsing down number')
+    parser.add_argument('--use_reference_device', action='store_true', help='Use a ReferenceUnitCell to substract symmetry point from weight')
     args = parser.parse_args()
 
     filename = args.filename
@@ -131,6 +134,12 @@ if __name__ == "__main__":
                               w_max_dtod=args.w_max_dtod,
                               up_down_dtod=args.up_down_dtod,
                               write_noise_std_mult=args.write_noise_std_mult)
+    
+    if args.use_reference_device:
+        ax, sp = plot_symmetry_point(device_config, ax=None, n_steps=0, pre_alternating_pulses=0, alternating_pulses=50, w_init=0)
+        print(f'Symmetry point: {sp}')
+        device_config = ReferenceUnitCell([device_config], construction_seed=SEED)
+        # set reference weights to symmetry point
 
     # Plot the fit
     if output_dir is not None:
@@ -150,19 +159,42 @@ if __name__ == "__main__":
         nn.LogSoftmax(dim=1)
     )
 
-    rpu_config = build_config('mp', device=device_config, construction_seed=SEED)
+    #rpu_config = build_config('mp', device=device_config, construction_seed=SEED)
     up_params = UpdateParameters()
     if args.pulse_type == 'none':
         up_params.pulse_type = PulseType.NONE
     elif args.pulse_type == 'noneWithDevice':
         up_params.pulse_type = PulseType.NONE_WITH_DEVICE
-    rpu_config.update = up_params
 
-    rpu_config.device.asymmetric_pulsing_dir = AsymmetricPulseType(args.asymmetric_pulsing_dir)
-    rpu_config.device.asymmetric_pulsing_up = args.asymmetric_pulsing_up
-    rpu_config.device.asymmetric_pulsing_down = args.asymmetric_pulsing_down
-
+    rpu_config = DigitalRankUpdateRPUConfig(
+            device=MixedPrecisionCompound(
+                device=device_config,
+                asymmetric_pulsing_dir = AsymmetricPulseType(args.asymmetric_pulsing_dir),
+                asymmetric_pulsing_up = args.asymmetric_pulsing_up,
+                asymmetric_pulsing_down = args.asymmetric_pulsing_down,
+                construction_seed=SEED),
+            forward=IOParameters(),
+            backward=IOParameters(),
+            update=up_params
+        )
+        
     model = convert_to_analog_mapped(model, rpu_config=rpu_config)
+
+    if args.use_reference_device:
+        initial_weighs = model.get_weights()
+        model.apply_to_analog_tiles(lambda tile: tile.set_hidden_update_index(1))
+        ref_weights = model.get_weights()
+        for key, val in ref_weights.items():
+            for t in val:
+                if t is not None:
+                    t.fill_(sp)
+        model.set_weights(ref_weights)
+        model.apply_to_analog_tiles(lambda tile: tile.set_hidden_update_index(0))
+        for key, val in initial_weighs.items():
+            for t in val:
+                if t is not None:
+                    t = t - sp
+        model.set_weights(initial_weighs)
 
     # Create the MNIST model
     mnist_model = BaseMNIST(model, seed=SEED)

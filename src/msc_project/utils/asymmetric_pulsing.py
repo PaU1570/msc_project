@@ -89,7 +89,7 @@ def plot_asymmetric(device, ax=None, n_steps=30, n_traces=1, noise_free=True, w_
 
     return ax
 
-def plot_symmetry_point(device, ax=None, n_steps=30, n_traces=1, noise_free=True, pre_alternating_pulses=0, alternating_pulses=None, sp_search_len=5, **kwargs):
+def plot_symmetry_point(device, ax=None, n_steps=30, n_traces=1, noise_free=True, pre_alternating_pulses=0, alternating_pulses=None, sp_search_len=5, w_init=None, **kwargs):
     """
     Plot a sequence of positive pulses, then negative, then alternating. Also finds where the symetry point is.
 
@@ -105,13 +105,14 @@ def plot_symmetry_point(device, ax=None, n_steps=30, n_traces=1, noise_free=True
 
     Returns:
         ax
+        symmetry_point
     """
     alternating_pulses = n_steps if alternating_pulses is None else alternating_pulses
     total_iters = 2 * n_steps + pre_alternating_pulses + alternating_pulses
 
     rpu_config = build_config('mp', device=device)
 
-    analog_tile = get_tile_for_plotting(rpu_config, n_traces, False, noise_free=noise_free)
+    analog_tile = get_tile_for_plotting(rpu_config, n_traces, False, noise_free=noise_free, w_init=w_init)
 
     pre_alt = np.ones(pre_alternating_pulses)
     direction = np.concatenate((np.ones(n_steps), -np.ones(n_steps), pre_alt, np.sign(np.sin(np.pi * (np.arange(alternating_pulses) + 1/2)))))
@@ -131,4 +132,4 @@ def plot_symmetry_point(device, ax=None, n_steps=30, n_traces=1, noise_free=True
         ax.axvline(dw, color='k', lw=0.5, ls='dotted')
     ax.axhline(symmetry_point, color='r', lw=0.5, ls='--', label=f'Symmetry point = {symmetry_point:.2f}')
 
-    return ax
+    return ax, symmetry_point

@@ -24,14 +24,13 @@ for file in $files; do
     ((i=i%N_BATCH)); ((i++==0)) && wait
 
     output_dirname=${output_directory}/$(basename $file _Summary.dat)
-    output=${output_dirname}/symmetry_point.png
 
     if [ ! -d "$output_dirname" ]; then
         mkdir -p "$output_dirname"
     fi
 
-    if python3 ${ANALYSIS_SCRIPT_SOURCE} $file --output ${output} ; then
-        echo -e "\e[32mSaved plot to:\e[0m ${output}"
+    if python3 ${ANALYSIS_SCRIPT_SOURCE} $file --output ${output_dirname} ; then
+        echo -e "\e[32mSaved plot to:\e[0m ${output_dirname}"
     else
         echo -e "\e[31mError analyzing file:\e[0m $file"
     fi &

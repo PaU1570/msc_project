@@ -20,5 +20,6 @@ test19: aihwkit ttv2 with varying noises: { 0.3, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1
 test20: mixed precision with SGD with varying each noise parameter while keeping the others constant (at default)
 test21: like test20 but a more narrow range of noises
 test22: like test21 but with new fitting (rescaled dw_min, SGD lr=0.5)
-test23: piecewise fit (rescaled, SGD lr=0.5) with dw_min_std=dw_min_dtod=write_noise_std=0. Weights at each epoch are saved (LBE247_analyzed_2nd_run_only)q
+test23: piecewise fit (rescaled, SGD lr=0.5) with dw_min_std=dw_min_dtod=write_noise_std=0. Weights at each epoch are saved (LBE247_analyzed_2nd_run_only)
 test24: like test23 but for the new data 20241024_LBE247_analyzed_2nd_run_only
+test25: like test23 using Reference Device (all references set to the same value)

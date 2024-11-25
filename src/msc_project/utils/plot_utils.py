@@ -6,10 +6,12 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as clr
 from matplotlib import colormaps
+import matplotlib.animation as animation
 import seaborn as sns
 
-from run_neurosim_to_csv import get_data_from_file
-import data_utils as du
+import sys
+from msc_project.utils.run_neurosim_to_csv import get_data_from_file
+import msc_project.utils.data_utils as du
 
 def create_parser():
     """
@@ -508,6 +510,85 @@ def plot_pytorch(args):
         plt.tight_layout()
         plt.savefig(args.savefig)
     plt.show()
+
+
+######################################################
+# Functions for plotting weights #####################
+######################################################
+
+def _plot_weight_hist(ax, w, layers=(True, True, True), label=None, color=None):
+    l1 = w['0.analog_module'][0]
+    l2 = w['2.analog_module'][0]
+    l3 = w['4.analog_module'][0]
+
+    bins = np.linspace(-1.5, 1.5, 100)
+
+    if layers[0]:
+        ax.hist(l1.flatten(), bins=bins, alpha=0.5, label=label, color=color)
+    if layers[1]:
+        ax.hist(l2.flatten(), bins=bins, alpha=0.5, label=label, color=color)
+    if layers[2]:
+        ax.hist(l3.flatten(), bins=bins, alpha=0.5, label=label, color=color)
+
+
+def plot_weight_hist(weights, labels=None, suptitle=None, huevals=None, cmap=None, norm=None, colors=None):
+    fig, ax = plt.subplots(3, 2, figsize=(15, 20))
+    if labels is None:
+        labels = [''] * len(weights)
+
+    if colors is None:
+        if huevals is None:
+            colors = [None] * len(weights)
+        else:
+            colors = [cmap(norm(h)) for h in huevals]
+
+    for weight, label, color in zip(weights, labels, colors):
+        for row, rax in enumerate(ax):
+            layers = (row == 0, row == 1, row == 2)
+            for col, cax in enumerate(rax):
+                w_idx = 0 if col == 0 else -1
+                _plot_weight_hist(cax, weight[w_idx], layers=layers, label=label, color=color)
+                cax.set(title=f"Layer {row} {'Initial' if w_idx == 0 else 'Final'}")
+                cax.legend()
+                cax.set(xlabel='Weight', ylabel='Count', xlim=(-1.5, 1.5))
+
+    fig.suptitle(suptitle)
+    plt.tight_layout()
+
+    plt.show()
+
+def animate_weight_hist(weights, labels=None, suptitle='', huevals=None, cmap=None, norm=None, colors=None):
+    fig, ax = plt.subplots(3, 1, figsize=(10, 20), sharex=True)
+    ax[0].set(ylabel='Count', xlim=(-1.5, 1.5), title='Layer 0')
+    ax[1].set(ylabel='Count', xlim=(-1.5, 1.5), title='Layer 1')
+    ax[2].set(xlabel='Weight', ylabel='Count', xlim=(-1.5, 1.5), title='Layer 2')
+    fig.suptitle(f"{suptitle} - Epoch 0", fontsize=16, y=0.92)
+
+    if labels is None:
+        labels = [''] * len(weights)
+
+    if colors is None:
+        if huevals is None:
+            colors = [None] * len(weights)
+        else:
+            colors = [cmap(norm(h)) for h in huevals]
+
+    def get_frame(i):
+        ax[0].cla()
+        ax[1].cla()
+        ax[2].cla()
+        ax[0].set(ylabel='Count', xlim=(-1.5, 1.5), title='Layer 0')
+        ax[1].set(ylabel='Count', xlim=(-1.5, 1.5), title='Layer 1')
+        ax[2].set(xlabel='Weight', ylabel='Count', xlim=(-1.5, 1.5), title='Layer 2')
+        for weight, label, color in zip(weights, labels, colors):
+            for row, rax in enumerate(ax):
+                layers = (row == 0, row == 1, row == 2)
+                _plot_weight_hist(rax, weight[i], layers=layers, label=label, color=color)
+                rax.legend()
+        fig.suptitle(f"{suptitle} - Epoch {i}", fontsize=16, y=0.92)
+
+    anim = animation.FuncAnimation(fig, get_frame, frames=len(weights[0]), repeat=False)
+    anim.save(f'{suptitle}.gif', writer='ffmpeg', fps=5)
     
 
 if __name__ == '__main__':
