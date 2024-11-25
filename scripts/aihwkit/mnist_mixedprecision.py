@@ -22,6 +22,7 @@ from aihwkit.simulator.configs import build_config
 from aihwkit.nn.conversion import convert_to_analog_mapped
 from aihwkit.optim import AnalogSGD, AnalogAdam
 from aihwkit.simulator.configs import IOParameters, UpdateParameters, PulseType, DigitalRankUpdateRPUConfig
+from aihwkit.simulator.parameters.mapping import MappingParameter
 from aihwkit.simulator.parameters.enums import AsymmetricPulseType
 from aihwkit.simulator.configs.compounds import ReferenceUnitCell, MixedPrecisionCompound
 
@@ -106,6 +107,8 @@ if __name__ == "__main__":
     parser.add_argument('--asymmetric_pulsing_up', type=int, default=1, help='Asymmetric pulsing up number')
     parser.add_argument('--asymmetric_pulsing_down', type=int, default=1, help='Asymmetric pulsing down number')
     parser.add_argument('--use_reference_device', action='store_true', help='Use a ReferenceUnitCell to substract symmetry point from weight')
+    parser.add_argument('--weight_scaling_omega', type=float, default=0, help='Weight scaling omega')
+    parser.add_argument('--learn_out_scaling', action='store_true', help='Learn output scaling')
     args = parser.parse_args()
 
     filename = args.filename
@@ -176,13 +179,16 @@ if __name__ == "__main__":
                 construction_seed=SEED),
             forward=IOParameters(),
             backward=IOParameters(),
-            update=up_params
+            update=up_params,
+            mapping=MappingParameter(weight_scaling_omega=args.weight_scaling_omega,
+                                     weight_scaling_lr_compensation=(args.weight_scaling_omega != 0),
+                                     learn_out_scaling=args.learn_out_scaling)
         )
         
     model = convert_to_analog_mapped(model, rpu_config=rpu_config)
 
     if args.use_reference_device:
-        initial_weighs = model.get_weights()
+        initial_weights = model.get_weights()
         model.apply_to_analog_tiles(lambda tile: tile.set_hidden_update_index(1))
         ref_weights = model.get_weights()
         for key, val in ref_weights.items():
@@ -191,11 +197,11 @@ if __name__ == "__main__":
                     t.fill_(sp)
         model.set_weights(ref_weights)
         model.apply_to_analog_tiles(lambda tile: tile.set_hidden_update_index(0))
-        for key, val in initial_weighs.items():
+        for key, val in initial_weights.items():
             for t in val:
                 if t is not None:
                     t = t - sp
-        model.set_weights(initial_weighs)
+        model.set_weights(initial_weights)
 
     # Create the MNIST model
     mnist_model = BaseMNIST(model, seed=SEED)
@@ -220,7 +226,7 @@ if __name__ == "__main__":
     mnist_model.optimizer = optimizer
     mnist_model.scheduler = scheduler
 
-    metrics, weights = mnist_model.train(train_loader, valid_loader, epochs=args.epochs, save_weights=args.save_weights)
+    metrics, weights, analog_weights = mnist_model.train(train_loader, valid_loader, epochs=args.epochs, save_weights=args.save_weights)
 
     # Test the model
     mnist_model.test(test_loader)
@@ -233,6 +239,8 @@ if __name__ == "__main__":
     if args.save_weights:
         with open(os.path.join(output_dir, 'weights.pkl'), 'wb') as f:
             pickle.dump(weights, f)
+        with open(os.path.join(output_dir, 'analog_weights.pkl'), 'wb') as f:
+            pickle.dump(analog_weights, f)
 
 
     if output_dir is not None:

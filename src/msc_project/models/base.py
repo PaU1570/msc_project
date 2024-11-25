@@ -27,9 +27,18 @@ class BaseModel:
     def get_dataset(self):
         raise NotImplementedError
     
+    def get_analog_weights(self):
+        try:
+            # when apply_weight_scaling = False, the read weights are the raw conductance values (not scaled)
+            return [tile.read_weights(apply_weight_scaling=False) for tile in self.model.analog_tiles()]
+        except:
+            print("Model does not have analog weights.")
+            return None
+    
     def train(self, train_set, valid_set, epochs=3, save_weights=False):
         metrics = np.zeros((epochs, 4))
         weights = [self.model.get_weights()]
+        analog_weights = [self.get_analog_weights()]
 
         classifier = torch.nn.NLLLoss()
 
@@ -60,6 +69,7 @@ class BaseModel:
             # Save weights.
             if save_weights:
                 weights.append(self.model.get_weights())
+                analog_weights.append(self.get_analog_weights())
 
             # Evaluate the model.
             predicted_ok = 0
@@ -94,7 +104,8 @@ class BaseModel:
 
         self.metrics = metrics
         self.weights = weights
-        return metrics, weights
+        self.analog_weights = analog_weights
+        return metrics, weights, analog_weights
     
     def test(self, test_set):
         """Test trained network

@@ -517,9 +517,14 @@ def plot_pytorch(args):
 ######################################################
 
 def _plot_weight_hist(ax, w, layers=(True, True, True), label=None, color=None):
-    l1 = w['0.analog_module'][0]
-    l2 = w['2.analog_module'][0]
-    l3 = w['4.analog_module'][0]
+    if type(w) is list:
+        l1 = w[0][0]
+        l2 = w[1][0]
+        l3 = w[2][0]
+    else:
+        l1 = w['0.analog_module'][0]
+        l2 = w['2.analog_module'][0]
+        l3 = w['4.analog_module'][0]
 
     bins = np.linspace(-1.5, 1.5, 100)
 
