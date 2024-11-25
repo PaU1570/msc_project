@@ -88,6 +88,7 @@ if __name__ == "__main__":
     parser.add_argument('filename', type=str, help='Path to the _Summary.dat file')
     parser.add_argument('--output_dir', type=str, help='Path to the output directory (a folder will be created in this directory)')
     parser.add_argument('--no_subdir', action='store_true', help="Don't create a subdirectory in the output directory")
+    parser.add_argument('--save_fit', action='store_true', help='Save the fit plot')
     # Training arguments
     parser.add_argument('--epochs', type=int, default=3, help='Number of epochs to train the model')
     #parser.add_argument('--early_stopping', action='store_true', help='Enable early stopping')
@@ -142,7 +143,7 @@ if __name__ == "__main__":
         # set reference weights to symmetry point
 
     # Plot the fit
-    if output_dir is not None:
+    if output_dir is not None and args.save_fit:
         fig_fit(pulses, conductance, model_response, os.path.join(output_dir, 'fit.png'))
 
     # Define the model
