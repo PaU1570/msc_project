@@ -23,3 +23,4 @@ test22: like test21 but with new fitting (rescaled dw_min, SGD lr=0.5)
 test23: piecewise fit (rescaled, SGD lr=0.5) with dw_min_std=dw_min_dtod=write_noise_std=0. Weights at each epoch are saved (LBE247_analyzed_2nd_run_only)
 test24: like test23 but for the new data 20241024_LBE247_analyzed_2nd_run_only
 test25: like test23 using Reference Device (all references set to the same value)
+test26: like test23 but with learn_out_scaling=True

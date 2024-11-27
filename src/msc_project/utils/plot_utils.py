@@ -270,6 +270,7 @@ def plot_summary(args):
         if args.savefig is not None:
             plt.tight_layout()
             plt.savefig(args.savefig, facecolor=fig.get_facecolor())
+
         plt.show()
 
     if args.all:
