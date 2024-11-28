@@ -24,3 +24,5 @@ test23: piecewise fit (rescaled, SGD lr=0.5) with dw_min_std=dw_min_dtod=write_n
 test24: like test23 but for the new data 20241024_LBE247_analyzed_2nd_run_only
 test25: like test23 using Reference Device (all references set to the same value)
 test26: like test23 but with learn_out_scaling=True
+test27: repeat test26 but saving the final output scaling
+test28: like test23 and test26 but with Adam optimizer sweeping learning rates (0.02 to 0.4 step 0.02) and beta 1 (0.7 to 0.9 step 0.05) (both learn_out_scaling=True and False)
