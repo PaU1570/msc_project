@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 PARENT_DIR=$(dirname "$SCRIPT_DIR")
-ANALYSIS_SCRIPT_SOURCE="${SCRIPT_DIR}/run_mnist_on_analyzed.sh"
+ANALYSIS_SCRIPT_SOURCE="${SCRIPT_DIR}/run_mnist.sh"
 
 if [ $# -ne 2 ]; then
     echo "Usage: $0 <analyzed data directory> <output directory>"

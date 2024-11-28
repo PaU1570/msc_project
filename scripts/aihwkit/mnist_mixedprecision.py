@@ -109,6 +109,10 @@ if __name__ == "__main__":
     parser.add_argument('--use_reference_device', action='store_true', help='Use a ReferenceUnitCell to substract symmetry point from weight')
     parser.add_argument('--weight_scaling_omega', type=float, default=0, help='Weight scaling omega')
     parser.add_argument('--learn_out_scaling', action='store_true', help='Learn output scaling')
+    parser.add_argument('--optimizer', type=str, choices=['sgd', 'adam'], default='sgd', help='Optimizer to use')
+    parser.add_argument('--lr', type=float, default=0.5, help='Learning rate')
+    parser.add_argument('--beta1', type=float, default=0.8, help='Beta1 for Adam optimizer')
+    parser.add_argument('--beta2', type=float, default=0.999, help='Beta2 for Adam optimizer')
     args = parser.parse_args()
 
     filename = args.filename
@@ -218,8 +222,10 @@ if __name__ == "__main__":
             f.write(str(rpu_config))
 
     # Train the model
-    optimizer = AnalogSGD(model.parameters(), lr=0.5)
-    # optimizer = AnalogAdam(model.parameters(), lr=0.05, betas=(0.9, 0.999), eps=1e-8)
+    if args.optimizer == 'sgd':
+        optimizer = AnalogSGD(model.parameters(), lr=args.lr)
+    elif args.optimizer == 'adam':
+        optimizer = AnalogAdam(model.parameters(), lr=args.lr, betas=(args.beta1, args.beta2), eps=1e-8)
     optimizer.regroup_param_groups(model)
     scheduler = StepLR(optimizer, step_size=10, gamma=0.5)
 
@@ -241,6 +247,8 @@ if __name__ == "__main__":
             pickle.dump(weights, f)
         with open(os.path.join(output_dir, 'analog_weights.pkl'), 'wb') as f:
             pickle.dump(analog_weights, f)
+        with open(os.path.join(output_dir, 'out_scaling_alpha.pkl'), 'wb') as f:
+            pickle.dump([tile.out_scaling_alpha for tile in model.analog_tiles()], f)
 
 
     if output_dir is not None:
