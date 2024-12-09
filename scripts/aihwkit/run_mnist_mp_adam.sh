@@ -25,6 +25,9 @@ echo "epochs: $epochs"
 echo "dw_min_dtod: $dw_min_dtod"
 echo "dw_min_std: $dw_min_std"
 echo "write_noise_std_mult: $write_noise_std_mult"
+echo "lr: $lr"
+echo "beta1: $beta1"
+echo "beta2: $beta2"
 
 if [ ! -d "$output_directory" ]; then
     mkdir -p "$output_directory"

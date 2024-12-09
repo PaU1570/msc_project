@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
+import re
 
 def get_files(folder_path, extension, contains=None, exclude=None):
     """
@@ -146,6 +147,12 @@ def read_summary_file(filename):
         for key, val in zip(keys, line):
             d[key.strip()] = val.strip()
 
+        # find all numeric values in the dirname 3 levels up and put them in the dictionary as val1, val2, ...
+        parsename = filename.split('/')[-4]
+        numeric_values = re.findall(r'\d+\.\d+|\d+', parsename)
+        for i,val in enumerate(numeric_values):
+            d[f'val{i+1}'] = float(val)
+
     exp_data = pd.read_csv(filename, skiprows=6)
     return d, exp_data
 
@@ -246,6 +253,10 @@ def get_pytorch_df(directory):
     metrics_files = get_metrics_csv_files(directory)
     summary_files = get_summary_files(directory)
     rpu_config_files = get_rpu_txt_files(directory)
+
+    # remove the files that have summary and rpu_config but no metrics (incomplete simulations)
+    summary_files = [s for s in summary_files if any(os.path.dirname(s) in m for m in metrics_files)]
+    rpu_config_files = [r for r in rpu_config_files if any(os.path.dirname(r) in m for m in metrics_files)]
 
     final_metrics = _get_final_metrics(metrics_files)
 

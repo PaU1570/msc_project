@@ -22,6 +22,7 @@ echo "epochs: $epochs"
 echo "dw_min_dtod: $dw_min_dtod"
 echo "dw_min_std: $dw_min_std"
 echo "write_noise_std_mult: $write_noise_std_mult"
+echo "learn_out_scaling: True"
 
 if [ ! -d "$output_directory" ]; then
     mkdir -p "$output_directory"
