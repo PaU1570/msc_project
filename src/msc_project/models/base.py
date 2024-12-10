@@ -34,13 +34,16 @@ class BaseModel:
         except:
             print("Model does not have analog weights.")
             return None
+        
+    def preprocess_input(self, input):
+        return input
     
     def train(self, train_set, valid_set, epochs=3, save_weights=False):
         metrics = np.zeros((epochs, 4))
         weights = [self.model.get_weights()]
         analog_weights = [self.get_analog_weights()]
 
-        classifier = torch.nn.NLLLoss()
+        classifier = self.classifier
 
         for epoch_number in range(epochs):
             print(f"Epoch {epoch_number}:")
@@ -48,8 +51,8 @@ class BaseModel:
             for i, (images, labels) in enumerate(train_set):
                 images = images.to(self.device)
                 labels = labels.to(self.device)
-                # Flatten MNIST images into a 784 vector.
-                images = images.view(images.shape[0], -1)
+                
+                images = self.preprocess_input(images)
 
                 self.optimizer.zero_grad()
                 # Add training Tensor to the model (input).
@@ -81,7 +84,7 @@ class BaseModel:
                     images = images.to(self.device)
                     labels = labels.to(self.device)
 
-                    images = images.view(images.shape[0], -1)
+                    images = self.preprocess_input(images)
                     pred = self.model(images)
                     loss = classifier(pred, labels)
                     val_loss += loss.item()
@@ -125,7 +128,7 @@ class BaseModel:
             images = images.to(self.device)
             labels = labels.to(self.device)
 
-            images = images.view(images.shape[0], -1)
+            images = self.preprocess_input(images)
             pred = self.model(images)
 
             _, predicted = torch.max(pred.data, 1)
@@ -148,6 +151,35 @@ class BaseMNIST(BaseModel):
         self.train_loader = torch.utils.data.DataLoader(self.train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers)
         self.valid_loader = torch.utils.data.DataLoader(self.valid_set, batch_size=batch_size, shuffle=False, num_workers=num_workers)
         self.test_loader = torch.utils.data.DataLoader(self.test_set, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+
+        self.classifier = torch.nn.NLLLoss()
+
+    def get_dataset(self):
+        return self.train_loader, self.valid_loader, self.test_loader
+    
+    def preprocess_input(self, images):
+        # Flatten MNIST images into a 784 vector.
+        return images.view(images.shape[0], -1)
+    
+
+class BaseCIFAR10(BaseModel):
+    def __init__(self, model, seed=2024, data_split=[0.8, 0.2], batch_size=BATCH_SIZE, num_workers=NUM_WORKERS):
+        super().__init__(model, seed)
+
+        mean = torch.Tensor([0.4914, 0.4822, 0.4465])
+        std = torch.Tensor([0.2470, 0.2435, 0.2616])
+        transform = torchvision.transforms.Compose([torchvision.transforms.ToTensor(), torchvision.transforms.Normalize(mean, std)])
+        
+        trainval_set = torchvision.datasets.CIFAR10(PATH_DATASET, train=True, download=True, transform=transform)
+        self.test_set = torchvision.datasets.CIFAR10(PATH_DATASET, train=False, download=True, transform=transform)
+        
+        self.train_set, self.valid_set = torch.utils.data.random_split(trainval_set, data_split, generator=torch.Generator().manual_seed(self.seed))
+        
+        self.train_loader = torch.utils.data.DataLoader(self.train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+        self.valid_loader = torch.utils.data.DataLoader(self.valid_set, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+        self.test_loader = torch.utils.data.DataLoader(self.test_set, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+
+        self.classifier = torch.nn.CrossEntropyLoss()
 
     def get_dataset(self):
         return self.train_loader, self.valid_loader, self.test_loader
