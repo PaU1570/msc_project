@@ -35,6 +35,8 @@ def create_parser():
     common_parser.add_argument('--ylim', type=float, nargs=2, help='Y axis limits', default=None)
     common_parser.add_argument('--scale', type=str, choices=['linear', 'log-log', 'log-lin', 'lin-log'], default='linear', help='Scale of the axes')
     common_parser.add_argument('--aspect', type=str, help='Aspect ratio of the plot', default='auto')
+    common_parser.add_argument('--hlines', type=float, nargs='*', help='Add horizontal lines to the plot', default=None)
+    common_parser.add_argument('--vlines', type=float, nargs='*', help='Add vertical lines to the plot', default=None)
     # data selection arguments
     common_parser.add_argument('--filter', type=str, help='Filter the data based on a column (multiple filters can be specified)', default=None, action='append', nargs='*')
     common_parser.add_argument('--exclude', type=str, help='Exclude the data based on a column (multiple filters can be specified)', default=None, action='append', nargs='*')
@@ -209,6 +211,13 @@ def set_axis_properties(ax, args):
         ylabel = ', '.join(ylabel)
 
     ax.set(xlabel=xlabel, ylabel=ylabel, xscale=xscale, yscale=yscale, title=title, aspect=args.aspect, xlim=args.xlim, ylim=args.ylim)
+    # add horizontal and vertical lines
+    if args.vlines is not None:
+        for vline in args.vlines:
+            ax.axvline(x=vline, color='gray', linestyle='--', linewidth=0.5)
+    if args.hlines is not None:
+        for hline in args.hlines:
+            ax.axhline(y=hline, color='gray', linestyle='--', linewidth=0.5)
 
 def plot_summary(args):
 
