@@ -17,5 +17,5 @@ N_BATCH=1
 
 for wn_mult in "${write_noise_std_mult_vals[@]}"; do
     ((i=i%N_BATCH)); ((i++==0)) && wait
-    bash "$ANALYSIS_SCRIPT_SOURCE" "$data_directory" "$output_directory/dtod_std_write_0.3_0.3_${wn_mult}" 25 0.3 0.3 "$wn_mult" &
+    bash "$ANALYSIS_SCRIPT_SOURCE" "$data_directory" "$output_directory/dtod_std_write_0.3_0.3_${wn_mult}" 25 0.3 0.3 "$wn_mult" 0.8 &
 done
