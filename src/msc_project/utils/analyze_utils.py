@@ -1,5 +1,5 @@
-import nonlinear_fit as nlf
-import data_utils as du
+from msc_project.utils import nonlinear_fit as nlf
+from msc_project.utils import data_utils as du
 import argparse
 import pandas as pd
 import numpy as np

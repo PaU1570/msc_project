@@ -37,7 +37,8 @@ def add_noise(device_config, fit, data,
               dw_min_std=0.3,
               w_min_dtod=0.3,
               w_max_dtod=0.3,
-              up_down_dtod=0.01,
+              up_down_dtod=0,
+              write_noise_std=None,
               write_noise_std_mult=1,
               enforce_consistency=True,
               dw_min_dtod_log_normal=False,
@@ -59,7 +60,11 @@ def add_noise(device_config, fit, data,
     device_config.w_min_dtod = w_min_dtod
     device_config.w_max_dtod = w_max_dtod
     device_config.up_down_dtod = up_down_dtod
-    device_config.write_noise_std = np.sqrt(std ** 2 - device_config.dw_min_std ** 2)/2 * write_noise_std_mult
+    if write_noise_std is None:
+        device_config.write_noise_std = np.sqrt(std ** 2 - device_config.dw_min_std ** 2)/2 * write_noise_std_mult
+    else:
+        device_config.write_noise_std = write_noise_std
+
     device_config.enforce_consistency=enforce_consistency  # do not allow dead devices
     device_config.dw_min_dtod_log_normal=dw_min_dtod_log_normal # more realistic to use log-normal
     device_config.construction_seed = construction_seed
@@ -101,7 +106,8 @@ if __name__ == "__main__":
     parser.add_argument('--w_max_dtod', type=float, default=0.3, help='Device-to-device variation of the maximum weight')
     parser.add_argument('--up_down_dtod', type=float, default=0.01, help='Device-to-device variation of the up/down asymmetry')
     parser.add_argument('--write_noise_std_mult', type=float, default=1, help='Multiplier for the write noise standard deviation')
-    parser.add_argument('--pulse_type', type=str, choices=['none', 'noneWithDevice', 'stochastic'], default='stochastic', help='Pulse type to use')
+    parser.add_argument('--write_noise_std', type=float, default=None, help='Write noise standard deviation. If given, overrides write_noise_std_mult')
+    parser.add_argument('--pulse_type', type=str, choices=['none', 'noneWithDevice', 'stochastic', 'deterministicImplicit'], default='deterministicImplicit', help='Pulse type to use')
     parser.add_argument('--save_weights', action='store_true', help='Save the weights at each epoch')
     parser.add_argument('--asymmetric_pulsing_dir', type=str, choices=['Up', 'Down', 'None'], default='None', help='Asymmetric pulsing direction')
     parser.add_argument('--asymmetric_pulsing_up', type=int, default=1, help='Asymmetric pulsing up number')
@@ -141,6 +147,7 @@ if __name__ == "__main__":
                               w_min_dtod=args.w_min_dtod,
                               w_max_dtod=args.w_max_dtod,
                               up_down_dtod=args.up_down_dtod,
+                              write_noise_std=args.write_noise_std,
                               write_noise_std_mult=args.write_noise_std_mult)
     
     if args.use_reference_device:
@@ -173,6 +180,10 @@ if __name__ == "__main__":
         up_params.pulse_type = PulseType.NONE
     elif args.pulse_type == 'noneWithDevice':
         up_params.pulse_type = PulseType.NONE_WITH_DEVICE
+    elif args.pulse_type == 'stochastic':
+        up_params.pulse_type = PulseType.STOCHASTIC
+    else:
+        up_params.pulse_type = PulseType.DETERMINISTIC_IMPLICIT
 
     rpu_config = DigitalRankUpdateRPUConfig(
             device=MixedPrecisionCompound(
@@ -236,9 +247,13 @@ if __name__ == "__main__":
 
     # Test the model
     mnist_model.test(test_loader)
+    test_acc = np.zeros(shape=(metrics.shape[0], 1))
+    test_acc[-1] = mnist_model.test_accuracy
+
+    metrics = np.concatenate((metrics, test_acc), axis=1)
 
     # Save training metrics
-    df = pd.DataFrame(metrics, columns=['epoch', 'train_loss', 'val_loss', 'val_acc'])
+    df = pd.DataFrame(metrics, columns=['epoch', 'train_loss', 'val_loss', 'val_acc', 'test_acc'])
     if output_dir is not None:
         df.to_csv(os.path.join(output_dir, 'metrics.csv'), index=False)
 
