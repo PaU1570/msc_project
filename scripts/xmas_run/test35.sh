@@ -12,12 +12,12 @@ fi
 data_directory="$1"
 output_directory="$2"
 
-write_noise_std_vals=($(seq 0 0.1 0.5))
-for write_noise_std in "${write_noise_std_vals[@]}"; do
-    bash "${ANALYSIS_SCRIPT_SOURCE}" "${data_directory}" "${output_directory}/no_out_scaling_wnstd_up_down_${write_noise_std}_1_1" 25 0 0 "$write_noise_std" 0 0 1 1
-    bash "${ANALYSIS_SCRIPT_SOURCE}" "${data_directory}" "${output_directory}/no_out_scaling_wnstd_up_down_${write_noise_std}_1_2" 25 0 0 "$write_noise_std" 0 0 1 2
-    bash "${ANALYSIS_SCRIPT_SOURCE}" "${data_directory}" "${output_directory}/no_out_scaling_wnstd_up_down_${write_noise_std}_1_3" 25 0 0 "$write_noise_std" 0 0 1 3
-    bash "${ANALYSIS_SCRIPT_SOURCE_LEARNOUTSCALING}" "${data_directory}" "${output_directory}/learn_out_scaling_wnstd_up_down_${write_noise_std}_1_1" 25 0 0 "$write_noise_std" 0 0 1 1
-    bash "${ANALYSIS_SCRIPT_SOURCE_LEARNOUTSCALING}" "${data_directory}" "${output_directory}/learn_out_scaling_wnstd_up_down_${write_noise_std}_1_2" 25 0 0 "$write_noise_std" 0 0 1 2
-    bash "${ANALYSIS_SCRIPT_SOURCE_LEARNOUTSCALING}" "${data_directory}" "${output_directory}/learn_out_scaling_wnstd_up_down_${write_noise_std}_1_3" 25 0 0 "$write_noise_std" 0 0 1 3
+noise_vals=(0 0.3)
+for noise in "${noise_vals[@]}"; do
+    bash "${ANALYSIS_SCRIPT_SOURCE}" "${data_directory}" "${output_directory}/no_out_scaling_noise_up_down_${noise}_1_1" 25 "$noise" "$noise" "$noise" "$noise" "$noise" 1 1
+    bash "${ANALYSIS_SCRIPT_SOURCE}" "${data_directory}" "${output_directory}/no_out_scaling_noise_up_down_${noise}_1_2" 25 "$noise" "$noise" "$noise" "$noise" "$noise" 1 2
+    #bash "${ANALYSIS_SCRIPT_SOURCE}" "${data_directory}" "${output_directory}/no_out_scaling_noise_up_down_${noise}_1_3" 25 "$noise" "$noise" "$noise" "$noise" "$noise" 1 3
+    bash "${ANALYSIS_SCRIPT_SOURCE_LEARNOUTSCALING}" "${data_directory}" "${output_directory}/learn_out_scaling_noise_up_down_${noise}_1_1" 25 "$noise" "$noise" "$noise" "$noise" "$noise" 1 1
+    bash "${ANALYSIS_SCRIPT_SOURCE_LEARNOUTSCALING}" "${data_directory}" "${output_directory}/learn_out_scaling_noise_up_down_${noise}_1_2" 25 "$noise" "$noise" "$noise" "$noise" "$noise" 1 2
+    #bash "${ANALYSIS_SCRIPT_SOURCE_LEARNOUTSCALING}" "${data_directory}" "${output_directory}/learn_out_scaling_noise_up_down_${noise}_1_3" 25 "$noise" "$noise" "$noise" "$noise" "$noise" 1 3
 done

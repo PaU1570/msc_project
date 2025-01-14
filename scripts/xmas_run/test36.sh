@@ -25,7 +25,7 @@ N_BATCH=1
 #     bash "$ANALYSIS_SCRIPT_SOURCE" "$data_directory" "$output_directory/dw_min_std_${dw_min_std}" 25 0 "$dw_min_std" 0 0 0 &
 # done
 
-write_noise_std_vals=($(seq 0 0.1 0.5))
+write_noise_std_vals=(0 0.3)
 for write_noise_std in "${write_noise_std_vals[@]}"; do
     ((i=i%N_BATCH)); ((i++==0)) && wait
     bash "$ANALYSIS_SCRIPT_SOURCE" "$data_directory" "$output_directory/write_noise_std_0_0_${write_noise_std}" 25 0 0 "$write_noise_std" 0 0 &

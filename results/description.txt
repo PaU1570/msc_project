@@ -45,14 +45,14 @@ xmas run (remember to not save fit pictures):
 
 - test34: NeuroSim test10 but save pulse numbers, 5 runs
 
-- test35a: asymmetric pulsing 1up1down learn_out_scaling=False, 0 noise for all except: write_noise_std sweep (0, 0.5, step 0.1)
-- test35b: asymmetric pulsing 1up2down learn_out_scaling=False, 0 noise for all except: write_noise_std sweep (0, 0.5, step 0.1)
-- test35c: asymmetric pulsing 1up3down learn_out_scaling=False, 0 noise for all except: write_noise_std sweep (0, 0.5, step 0.1)
-- test35d: asymmetric pulsing 1up1down learn_out_scaling=True, 0 noise for all except: write_noise_std sweep (0, 0.5, step 0.1)
-- test35e: asymmetric pulsing 1up2down learn_out_scaling=True, 0 noise for all except: write_noise_std sweep (0, 0.5, step 0.1)
-- test35f: asymmetric pulsing 1up3down learn_out_scaling=True, 0 noise for all except: write_noise_std sweep (0, 0.5, step 0.1)
+- test35a: asymmetric pulsing 1up1down learn_out_scaling=False, 0 noise for all and 0.3 (default) noise for all.
+- test35b: asymmetric pulsing 1up2down learn_out_scaling=False, 0 noise for all and 0.3 (default) noise for all.
+#- test35c: asymmetric pulsing 1up3down learn_out_scaling=False, 0 noise for all and 0.3 (default) noise for all.
+- test35d: asymmetric pulsing 1up1down learn_out_scaling=True, 0 noise for all and 0.3 (default) noise for all.
+- test35e: asymmetric pulsing 1up2down learn_out_scaling=True, 0 noise for all and 0.3 (default) noise for all.
+#- test35f: asymmetric pulsing 1up3down learn_out_scaling=True, 0 noise for all and 0.3 (default) noise for all.
 
-- test36: repeat test31e but with learn_out_scaling=True. Sweep step 0.1 instead of 0.05; and repeat with 0.3 noise on all the other parameters.
+- test36: repeat test31e but with learn_out_scaling=True. 0 and 0.3 write noise instead of sweep; and repeat with 0.3 noise on all the other parameters.
 
 - test37a-h: repeat test32a-d but with pulseType=None and pulseType=Stochastic
 

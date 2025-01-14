@@ -10,19 +10,19 @@ RESULTS_DIR="/scratch/msc24h18/msc_project/results"
 #bash "${SCRIPT_DIR}/test31.sh" "${DATA_DIR}" "${RESULTS_DIR}/test31"
 
 # run test32a
-bash "${PARENT_DIR}/aihwkit/run_mnist_mp.sh" "${DATA_DIR}" "${RESULTS_DIR}/test32/no_out_scaling_wnstd_0" 25 0.3 0.3 0 0.3 0.3
+#bash "${PARENT_DIR}/aihwkit/run_mnist_mp.sh" "${DATA_DIR}" "${RESULTS_DIR}/test32/no_out_scaling_wnstd_0" 25 0.3 0.3 0 0.3 0.3
 # run test32b
-bash "${PARENT_DIR}/aihwkit/run_mnist_mp_learnoutscaling.sh" "${DATA_DIR}" "${RESULTS_DIR}/test32/learn_out_scaling_wnstd_0" 25 0.3 0.3 0 0.3 0.3
+#bash "${PARENT_DIR}/aihwkit/run_mnist_mp_learnoutscaling.sh" "${DATA_DIR}" "${RESULTS_DIR}/test32/learn_out_scaling_wnstd_0" 25 0.3 0.3 0 0.3 0.3
 # run test32c
-bash "${PARENT_DIR}/aihwkit/run_mnist_mp.sh" "${DATA_DIR}" "${RESULTS_DIR}/test32/no_out_scaling_wnstd_0.3" 25 0.3 0.3 0.3 0.3 0.3
+#bash "${PARENT_DIR}/aihwkit/run_mnist_mp.sh" "${DATA_DIR}" "${RESULTS_DIR}/test32/no_out_scaling_wnstd_0.3" 25 0.3 0.3 0.3 0.3 0.3
 # run test32d
-bash "${PARENT_DIR}/aihwkit/run_mnist_mp_learnoutscaling.sh" "${DATA_DIR}" "${RESULTS_DIR}/test32/learn_out_scaling_wnstd_0.3" 25 0.3 0.3 0.3 0.3 0.3
+#bash "${PARENT_DIR}/aihwkit/run_mnist_mp_learnoutscaling.sh" "${DATA_DIR}" "${RESULTS_DIR}/test32/learn_out_scaling_wnstd_0.3" 25 0.3 0.3 0.3 0.3 0.3
 
 # run test33
-bash "${PARENT_DIR}/run_from_configs.sh" "${RESULTS_DIR}/test33" "${RESULTS_DIR}/test33" 3
+#bash "${PARENT_DIR}/run_from_configs.sh" "${RESULTS_DIR}/test33" "${RESULTS_DIR}/test33" 3
 
 # run test34
-bash "${PARENT_DIR}/run_from_configs.sh" "/scratch/msc24h18/msc_project/neurosim_configs/test10" "${RESULTS_DIR}/test34" 5
+#bash "${PARENT_DIR}/run_from_configs.sh" "/scratch/msc24h18/msc_project/neurosim_configs/test10" "${RESULTS_DIR}/test34" 5
 
 # run test35
 bash "${SCRIPT_DIR}/test35.sh" "${DATA_DIR}" "${RESULTS_DIR}/test35"
