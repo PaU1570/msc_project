@@ -7,7 +7,7 @@ DATA_DIR="/scratch/msc24h18/msc_project/data/LBE247_analyzed_2nd_run_only"
 RESULTS_DIR="/scratch/msc24h18/msc_project/results"
 
 # run test31
-bash "${SCRIPT_DIR}/test31.sh" "${DATA_DIR}" "${RESULTS_DIR}/test31"
+#bash "${SCRIPT_DIR}/test31.sh" "${DATA_DIR}" "${RESULTS_DIR}/test31"
 
 # run test32a
 bash "${PARENT_DIR}/aihwkit/run_mnist_mp.sh" "${DATA_DIR}" "${RESULTS_DIR}/test32/no_out_scaling_wnstd_0" 25 0.3 0.3 0 0.3 0.3

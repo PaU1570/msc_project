@@ -1,0 +1,8 @@
+test_date,test_time,device_name,device_id
+24.10.2024,13:22:32,,ID170ZR5000
+groundWGFMU,pulseWGFMU,startVolage1,endVoltage1,startVolage2,endVoltage2,stepSize,riseTime,fallTime,pulseWidth,pulseDelay,VpreCond1,VpreCond2,riseTimePrecond,fallTimePrecon,pulseWidthPreCond,bothSides,repetitions,preConEveryLoop,groundVoltageDuringPulse,measName
+SMU2,WGFMU1,0.7,5.0,-0.6,-3.6,0.042,2e-08,2e-08,2e-08,0.001,0.0,0.0,0.0001,0.0001,0.005,0.0,2.0,0.0,0.0,2em8s
+VStartPos (V),VEndPos (V),VStartNeg (V),VEndNeg (V),twidth (s),onOffRatio,A_LTP,A_LTD,NL_LTP,NL_LTD,num_LTP,num_LTD,fit_R2_LTP,fit_R2_LTD
+0.6,5.0,-0.5,-3.7,2e-08,4.593602343282945,1.5463051686887639,-0.3372031286401767,0.81,-3.36,102,72,0.9079544413600292,0.9184355317374195
+NeuroSim output:
+=================

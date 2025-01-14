@@ -52,8 +52,8 @@ xmas run (remember to not save fit pictures):
 - test35e: asymmetric pulsing 1up2down learn_out_scaling=True, 0 noise for all except: write_noise_std sweep (0, 0.5, step 0.1)
 - test35f: asymmetric pulsing 1up3down learn_out_scaling=True, 0 noise for all except: write_noise_std sweep (0, 0.5, step 0.1)
 
-- test36a-e: repeat test31a-e but with learn_out_scaling=True
+- test36: repeat test31e but with learn_out_scaling=True. Sweep step 0.1 instead of 0.05; and repeat with 0.3 noise on all the other parameters.
 
 - test37a-h: repeat test32a-d but with pulseType=None and pulseType=Stochastic
 
-- test38: floating point model, sweep lr (0.1, 0.8, step 0.1) (save weights)
+- test38: floating point model, sweep lr (0.05, 1, step 0.05) (save weights)

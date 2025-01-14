@@ -1,0 +1,8 @@
+test_date,test_time,device_name,device_id
+19.09.2024,16:05:42,LBE247,ID301XR1000Oct
+groundWGFMU,pulseWGFMU,startVolage1,endVoltage1,startVolage2,endVoltage2,stepSize,riseTime,fallTime,pulseWidth,pulseDelay,VpreCond1,VpreCond2,riseTimePrecond,fallTimePrecon,pulseWidthPreCond,bothSides,repetitions,preConEveryLoop,groundVoltageDuringPulse,measName
+SMU2,WGFMU1,0.0,5.0,0.0,-4.5,0.1,2e-08,2e-08,2e-08,0.001,0.0,0.0,0.0001,0.0001,0.005,1.0,2.0,0.0,0.0,2e-8s-5V-m4p5V
+VStartPos (V),VEndPos (V),VStartNeg (V),VEndNeg (V),twidth (s),onOffRatio,A_LTP,A_LTD,NL_LTP,NL_LTD,num_LTP,num_LTD,fit_R2_LTP,fit_R2_LTD
+1.1,5.0,-0.9,-3.5,2e-08,7.78406708595419,2.0620429388766093,-1.0373475375506476,0.61,-1.2,38,25,0.9285355209720362,0.9700399625661974
+NeuroSim output:
+=================
