@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as clr
 import argparse
+import os
 
 def distribution_function_mesa(z, Gamma, z1, z2):
     """
@@ -96,7 +97,7 @@ def fit_tau(voltage, log_tau, p0=None):
     popt, pcov = curve_fit(lambda V, t0, V0, n: np.log(f_tau(V, t0, V0, n)), voltage, log_tau, p0=p0, nan_policy='omit')
     return popt
 
-def iterative_fit(data, pmax=None, iters=10):
+def iterative_fit(data, pmax=None, iters=10, p0_tmin=None, p0_tmax=None):
     """
     Fit polarization data, extract tau_min/max fit, and then use that to obtain better initial guesses for polarization fit.
     """
@@ -133,11 +134,11 @@ def iterative_fit(data, pmax=None, iters=10):
 
         # fit tau_min and tau_max
         try:
-            popt_tmin = fit_tau(optdata["voltage"], optdata["p1"])
+            popt_tmin = fit_tau(optdata["voltage"], optdata["p1"], p0=p0_tmin)
         except:
             pass
         try:
-            popt_tmax = fit_tau(optdata["voltage"], optdata["p2"])
+            popt_tmax = fit_tau(optdata["voltage"], optdata["p2"], p0=p0_tmax)
         except:
             pass
 
@@ -202,8 +203,8 @@ def plot_all(data, ax=None, cmap=plt.cm.plasma, fit=False, fit_type="mesa", pmax
     
     return pd.DataFrame(optdata)
 
-def plot_all_iterative(data, axs, pmax=None, cmap=plt.cm.plasma, iters=10):
-    opt_df, popt_tmin, popt_tmax = iterative_fit(data, pmax=pmax, iters=iters)
+def plot_all_iterative(data, axs, pmax=None, cmap=plt.cm.plasma, iters=10, p0_tmin=None, p0_tmax=None):
+    opt_df, popt_tmin, popt_tmax = iterative_fit(data, pmax=pmax, iters=iters, p0_tmin=p0_tmin, p0_tmax=p0_tmax)
 
     norm = clr.Normalize()       
     colors = cmap(norm(data.columns[1:].astype(float)))
@@ -252,6 +253,12 @@ def load_data(filename):
     
     return data
 
+def get_pmax(filename):
+    df = load_data(filename)
+    maxpols = df.max()
+    maxpols = maxpols[1:]
+    maxpols.to_csv(os.path.join(os.path.dirname(filename), os.path.join("maxpols", os.path.basename(filename))), index_label='V', header=['Pmax'])
+
 if __name__ == '__main__':
     plt.style.use('ggplot')
 
@@ -259,6 +266,8 @@ if __name__ == '__main__':
     parser.add_argument('input', type=str, help='Input file')
     parser.add_argument('--voltage', type=float, help='Voltage to fit')
     parser.add_argument('--p0', type=float, nargs=3, help='Initial guess for the fit parameters')
+    parser.add_argument('--p0_tmin', type=float, nargs=3, help='Initial guess for the fit parameters of tmin')
+    parser.add_argument('--p0_tmax', type=float, nargs=3, help='Initial guess for the fit parameters of tmax')
     parser.add_argument('--fit_type', type=str, choices=['mesa', 'lorentzian'], default='mesa', help='Type of distribution function to fit')
     parser.add_argument('--pmax', type=str, help='File containing maximum polarization values for each voltage')
 
@@ -280,7 +289,7 @@ if __name__ == '__main__':
     else:
         fig, axs = plt.subplots(1, 2, figsize=(20, 10))
         fig.suptitle(args.input)
-        plot_all_iterative(data, axs, pmax=pmax)
+        plot_all_iterative(data, axs, pmax=pmax, p0_tmin=args.p0_tmin, p0_tmax=args.p0_tmax)
         axs[0].set(xlabel = 'Pulse duration', ylabel = 'Partial polarization', xscale='log', ylim=(0, 1))
         axs[0].legend()
         axs[1].set(xlabel = 'V', ylabel = '$\\log(\\tau)$')
