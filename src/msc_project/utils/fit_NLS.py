@@ -100,7 +100,7 @@ def f_tau(V, tau0, V0, n):
 
 def fit_tau(voltage, log_tau, p0=None):
     """
-    Fit the log of the characteristic time to a linear function of the voltage.
+    Fit the log of the characteristic time to a function of the voltage.
     """
     voltage = np.array(voltage)
     log_tau = np.array(log_tau)
@@ -385,6 +385,19 @@ if __name__ == '__main__':
         bounds = (args.bounds_lower, np.inf)
     elif args.bounds_upper:
         bounds = (-np.inf, args.bounds_upper)
+    
+    # fig, ax = plt.subplots()
+    # norm = clr.Normalize()
+    # cmap=plt.cm.plasma     
+    # colors = cmap(norm(data.columns[1:].astype(float)))
+    # cbar = plt.colorbar(cm.ScalarMappable(cmap=cmap, norm=norm), ax=ax)
+    # cbar.set_label("V")
+    
+    # for col, c in zip(data.columns[1:], colors):           
+    #     plot_single(data, col, ax=ax, fit=False, color=c)
+
+    # plt.show()
+    # exit(1)
 
     if args.voltage:
         fig, ax = plt.subplots()
