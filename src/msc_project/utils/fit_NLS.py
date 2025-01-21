@@ -98,7 +98,7 @@ def fit_polarization(x, y, p0=None, bounds=None, type="mesa", pmax=None):
 def f_tau(V, tau0, V0, n):
         return tau0 * np.exp((V0 / V)**n)
 
-def fit_tau(voltage, log_tau, p0=None):
+def fit_tau(voltage, log_tau, p0=None, bounds=None):
     """
     Fit the log of the characteristic time to a function of the voltage.
     """
@@ -107,9 +107,9 @@ def fit_tau(voltage, log_tau, p0=None):
 
     if p0 is None:
         p0 = [1, 1, 1]
-        pass
 
-    bounds = ([-np.inf, 0, 0], [np.inf, np.inf, 4])
+    if bounds is None:
+        bounds = ([-np.inf, 0, 0], [np.inf, np.inf, 4])
     #bounds = (-np.inf, np.inf)
     
     popt, pcov = curve_fit(lambda V, t0, V0, n: np.log(f_tau(V, t0, V0, n)), voltage, log_tau, p0=p0, bounds=bounds, nan_policy='omit')
