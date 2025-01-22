@@ -154,7 +154,7 @@ if __name__ == "__main__":
         ax, sp = plot_symmetry_point(device_config, ax=None, n_steps=0, pre_alternating_pulses=0, alternating_pulses=50, w_init=0)
         print(f'Symmetry point: {sp}')
         device_config = ReferenceUnitCell([device_config], construction_seed=SEED)
-        # set reference weights to symmetry point
+        # set reference weights to symmetry point (TODO)
 
     # Plot the fit
     if output_dir is not None and args.save_fit:

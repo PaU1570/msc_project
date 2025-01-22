@@ -146,8 +146,13 @@ def filter_data(data, filter_list, exclusion_list, reset_index=True):
         for exclusion_column, exclusion_value in exclusion_list:
             if exclusion_column not in data.columns:
                 print(f"Warning: {exclusion_column} is not a column in the data. No data will be excluded based on this column.")
-            print(f'Excluding data based on {exclusion_column} = {exclusion_value}')
-            data = data[data[exclusion_column] != exclusion_value]
+            else:
+                print(f'Excluding data based on {exclusion_column} = {exclusion_value}')
+                try:
+                    exclusion_value = pd.to_numeric(exclusion_value)
+                except ValueError:
+                    pass
+                data = data[data[exclusion_column] != exclusion_value]
     
     if reset_index:
         data = data.reset_index(drop=True)

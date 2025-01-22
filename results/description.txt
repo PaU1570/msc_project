@@ -57,3 +57,8 @@ xmas run (remember to not save fit pictures):
 - test37a-h: repeat test32a-d but with pulseType=None and pulseType=Stochastic
 
 - test38: floating point model, sweep lr (0.05, 1, step 0.05) (save weights)
+
+test40: compare floating point, mixed-precision, and plain sgd for three devices (default noise):
+    - ID181ZR1000,24.10.2024,12:21:13, with symmetry point 0.07
+    - ID181ZR1000,24.10.2024,12:51:01, with symmetry point 0.24
+    - ID181ZR1000,24.10.2024,12:44:23, with symmetry point 0.62
