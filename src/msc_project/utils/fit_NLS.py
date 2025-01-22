@@ -8,6 +8,9 @@ import matplotlib.cm as cm
 import matplotlib.colors as clr
 import argparse
 import os
+from multiprocessing import Pool
+import datetime
+import time
 
 def r2_score(y, y_pred):
     """
@@ -328,22 +331,52 @@ def plot_all_iterative(data, axs, pmax=None, cmap=plt.cm.plasma, iters=5, p0_tmi
             axs[1].plot(v, np.log(tl), ls='--', color='C0',
                         label=f'$\\log(\\tau_{{Lorentz}})$ (fit): $\\tau_0$={popt_tl[0]:.2e}, $V_0$={popt_tl[1]:.2f}, $n$={popt_tl[2]:.2f}')
 
-def load_data(filename):
+def load_data(filename, format=0):
     """
     Load data in the format of the provided CSV file.
     The first column is pulse width, and the even columns (starting from 0) are the polarization values for each voltage.
+
+    Args:
+        - filename: path to the csv file
+        - format: format of the csv file.
+            0: rows are [pulse Width,1V,1.00V,1.25V,1.25V,...] where for each voltage the partial polarization is in the even columns (starting from 0)
+            1: rows are [pulse Width,1V,1.25V,1.50V,1.75V,...] where there is no repetition of the voltages
+            2: data in the format sent by Ruben
+
+    Returns:
+        - pandas DataFrame with the first column being the Pulse Width and the rest the partial polarization values for each voltage
     """
-    data = pd.read_csv(filename)
-    # keep only even columns
-    data = data.iloc[:, ::2]
-    # fix column names
-    data.columns = [col.split('V')[0] for col in data.columns]
-    # convert all the numeric values to float
-    data = data.apply(pd.to_numeric, errors='coerce')
-    # clip negative values to 0
-    data = data.clip(lower=0)
-    # normalize the data
-    data = data.div(data.max().max())
+    if (format == 0) or (format == 1):
+        data = pd.read_csv(filename)
+        if format == 0:
+            # keep only even columns
+            data = data.iloc[:, ::2]
+        # fix column names
+        data.columns = [col.split('V')[0] for col in data.columns]
+        # convert all the numeric values to float
+        data = data.apply(pd.to_numeric, errors='coerce')
+        # clip negative values to 0
+        data = data.clip(lower=0)
+        # normalize the data
+        data = data.div(data.iloc[:, 1:].max().max())
+    elif format == 2:
+        unformatted_data = pd.read_csv(filename, sep=' ')
+        v = sorted(unformatted_data['v'].unique())
+        t = sorted(unformatted_data['pulseTime'].unique())
+        formatted_data = {"Pulse Width": t}
+        for v_val in v:
+            tmp = unformatted_data[unformatted_data['v'] == v_val]
+            tmp.sort_values(by='pulseTime', ignore_index=True, inplace=True)
+
+            s_vals = np.zeros_like(t)
+            s_vals[:] = np.nan
+
+            indices = [t.index(pulse_time) for pulse_time in tmp['pulseTime']]
+            s_vals[indices] = tmp['S'].values
+
+            formatted_data[v_val] = s_vals
+
+        data = pd.DataFrame(formatted_data)
     
     return data
 
@@ -352,6 +385,141 @@ def get_pmax(filename):
     maxpols = df.max()
     maxpols = maxpols[1:]
     maxpols.to_csv(os.path.join(os.path.dirname(filename), os.path.join("maxpols", os.path.basename(filename))), index_label='V', header=['Pmax'])
+
+
+def _fit_single_file(args):
+    f, data_path, n, n_tol, format = args
+    size = f.split(' ')[0]
+    if type(size) != int and not size.isnumeric():
+        size = 0
+    data = load_data(os.path.join(data_path, f), format=format)
+    fit_data = {"size": [], "voltage": [], "n": [], "A": [], "omega": [], "log_tlorentz": [], "r2_score": []}
+
+    p0 = [0.2, 0.1, -7, n]
+    bounds = ([-np.inf, -np.inf, -np.inf, n-n_tol], [np.inf, np.inf, np.inf, n+n_tol])
+    for col in data.columns[1:]:
+        try:
+            popt = fit_polarization(data['Pulse Width'], data[col], type="lorentzian", p0=p0, bounds=bounds)
+        except Exception as e:
+            print(f"Couldn't fit {col}V (size {size}): {e}")
+            continue
+
+        r2 = r2_score(data[col], polarization_lorentzian(data['Pulse Width'], *popt))
+
+        fit_data["size"].append(size)
+        fit_data["voltage"].append(col)
+        fit_data["A"].append(popt[0])
+        fit_data["omega"].append(popt[1])
+        fit_data["log_tlorentz"].append(popt[2])
+        fit_data["n"].append(popt[3])
+        fit_data["r2_score"].append(r2)
+
+        print(f"Fit {col}V (size {size}): {popt}")
+
+    return fit_data
+
+def fit_polarizations(data_path, n_vals, n_tol, output_file, format=0):
+    """
+    Given the path to where csv files for the partial polarization data are stored (all sizes), fit the data for each voltage and size while keeping n
+    fixed to the provided values. The fit parameters are saved to a csv file.
+
+    Uses multiprocessing to speed up the process.
+
+    Args:
+        - data_path: path to the directory containing the csv files
+        - n_vals: list of n values to keep fixed
+        - n_tol: tolerance for n values. the value of n resulting from the fit will be in the range [n-n_tol, n+n_tol]
+        - output_file: path to the output csv file
+        - format: format of the csv file. See load_data for more information
+
+    Returns:
+        - None
+    """
+    ext = ".csv" if format != 2 else ".txt"
+    csv_files = [f for f in os.listdir(data_path) if f.endswith(ext)]
+    args = [(f, data_path, n, n_tol, format) for f in csv_files for n in n_vals]
+
+    with Pool() as pool:
+        results = pool.map(_fit_single_file, args)
+
+    fit_data = {"size": [], "voltage": [], "n": [], "A": [], "omega": [], "log_tlorentz": [], "r2_score": []}
+    for result in results:
+        for key in fit_data:
+            fit_data[key].extend(result[key])
+
+    fit_df = pd.DataFrame(fit_data)
+    fit_df.sort_values(by=['size', 'voltage', 'n'], inplace=True, ignore_index=True)
+    fit_df.to_csv(output_file, index=False)
+
+def fit_tau_lorentz(data_path, n_vals, n_tol, fix_n_tau, exclude_voltages, output_file, fix_V0=False, polarity='positive'):
+    """
+    Take the best fit parameters for the polarization (output of fit_polarizations) and fit the log of the characteristic time to a function of the voltage.
+
+    Args:
+        - data_path: path to the csv file containing the best fit parameters for the polarization (output of fit_polarizations)
+        - n_vals: list of n values to keep fixed
+        - n_tol: tolerance for n values. the value of n resulting from the fit will be in the range [n-n_tol, n+n_tol]
+        - fix_n_tau: if True, fix the value of n in the fit for tau
+        - exclude_voltages: list of voltages to exclude from the fit
+        - output_file: path to the output csv file
+        - fix_V0: if provided, fix the value of V0 in the fit
+    """
+    fit_df = pd.read_csv(data_path)
+    if polarity == 'positive':
+        fit_df = fit_df[fit_df['voltage'] > 0]
+        sign = 1
+    elif polarity == 'negative':
+        fit_df = fit_df[fit_df['voltage'] < 0]
+        sign = -1
+    else:
+        raise ValueError("Unknown polarity")
+
+    tau_fit_data = {"size": [], "n": [], "t0": [], "V0": [], "n_tau": [], "r2_score": []}
+    unique_sizes = fit_df['size'].unique()
+    for size in unique_sizes:
+        size_df = fit_df[fit_df['size'] == size]
+        print(f"Processing size: {size}")
+
+        for n in n_vals:
+            size_n_df = size_df[np.isclose(size_df['n'], n, atol=n_tol*1.1)]
+            if not size_n_df.empty:
+                print(f"  n = {n}: {len(size_n_df)} entries")
+                p0 = [1e-5, 5, n]
+                bounds = ([-np.inf, -np.inf, 0], [np.inf, np.inf, 4])
+
+                x = np.array(size_n_df['voltage'])
+                y = np.array(size_n_df['log_tlorentz'])
+                if exclude_voltages is not None:
+                    mask = np.isin(x, exclude_voltages, invert=True)
+                    x = x[mask]
+                    y = y[mask]
+                x *= sign
+
+                if fix_n_tau:
+                    bounds = ([-np.inf, -np.inf, n-n_tol], [np.inf, np.inf, n+n_tol])
+
+                if fix_V0:
+                    p0[1] = fix_V0
+                    bounds[0][1] = fix_V0 - 1e-5
+                    bounds[1][1] = fix_V0 + 1e-5
+
+                try:
+                    popt = fit_tau(x, y, p0=p0, bounds=bounds)
+                except Exception as e:
+                    print(f"  Couldn't fit {size} (n={n}): {e}")
+                    continue
+
+                r2 = r2_score(y, np.log(f_tau(x, *popt)))
+
+                tau_fit_data["size"].append(size)
+                tau_fit_data["n"].append(n)
+                tau_fit_data["t0"].append(popt[0])
+                tau_fit_data["V0"].append(popt[1] * sign)
+                tau_fit_data["n_tau"].append(popt[2])
+                tau_fit_data["r2_score"].append(r2)
+
+    tau_fit_df = pd.DataFrame(tau_fit_data)
+    tau_fit_df.to_csv(output_file, index=False)
 
 if __name__ == '__main__':
     plt.style.use('ggplot')
@@ -385,19 +553,6 @@ if __name__ == '__main__':
         bounds = (args.bounds_lower, np.inf)
     elif args.bounds_upper:
         bounds = (-np.inf, args.bounds_upper)
-    
-    # fig, ax = plt.subplots()
-    # norm = clr.Normalize()
-    # cmap=plt.cm.plasma     
-    # colors = cmap(norm(data.columns[1:].astype(float)))
-    # cbar = plt.colorbar(cm.ScalarMappable(cmap=cmap, norm=norm), ax=ax)
-    # cbar.set_label("V")
-    
-    # for col, c in zip(data.columns[1:], colors):           
-    #     plot_single(data, col, ax=ax, fit=False, color=c)
-
-    # plt.show()
-    # exit(1)
 
     if args.voltage:
         fig, ax = plt.subplots()
