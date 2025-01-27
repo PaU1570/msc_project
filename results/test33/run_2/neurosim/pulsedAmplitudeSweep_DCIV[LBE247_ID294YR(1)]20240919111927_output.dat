@@ -1,0 +1,1395 @@
+test_date,test_time,device_name,device_id
+19.09.2024,11:19:27,LBE247,ID294YR
+groundWGFMU,pulseWGFMU,startVolage1,endVoltage1,startVolage2,endVoltage2,stepSize,riseTime,fallTime,pulseWidth,pulseDelay,VpreCond1,VpreCond2,riseTimePrecond,fallTimePrecon,pulseWidthPreCond,bothSides,repetitions,preConEveryLoop,groundVoltageDuringPulse,measName
+SMU2,WGFMU1,0.0,3.0,0.0,-2.0,0.1,2e-08,2e-08,0.0005,0.001,0.0,0.0,0.0001,0.0001,0.005,1.0,3.0,0.0,0.0,5e-4s-3V-m2V
+VStartPos (V),VEndPos (V),VStartNeg (V),VEndNeg (V),twidth (s),onOffRatio,A_LTP,A_LTD,NL_LTP,NL_LTD,num_LTP,num_LTD,fit_R2_LTP,fit_R2_LTD
+0.4,3.0,-0.3,-1.9,0.0005,16.63128352261786,0.4094261482575771,-0.4414744739016418,2.86,-2.68,25,15,0.895939064274236,0.9173040354213562
+NeuroSim output:
+=================
+Config read from file: /scratch/msc24h18/msc_project/results/test33/data/LBE247_ID294YR/pulsedAmplitudeSweep_DCIV_20240919111656/pulsedAmplitudeSweep_DCIV[LBE247_ID294YR(1)]20240919111927/pulsedAmplitudeSweep_DCIV[LBE247_ID294YR(1)]20240919111927/pulsedAmplitudeSweep_DCIV[LBE247_ID294YR(1)]20240919111927.json
+Device type: RealDevice
+Total SubArray (synaptic core) area=5.0841e-09 m^2
+Total Neuron (neuron peripheries) area=1.2082e-09 m^2
+Total area=6.2923e-09 m^2
+Leakage power of subArrayIH is : 7.1391e-05 W
+Leakage power of subArrayHO is : 1.6238e-05 W
+Leakage power of NeuronIH is : 1.5533e-05 W
+Leakage power of NeuronHO is : 2.4850e-06 W
+Total leakage power of subArray is : 8.7629e-05 W
+Total leakage power of Neuron is : 1.8018e-05 W
+Accuracy at 1 epochs is : 12.61%
+	Read latency=1.2918e-01 s
+	Write latency=1.1817e+01 s
+	Read energy=5.9705e-06 J
+	Write energy=7.6341e-06 J
+	The total weight update=2.3416e+05
+	The total pulse number=2.3475e+04
+	The total actual conductance update=1.3243e-05
+	The total actual pulse number=1.9596e+04
+	The total actual conductance update per synapse=3.2301e-10
+	The total actual pulse number per synapse=4.7795e-01
+Accuracy at 2 epochs is : 12.77%
+	Read latency=2.5836e-01 s
+	Write latency=2.2309e+01 s
+	Read energy=1.1896e-05 J
+	Write energy=1.5258e-05 J
+	The total weight update=4.4109e+05
+	The total pulse number=4.4221e+04
+	The total actual conductance update=2.4054e-05
+	The total actual pulse number=3.7065e+04
+	The total actual conductance update per synapse=5.8669e-10
+	The total actual pulse number per synapse=9.0402e-01
+Accuracy at 3 epochs is : 12.57%
+	Read latency=3.8754e-01 s
+	Write latency=3.1614e+01 s
+	Read energy=1.7760e-05 J
+	Write energy=2.2867e-05 J
+	The total weight update=6.4337e+05
+	The total pulse number=6.2589e+04
+	The total actual conductance update=3.2948e-05
+	The total actual pulse number=5.2406e+04
+	The total actual conductance update per synapse=8.0360e-10
+	The total actual pulse number per synapse=1.2782e+00
+Accuracy at 4 epochs is : 12.76%
+	Read latency=5.1671e-01 s
+	Write latency=4.0451e+01 s
+	Read energy=2.3599e-05 J
+	Write energy=3.0472e-05 J
+	The total weight update=8.4296e+05
+	The total pulse number=7.9978e+04
+	The total actual conductance update=4.0636e-05
+	The total actual pulse number=6.7002e+04
+	The total actual conductance update per synapse=9.9112e-10
+	The total actual pulse number per synapse=1.6342e+00
+Accuracy at 5 epochs is : 12.85%
+	Read latency=6.4589e-01 s
+	Write latency=4.9037e+01 s
+	Read energy=2.9375e-05 J
+	Write energy=3.8073e-05 J
+	The total weight update=1.0394e+06
+	The total pulse number=9.6751e+04
+	The total actual conductance update=4.7897e-05
+	The total actual pulse number=8.1089e+04
+	The total actual conductance update per synapse=1.1682e-09
+	The total actual pulse number per synapse=1.9778e+00
+Accuracy at 6 epochs is : 13.18%
+	Read latency=7.7507e-01 s
+	Write latency=5.7138e+01 s
+	Read energy=3.5161e-05 J
+	Write energy=4.5671e-05 J
+	The total weight update=1.2333e+06
+	The total pulse number=1.1261e+05
+	The total actual conductance update=5.4315e-05
+	The total actual pulse number=9.4495e+04
+	The total actual conductance update per synapse=1.3248e-09
+	The total actual pulse number per synapse=2.3048e+00
+Accuracy at 7 epochs is : 13.30%
+	Read latency=9.0425e-01 s
+	Write latency=6.4797e+01 s
+	Read energy=4.0929e-05 J
+	Write energy=5.3269e-05 J
+	The total weight update=1.4243e+06
+	The total pulse number=1.2758e+05
+	The total actual conductance update=6.0253e-05
+	The total actual pulse number=1.0712e+05
+	The total actual conductance update per synapse=1.4696e-09
+	The total actual pulse number per synapse=2.6126e+00
+Accuracy at 8 epochs is : 13.40%
+	Read latency=1.0334e+00 s
+	Write latency=7.2288e+01 s
+	Read energy=4.6655e-05 J
+	Write energy=6.0900e-05 J
+	The total weight update=1.6143e+06
+	The total pulse number=1.4223e+05
+	The total actual conductance update=6.5961e-05
+	The total actual pulse number=1.1948e+05
+	The total actual conductance update per synapse=1.6088e-09
+	The total actual pulse number per synapse=2.9141e+00
+Accuracy at 9 epochs is : 13.50%
+	Read latency=1.1626e+00 s
+	Write latency=7.9113e+01 s
+	Read energy=5.2364e-05 J
+	Write energy=6.8615e-05 J
+	The total weight update=1.8018e+06
+	The total pulse number=1.5550e+05
+	The total actual conductance update=7.1130e-05
+	The total actual pulse number=1.3054e+05
+	The total actual conductance update per synapse=1.7349e-09
+	The total actual pulse number per synapse=3.1839e+00
+Accuracy at 10 epochs is : 13.63%
+	Read latency=1.2918e+00 s
+	Write latency=8.5888e+01 s
+	Read energy=5.8050e-05 J
+	Write energy=7.6340e-05 J
+	The total weight update=1.9883e+06
+	The total pulse number=1.6856e+05
+	The total actual conductance update=7.5952e-05
+	The total actual pulse number=1.4137e+05
+	The total actual conductance update per synapse=1.8525e-09
+	The total actual pulse number per synapse=3.4480e+00
+Accuracy at 11 epochs is : 13.82%
+	Read latency=1.4210e+00 s
+	Write latency=9.2243e+01 s
+	Read energy=6.3727e-05 J
+	Write energy=8.4055e-05 J
+	The total weight update=2.1730e+06
+	The total pulse number=1.8081e+05
+	The total actual conductance update=8.0516e-05
+	The total actual pulse number=1.5173e+05
+	The total actual conductance update per synapse=1.9638e-09
+	The total actual pulse number per synapse=3.7006e+00
+Accuracy at 12 epochs is : 13.92%
+	Read latency=1.5501e+00 s
+	Write latency=9.8284e+01 s
+	Read energy=6.9395e-05 J
+	Write energy=9.1767e-05 J
+	The total weight update=2.3565e+06
+	The total pulse number=1.9244e+05
+	The total actual conductance update=8.4756e-05
+	The total actual pulse number=1.6149e+05
+	The total actual conductance update per synapse=2.0672e-09
+	The total actual pulse number per synapse=3.9388e+00
+Accuracy at 13 epochs is : 14.15%
+	Read latency=1.6793e+00 s
+	Write latency=1.0413e+02 s
+	Read energy=7.5032e-05 J
+	Write energy=9.9478e-05 J
+	The total weight update=2.5381e+06
+	The total pulse number=2.0340e+05
+	The total actual conductance update=8.8835e-05
+	The total actual pulse number=1.7087e+05
+	The total actual conductance update per synapse=2.1667e-09
+	The total actual pulse number per synapse=4.1676e+00
+Accuracy at 14 epochs is : 14.54%
+	Read latency=1.8085e+00 s
+	Write latency=1.0987e+02 s
+	Read energy=8.0663e-05 J
+	Write energy=1.0719e-04 J
+	The total weight update=2.7196e+06
+	The total pulse number=2.1409e+05
+	The total actual conductance update=9.2929e-05
+	The total actual pulse number=1.8019e+05
+	The total actual conductance update per synapse=2.2666e-09
+	The total actual pulse number per synapse=4.3949e+00
+Accuracy at 15 epochs is : 14.90%
+	Read latency=1.9377e+00 s
+	Write latency=1.1512e+02 s
+	Read energy=8.6298e-05 J
+	Write energy=1.1489e-04 J
+	The total weight update=2.8988e+06
+	The total pulse number=2.2386e+05
+	The total actual conductance update=9.6561e-05
+	The total actual pulse number=1.8859e+05
+	The total actual conductance update per synapse=2.3552e-09
+	The total actual pulse number per synapse=4.5997e+00
+Accuracy at 16 epochs is : 14.90%
+	Read latency=2.0669e+00 s
+	Write latency=1.2037e+02 s
+	Read energy=9.1906e-05 J
+	Write energy=1.2259e-04 J
+	The total weight update=3.0776e+06
+	The total pulse number=2.3376e+05
+	The total actual conductance update=1.0008e-04
+	The total actual pulse number=1.9691e+05
+	The total actual conductance update per synapse=2.4411e-09
+	The total actual pulse number per synapse=4.8027e+00
+Accuracy at 17 epochs is : 15.09%
+	Read latency=2.1960e+00 s
+	Write latency=1.2527e+02 s
+	Read energy=9.7505e-05 J
+	Write energy=1.3029e-04 J
+	The total weight update=3.2563e+06
+	The total pulse number=2.4278e+05
+	The total actual conductance update=1.0328e-04
+	The total actual pulse number=2.0480e+05
+	The total actual conductance update per synapse=2.5190e-09
+	The total actual pulse number per synapse=4.9950e+00
+Accuracy at 18 epochs is : 15.19%
+	Read latency=2.3252e+00 s
+	Write latency=1.3018e+02 s
+	Read energy=1.0312e-04 J
+	Write energy=1.3799e-04 J
+	The total weight update=3.4344e+06
+	The total pulse number=2.5182e+05
+	The total actual conductance update=1.0660e-04
+	The total actual pulse number=2.1272e+05
+	The total actual conductance update per synapse=2.6000e-09
+	The total actual pulse number per synapse=5.1883e+00
+Accuracy at 19 epochs is : 15.20%
+	Read latency=2.4544e+00 s
+	Write latency=1.3494e+02 s
+	Read energy=1.0872e-04 J
+	Write energy=1.4568e-04 J
+	The total weight update=3.6117e+06
+	The total pulse number=2.6057e+05
+	The total actual conductance update=1.0980e-04
+	The total actual pulse number=2.2035e+05
+	The total actual conductance update per synapse=2.6781e-09
+	The total actual pulse number per synapse=5.3743e+00
+Accuracy at 20 epochs is : 15.42%
+	Read latency=2.5836e+00 s
+	Write latency=1.3983e+02 s
+	Read energy=1.1428e-04 J
+	Write energy=1.5337e-04 J
+	The total weight update=3.7870e+06
+	The total pulse number=2.6954e+05
+	The total actual conductance update=1.1309e-04
+	The total actual pulse number=2.2820e+05
+	The total actual conductance update per synapse=2.7584e-09
+	The total actual pulse number per synapse=5.5659e+00
+Accuracy at 21 epochs is : 15.51%
+	Read latency=2.7127e+00 s
+	Write latency=1.4431e+02 s
+	Read energy=1.1986e-04 J
+	Write energy=1.6106e-04 J
+	The total weight update=3.9618e+06
+	The total pulse number=2.7780e+05
+	The total actual conductance update=1.1616e-04
+	The total actual pulse number=2.3540e+05
+	The total actual conductance update per synapse=2.8332e-09
+	The total actual pulse number per synapse=5.7414e+00
+Accuracy at 22 epochs is : 15.57%
+	Read latency=2.8419e+00 s
+	Write latency=1.4846e+02 s
+	Read energy=1.2542e-04 J
+	Write energy=1.6875e-04 J
+	The total weight update=4.1356e+06
+	The total pulse number=2.8542e+05
+	The total actual conductance update=1.1900e-04
+	The total actual pulse number=2.4208e+05
+	The total actual conductance update per synapse=2.9025e-09
+	The total actual pulse number per synapse=5.9043e+00
+Accuracy at 23 epochs is : 15.56%
+	Read latency=2.9711e+00 s
+	Write latency=1.5262e+02 s
+	Read energy=1.3097e-04 J
+	Write energy=1.7643e-04 J
+	The total weight update=4.3086e+06
+	The total pulse number=2.9305e+05
+	The total actual conductance update=1.2177e-04
+	The total actual pulse number=2.4883e+05
+	The total actual conductance update per synapse=2.9699e-09
+	The total actual pulse number per synapse=6.0690e+00
+Accuracy at 24 epochs is : 15.68%
+	Read latency=3.1003e+00 s
+	Write latency=1.5657e+02 s
+	Read energy=1.3651e-04 J
+	Write energy=1.8412e-04 J
+	The total weight update=4.4807e+06
+	The total pulse number=3.0027e+05
+	The total actual conductance update=1.2439e-04
+	The total actual pulse number=2.5520e+05
+	The total actual conductance update per synapse=3.0340e-09
+	The total actual pulse number per synapse=6.2243e+00
+Accuracy at 25 epochs is : 15.75%
+	Read latency=3.2295e+00 s
+	Write latency=1.6042e+02 s
+	Read energy=1.4204e-04 J
+	Write energy=1.9180e-04 J
+	The total weight update=4.6527e+06
+	The total pulse number=3.0712e+05
+	The total actual conductance update=1.2698e-04
+	The total actual pulse number=2.6140e+05
+	The total actual conductance update per synapse=3.0971e-09
+	The total actual pulse number per synapse=6.3756e+00
+Accuracy at 26 epochs is : 15.74%
+	Read latency=3.3586e+00 s
+	Write latency=1.6389e+02 s
+	Read energy=1.4757e-04 J
+	Write energy=1.9948e-04 J
+	The total weight update=4.8234e+06
+	The total pulse number=3.1326e+05
+	The total actual conductance update=1.2925e-04
+	The total actual pulse number=2.6699e+05
+	The total actual conductance update per synapse=3.1524e-09
+	The total actual pulse number per synapse=6.5119e+00
+Accuracy at 27 epochs is : 15.94%
+	Read latency=3.4878e+00 s
+	Write latency=1.6740e+02 s
+	Read energy=1.5310e-04 J
+	Write energy=2.0715e-04 J
+	The total weight update=4.9940e+06
+	The total pulse number=3.1938e+05
+	The total actual conductance update=1.3160e-04
+	The total actual pulse number=2.7266e+05
+	The total actual conductance update per synapse=3.2096e-09
+	The total actual pulse number per synapse=6.6503e+00
+Accuracy at 28 epochs is : 16.02%
+	Read latency=3.6170e+00 s
+	Write latency=1.7071e+02 s
+	Read energy=1.5862e-04 J
+	Write energy=2.1483e-04 J
+	The total weight update=5.1638e+06
+	The total pulse number=3.2508e+05
+	The total actual conductance update=1.3384e-04
+	The total actual pulse number=2.7802e+05
+	The total actual conductance update per synapse=3.2643e-09
+	The total actual pulse number per synapse=6.7810e+00
+Accuracy at 29 epochs is : 16.20%
+	Read latency=3.7462e+00 s
+	Write latency=1.7407e+02 s
+	Read energy=1.6412e-04 J
+	Write energy=2.2251e-04 J
+	The total weight update=5.3336e+06
+	The total pulse number=3.3096e+05
+	The total actual conductance update=1.3607e-04
+	The total actual pulse number=2.8341e+05
+	The total actual conductance update per synapse=3.3188e-09
+	The total actual pulse number per synapse=6.9124e+00
+Accuracy at 30 epochs is : 16.33%
+	Read latency=3.8754e+00 s
+	Write latency=1.7700e+02 s
+	Read energy=1.6963e-04 J
+	Write energy=2.3018e-04 J
+	The total weight update=5.5017e+06
+	The total pulse number=3.3595e+05
+	The total actual conductance update=1.3800e-04
+	The total actual pulse number=2.8812e+05
+	The total actual conductance update per synapse=3.3659e-09
+	The total actual pulse number per synapse=7.0273e+00
+Accuracy at 31 epochs is : 16.26%
+	Read latency=4.0045e+00 s
+	Write latency=1.7998e+02 s
+	Read energy=1.7513e-04 J
+	Write energy=2.3785e-04 J
+	The total weight update=5.6709e+06
+	The total pulse number=3.4108e+05
+	The total actual conductance update=1.4001e-04
+	The total actual pulse number=2.9298e+05
+	The total actual conductance update per synapse=3.4149e-09
+	The total actual pulse number per synapse=7.1458e+00
+Accuracy at 32 epochs is : 16.54%
+	Read latency=4.1337e+00 s
+	Write latency=1.8293e+02 s
+	Read energy=1.8063e-04 J
+	Write energy=2.4552e-04 J
+	The total weight update=5.8392e+06
+	The total pulse number=3.4615e+05
+	The total actual conductance update=1.4195e-04
+	The total actual pulse number=2.9772e+05
+	The total actual conductance update per synapse=3.4623e-09
+	The total actual pulse number per synapse=7.2615e+00
+Accuracy at 33 epochs is : 16.49%
+	Read latency=4.2629e+00 s
+	Write latency=1.8573e+02 s
+	Read energy=1.8611e-04 J
+	Write energy=2.5320e-04 J
+	The total weight update=6.0072e+06
+	The total pulse number=3.5092e+05
+	The total actual conductance update=1.4380e-04
+	The total actual pulse number=3.0226e+05
+	The total actual conductance update per synapse=3.5074e-09
+	The total actual pulse number per synapse=7.3722e+00
+Accuracy at 34 epochs is : 16.61%
+	Read latency=4.3921e+00 s
+	Write latency=1.8849e+02 s
+	Read energy=1.9160e-04 J
+	Write energy=2.6084e-04 J
+	The total weight update=6.1749e+06
+	The total pulse number=3.5562e+05
+	The total actual conductance update=1.4558e-04
+	The total actual pulse number=3.0677e+05
+	The total actual conductance update per synapse=3.5507e-09
+	The total actual pulse number per synapse=7.4823e+00
+Accuracy at 35 epochs is : 16.62%
+	Read latency=4.5212e+00 s
+	Write latency=1.9122e+02 s
+	Read energy=1.9707e-04 J
+	Write energy=2.6851e-04 J
+	The total weight update=6.3418e+06
+	The total pulse number=3.6028e+05
+	The total actual conductance update=1.4731e-04
+	The total actual pulse number=3.1116e+05
+	The total actual conductance update per synapse=3.5929e-09
+	The total actual pulse number per synapse=7.5894e+00
+Accuracy at 36 epochs is : 16.64%
+	Read latency=4.6504e+00 s
+	Write latency=1.9389e+02 s
+	Read energy=2.0256e-04 J
+	Write energy=2.7618e-04 J
+	The total weight update=6.5081e+06
+	The total pulse number=3.6482e+05
+	The total actual conductance update=1.4904e-04
+	The total actual pulse number=3.1549e+05
+	The total actual conductance update per synapse=3.6351e-09
+	The total actual pulse number per synapse=7.6949e+00
+Accuracy at 37 epochs is : 16.78%
+	Read latency=4.7796e+00 s
+	Write latency=1.9663e+02 s
+	Read energy=2.0803e-04 J
+	Write energy=2.8384e-04 J
+	The total weight update=6.6749e+06
+	The total pulse number=3.6950e+05
+	The total actual conductance update=1.5078e-04
+	The total actual pulse number=3.1989e+05
+	The total actual conductance update per synapse=3.6775e-09
+	The total actual pulse number per synapse=7.8022e+00
+Accuracy at 38 epochs is : 16.86%
+	Read latency=4.9088e+00 s
+	Write latency=1.9918e+02 s
+	Read energy=2.1350e-04 J
+	Write energy=2.9150e-04 J
+	The total weight update=6.8409e+06
+	The total pulse number=3.7377e+05
+	The total actual conductance update=1.5238e-04
+	The total actual pulse number=3.2402e+05
+	The total actual conductance update per synapse=3.7167e-09
+	The total actual pulse number per synapse=7.9030e+00
+Accuracy at 39 epochs is : 17.00%
+	Read latency=5.0380e+00 s
+	Write latency=2.0186e+02 s
+	Read energy=2.1898e-04 J
+	Write energy=2.9917e-04 J
+	The total weight update=7.0072e+06
+	The total pulse number=3.7831e+05
+	The total actual conductance update=1.5409e-04
+	The total actual pulse number=3.2841e+05
+	The total actual conductance update per synapse=3.7583e-09
+	The total actual pulse number per synapse=8.0101e+00
+Accuracy at 40 epochs is : 16.91%
+	Read latency=5.1671e+00 s
+	Write latency=2.0444e+02 s
+	Read energy=2.2445e-04 J
+	Write energy=3.0684e-04 J
+	The total weight update=7.1735e+06
+	The total pulse number=3.8264e+05
+	The total actual conductance update=1.5568e-04
+	The total actual pulse number=3.3260e+05
+	The total actual conductance update per synapse=3.7970e-09
+	The total actual pulse number per synapse=8.1121e+00
+Accuracy at 41 epochs is : 17.05%
+	Read latency=5.2963e+00 s
+	Write latency=2.0709e+02 s
+	Read energy=2.2992e-04 J
+	Write energy=3.1450e-04 J
+	The total weight update=7.3393e+06
+	The total pulse number=3.8709e+05
+	The total actual conductance update=1.5737e-04
+	The total actual pulse number=3.3692e+05
+	The total actual conductance update per synapse=3.8382e-09
+	The total actual pulse number per synapse=8.2176e+00
+Accuracy at 42 epochs is : 17.20%
+	Read latency=5.4255e+00 s
+	Write latency=2.0969e+02 s
+	Read energy=2.3539e-04 J
+	Write energy=3.2216e-04 J
+	The total weight update=7.5048e+06
+	The total pulse number=3.9152e+05
+	The total actual conductance update=1.5900e-04
+	The total actual pulse number=3.4111e+05
+	The total actual conductance update per synapse=3.8782e-09
+	The total actual pulse number per synapse=8.3198e+00
+Accuracy at 43 epochs is : 17.29%
+	Read latency=5.5547e+00 s
+	Write latency=2.1236e+02 s
+	Read energy=2.4086e-04 J
+	Write energy=3.2983e-04 J
+	The total weight update=7.6705e+06
+	The total pulse number=3.9596e+05
+	The total actual conductance update=1.6072e-04
+	The total actual pulse number=3.4542e+05
+	The total actual conductance update per synapse=3.9201e-09
+	The total actual pulse number per synapse=8.4248e+00
+Accuracy at 44 epochs is : 17.34%
+	Read latency=5.6838e+00 s
+	Write latency=2.1476e+02 s
+	Read energy=2.4631e-04 J
+	Write energy=3.3749e-04 J
+	The total weight update=7.8358e+06
+	The total pulse number=3.9993e+05
+	The total actual conductance update=1.6225e-04
+	The total actual pulse number=3.4932e+05
+	The total actual conductance update per synapse=3.9574e-09
+	The total actual pulse number per synapse=8.5199e+00
+Accuracy at 45 epochs is : 17.48%
+	Read latency=5.8130e+00 s
+	Write latency=2.1711e+02 s
+	Read energy=2.5178e-04 J
+	Write energy=3.4514e-04 J
+	The total weight update=8.0000e+06
+	The total pulse number=4.0391e+05
+	The total actual conductance update=1.6375e-04
+	The total actual pulse number=3.5309e+05
+	The total actual conductance update per synapse=3.9940e-09
+	The total actual pulse number per synapse=8.6119e+00
+Accuracy at 46 epochs is : 17.42%
+	Read latency=5.9422e+00 s
+	Write latency=2.1935e+02 s
+	Read energy=2.5723e-04 J
+	Write energy=3.5280e-04 J
+	The total weight update=8.1649e+06
+	The total pulse number=4.0749e+05
+	The total actual conductance update=1.6513e-04
+	The total actual pulse number=3.5674e+05
+	The total actual conductance update per synapse=4.0275e-09
+	The total actual pulse number per synapse=8.7010e+00
+Accuracy at 47 epochs is : 17.53%
+	Read latency=6.0714e+00 s
+	Write latency=2.2161e+02 s
+	Read energy=2.6270e-04 J
+	Write energy=3.6046e-04 J
+	The total weight update=8.3295e+06
+	The total pulse number=4.1114e+05
+	The total actual conductance update=1.6657e-04
+	The total actual pulse number=3.6045e+05
+	The total actual conductance update per synapse=4.0626e-09
+	The total actual pulse number per synapse=8.7914e+00
+Accuracy at 48 epochs is : 17.43%
+	Read latency=6.2006e+00 s
+	Write latency=2.2385e+02 s
+	Read energy=2.6814e-04 J
+	Write energy=3.6812e-04 J
+	The total weight update=8.4937e+06
+	The total pulse number=4.1481e+05
+	The total actual conductance update=1.6800e-04
+	The total actual pulse number=3.6405e+05
+	The total actual conductance update per synapse=4.0976e-09
+	The total actual pulse number per synapse=8.8793e+00
+Accuracy at 49 epochs is : 17.52%
+	Read latency=6.3297e+00 s
+	Write latency=2.2609e+02 s
+	Read energy=2.7359e-04 J
+	Write energy=3.7578e-04 J
+	The total weight update=8.6580e+06
+	The total pulse number=4.1833e+05
+	The total actual conductance update=1.6937e-04
+	The total actual pulse number=3.6768e+05
+	The total actual conductance update per synapse=4.1311e-09
+	The total actual pulse number per synapse=8.9678e+00
+Accuracy at 50 epochs is : 17.49%
+	Read latency=6.4589e+00 s
+	Write latency=2.2853e+02 s
+	Read energy=2.7904e-04 J
+	Write energy=3.8345e-04 J
+	The total weight update=8.8223e+06
+	The total pulse number=4.2236e+05
+	The total actual conductance update=1.7092e-04
+	The total actual pulse number=3.7159e+05
+	The total actual conductance update per synapse=4.1688e-09
+	The total actual pulse number per synapse=9.0632e+00
+Accuracy at 51 epochs is : 17.42%
+	Read latency=6.5881e+00 s
+	Write latency=2.3064e+02 s
+	Read energy=2.8449e-04 J
+	Write energy=3.9111e-04 J
+	The total weight update=8.9853e+06
+	The total pulse number=4.2583e+05
+	The total actual conductance update=1.7221e-04
+	The total actual pulse number=3.7498e+05
+	The total actual conductance update per synapse=4.2001e-09
+	The total actual pulse number per synapse=9.1458e+00
+Accuracy at 52 epochs is : 17.45%
+	Read latency=6.7173e+00 s
+	Write latency=2.3295e+02 s
+	Read energy=2.8994e-04 J
+	Write energy=3.9877e-04 J
+	The total weight update=9.1493e+06
+	The total pulse number=4.2969e+05
+	The total actual conductance update=1.7365e-04
+	The total actual pulse number=3.7866e+05
+	The total actual conductance update per synapse=4.2354e-09
+	The total actual pulse number per synapse=9.2357e+00
+Accuracy at 53 epochs is : 17.56%
+	Read latency=6.8465e+00 s
+	Write latency=2.3538e+02 s
+	Read energy=2.9540e-04 J
+	Write energy=4.0643e-04 J
+	The total weight update=9.3124e+06
+	The total pulse number=4.3368e+05
+	The total actual conductance update=1.7515e-04
+	The total actual pulse number=3.8258e+05
+	The total actual conductance update per synapse=4.2720e-09
+	The total actual pulse number per synapse=9.3311e+00
+Accuracy at 54 epochs is : 17.55%
+	Read latency=6.9756e+00 s
+	Write latency=2.3759e+02 s
+	Read energy=3.0084e-04 J
+	Write energy=4.1409e-04 J
+	The total weight update=9.4755e+06
+	The total pulse number=4.3734e+05
+	The total actual conductance update=1.7656e-04
+	The total actual pulse number=3.8617e+05
+	The total actual conductance update per synapse=4.3062e-09
+	The total actual pulse number per synapse=9.4188e+00
+Accuracy at 55 epochs is : 17.58%
+	Read latency=7.1048e+00 s
+	Write latency=2.4005e+02 s
+	Read energy=3.0629e-04 J
+	Write energy=4.2176e-04 J
+	The total weight update=9.6385e+06
+	The total pulse number=4.4143e+05
+	The total actual conductance update=1.7809e-04
+	The total actual pulse number=3.9015e+05
+	The total actual conductance update per synapse=4.3437e-09
+	The total actual pulse number per synapse=9.5158e+00
+Accuracy at 56 epochs is : 17.78%
+	Read latency=7.2340e+00 s
+	Write latency=2.4229e+02 s
+	Read energy=3.1174e-04 J
+	Write energy=4.2941e-04 J
+	The total weight update=9.8016e+06
+	The total pulse number=4.4502e+05
+	The total actual conductance update=1.7942e-04
+	The total actual pulse number=3.9378e+05
+	The total actual conductance update per synapse=4.3760e-09
+	The total actual pulse number per synapse=9.6043e+00
+Accuracy at 57 epochs is : 17.70%
+	Read latency=7.3632e+00 s
+	Write latency=2.4451e+02 s
+	Read energy=3.1718e-04 J
+	Write energy=4.3707e-04 J
+	The total weight update=9.9638e+06
+	The total pulse number=4.4864e+05
+	The total actual conductance update=1.8080e-04
+	The total actual pulse number=3.9738e+05
+	The total actual conductance update per synapse=4.4097e-09
+	The total actual pulse number per synapse=9.6922e+00
+Accuracy at 58 epochs is : 17.57%
+	Read latency=7.4923e+00 s
+	Write latency=2.4668e+02 s
+	Read energy=3.2263e-04 J
+	Write energy=4.4473e-04 J
+	The total weight update=1.0127e+07
+	The total pulse number=4.5216e+05
+	The total actual conductance update=1.8210e-04
+	The total actual pulse number=4.0087e+05
+	The total actual conductance update per synapse=4.4415e-09
+	The total actual pulse number per synapse=9.7772e+00
+Accuracy at 59 epochs is : 17.65%
+	Read latency=7.6215e+00 s
+	Write latency=2.4889e+02 s
+	Read energy=3.2806e-04 J
+	Write energy=4.5239e-04 J
+	The total weight update=1.0289e+07
+	The total pulse number=4.5575e+05
+	The total actual conductance update=1.8343e-04
+	The total actual pulse number=4.0441e+05
+	The total actual conductance update per synapse=4.4739e-09
+	The total actual pulse number per synapse=9.8638e+00
+Accuracy at 60 epochs is : 17.63%
+	Read latency=7.7507e+00 s
+	Write latency=2.5108e+02 s
+	Read energy=3.3351e-04 J
+	Write energy=4.6004e-04 J
+	The total weight update=1.0451e+07
+	The total pulse number=4.5936e+05
+	The total actual conductance update=1.8486e-04
+	The total actual pulse number=4.0798e+05
+	The total actual conductance update per synapse=4.5087e-09
+	The total actual pulse number per synapse=9.9506e+00
+Accuracy at 61 epochs is : 17.61%
+	Read latency=7.8799e+00 s
+	Write latency=2.5341e+02 s
+	Read energy=3.3895e-04 J
+	Write energy=4.6770e-04 J
+	The total weight update=1.0613e+07
+	The total pulse number=4.6321e+05
+	The total actual conductance update=1.8625e-04
+	The total actual pulse number=4.1168e+05
+	The total actual conductance update per synapse=4.5428e-09
+	The total actual pulse number per synapse=1.0041e+01
+Accuracy at 62 epochs is : 17.67%
+	Read latency=8.0091e+00 s
+	Write latency=2.5570e+02 s
+	Read energy=3.4439e-04 J
+	Write energy=4.7536e-04 J
+	The total weight update=1.0775e+07
+	The total pulse number=4.6705e+05
+	The total actual conductance update=1.8767e-04
+	The total actual pulse number=4.1536e+05
+	The total actual conductance update per synapse=4.5774e-09
+	The total actual pulse number per synapse=1.0131e+01
+Accuracy at 63 epochs is : 17.70%
+	Read latency=8.1382e+00 s
+	Write latency=2.5794e+02 s
+	Read energy=3.4981e-04 J
+	Write energy=4.8302e-04 J
+	The total weight update=1.0937e+07
+	The total pulse number=4.7075e+05
+	The total actual conductance update=1.8908e-04
+	The total actual pulse number=4.1898e+05
+	The total actual conductance update per synapse=4.6118e-09
+	The total actual pulse number per synapse=1.0219e+01
+Accuracy at 64 epochs is : 17.80%
+	Read latency=8.2674e+00 s
+	Write latency=2.6012e+02 s
+	Read energy=3.5525e-04 J
+	Write energy=4.9068e-04 J
+	The total weight update=1.1098e+07
+	The total pulse number=4.7435e+05
+	The total actual conductance update=1.9044e-04
+	The total actual pulse number=4.2248e+05
+	The total actual conductance update per synapse=4.6449e-09
+	The total actual pulse number per synapse=1.0304e+01
+Accuracy at 65 epochs is : 17.89%
+	Read latency=8.3966e+00 s
+	Write latency=2.6225e+02 s
+	Read energy=3.6067e-04 J
+	Write energy=4.9833e-04 J
+	The total weight update=1.1260e+07
+	The total pulse number=4.7780e+05
+	The total actual conductance update=1.9172e-04
+	The total actual pulse number=4.2591e+05
+	The total actual conductance update per synapse=4.6760e-09
+	The total actual pulse number per synapse=1.0388e+01
+Accuracy at 66 epochs is : 17.83%
+	Read latency=8.5258e+00 s
+	Write latency=2.6448e+02 s
+	Read energy=3.6611e-04 J
+	Write energy=5.0599e-04 J
+	The total weight update=1.1422e+07
+	The total pulse number=4.8151e+05
+	The total actual conductance update=1.9317e-04
+	The total actual pulse number=4.2956e+05
+	The total actual conductance update per synapse=4.7114e-09
+	The total actual pulse number per synapse=1.0477e+01
+Accuracy at 67 epochs is : 17.76%
+	Read latency=8.6550e+00 s
+	Write latency=2.6679e+02 s
+	Read energy=3.7155e-04 J
+	Write energy=5.1365e-04 J
+	The total weight update=1.1583e+07
+	The total pulse number=4.8531e+05
+	The total actual conductance update=1.9459e-04
+	The total actual pulse number=4.3324e+05
+	The total actual conductance update per synapse=4.7460e-09
+	The total actual pulse number per synapse=1.0567e+01
+Accuracy at 68 epochs is : 17.86%
+	Read latency=8.7841e+00 s
+	Write latency=2.6902e+02 s
+	Read energy=3.7699e-04 J
+	Write energy=5.2131e-04 J
+	The total weight update=1.1744e+07
+	The total pulse number=4.8899e+05
+	The total actual conductance update=1.9594e-04
+	The total actual pulse number=4.3685e+05
+	The total actual conductance update per synapse=4.7790e-09
+	The total actual pulse number per synapse=1.0655e+01
+Accuracy at 69 epochs is : 17.91%
+	Read latency=8.9133e+00 s
+	Write latency=2.7110e+02 s
+	Read energy=3.8242e-04 J
+	Write energy=5.2896e-04 J
+	The total weight update=1.1905e+07
+	The total pulse number=4.9234e+05
+	The total actual conductance update=1.9716e-04
+	The total actual pulse number=4.4022e+05
+	The total actual conductance update per synapse=4.8088e-09
+	The total actual pulse number per synapse=1.0737e+01
+Accuracy at 70 epochs is : 17.90%
+	Read latency=9.0425e+00 s
+	Write latency=2.7332e+02 s
+	Read energy=3.8784e-04 J
+	Write energy=5.3663e-04 J
+	The total weight update=1.2065e+07
+	The total pulse number=4.9606e+05
+	The total actual conductance update=1.9854e-04
+	The total actual pulse number=4.4378e+05
+	The total actual conductance update per synapse=4.8424e-09
+	The total actual pulse number per synapse=1.0824e+01
+Accuracy at 71 epochs is : 17.95%
+	Read latency=9.1717e+00 s
+	Write latency=2.7543e+02 s
+	Read energy=3.9327e-04 J
+	Write energy=5.4428e-04 J
+	The total weight update=1.2226e+07
+	The total pulse number=4.9949e+05
+	The total actual conductance update=1.9981e-04
+	The total actual pulse number=4.4720e+05
+	The total actual conductance update per synapse=4.8734e-09
+	The total actual pulse number per synapse=1.0907e+01
+Accuracy at 72 epochs is : 17.97%
+	Read latency=9.3008e+00 s
+	Write latency=2.7763e+02 s
+	Read energy=3.9870e-04 J
+	Write energy=5.5194e-04 J
+	The total weight update=1.2386e+07
+	The total pulse number=5.0308e+05
+	The total actual conductance update=2.0120e-04
+	The total actual pulse number=4.5074e+05
+	The total actual conductance update per synapse=4.9073e-09
+	The total actual pulse number per synapse=1.0994e+01
+Accuracy at 73 epochs is : 17.98%
+	Read latency=9.4300e+00 s
+	Write latency=2.7961e+02 s
+	Read energy=4.0413e-04 J
+	Write energy=5.5960e-04 J
+	The total weight update=1.2547e+07
+	The total pulse number=5.0627e+05
+	The total actual conductance update=2.0237e-04
+	The total actual pulse number=4.5394e+05
+	The total actual conductance update per synapse=4.9358e-09
+	The total actual pulse number per synapse=1.1072e+01
+Accuracy at 74 epochs is : 18.04%
+	Read latency=9.5592e+00 s
+	Write latency=2.8186e+02 s
+	Read energy=4.0955e-04 J
+	Write energy=5.6726e-04 J
+	The total weight update=1.2707e+07
+	The total pulse number=5.0984e+05
+	The total actual conductance update=2.0375e-04
+	The total actual pulse number=4.5760e+05
+	The total actual conductance update per synapse=4.9696e-09
+	The total actual pulse number per synapse=1.1161e+01
+Accuracy at 75 epochs is : 18.08%
+	Read latency=9.6884e+00 s
+	Write latency=2.8390e+02 s
+	Read energy=4.1497e-04 J
+	Write energy=5.7492e-04 J
+	The total weight update=1.2868e+07
+	The total pulse number=5.1312e+05
+	The total actual conductance update=2.0501e-04
+	The total actual pulse number=4.6088e+05
+	The total actual conductance update per synapse=5.0003e-09
+	The total actual pulse number per synapse=1.1241e+01
+Accuracy at 76 epochs is : 18.11%
+	Read latency=9.8176e+00 s
+	Write latency=2.8598e+02 s
+	Read energy=4.2038e-04 J
+	Write energy=5.8257e-04 J
+	The total weight update=1.3028e+07
+	The total pulse number=5.1644e+05
+	The total actual conductance update=2.0625e-04
+	The total actual pulse number=4.6420e+05
+	The total actual conductance update per synapse=5.0305e-09
+	The total actual pulse number per synapse=1.1322e+01
+Accuracy at 77 epochs is : 18.12%
+	Read latency=9.9467e+00 s
+	Write latency=2.8812e+02 s
+	Read energy=4.2580e-04 J
+	Write energy=5.9023e-04 J
+	The total weight update=1.3189e+07
+	The total pulse number=5.1991e+05
+	The total actual conductance update=2.0754e-04
+	The total actual pulse number=4.6766e+05
+	The total actual conductance update per synapse=5.0620e-09
+	The total actual pulse number per synapse=1.1406e+01
+Accuracy at 78 epochs is : 18.18%
+	Read latency=1.0076e+01 s
+	Write latency=2.9021e+02 s
+	Read energy=4.3123e-04 J
+	Write energy=5.9788e-04 J
+	The total weight update=1.3349e+07
+	The total pulse number=5.2325e+05
+	The total actual conductance update=2.0881e-04
+	The total actual pulse number=4.7103e+05
+	The total actual conductance update per synapse=5.0928e-09
+	The total actual pulse number per synapse=1.1488e+01
+Accuracy at 79 epochs is : 18.23%
+	Read latency=1.0205e+01 s
+	Write latency=2.9221e+02 s
+	Read energy=4.3664e-04 J
+	Write energy=6.0553e-04 J
+	The total weight update=1.3509e+07
+	The total pulse number=5.2644e+05
+	The total actual conductance update=2.0997e-04
+	The total actual pulse number=4.7428e+05
+	The total actual conductance update per synapse=5.1213e-09
+	The total actual pulse number per synapse=1.1568e+01
+Accuracy at 80 epochs is : 18.22%
+	Read latency=1.0334e+01 s
+	Write latency=2.9424e+02 s
+	Read energy=4.4206e-04 J
+	Write energy=6.1319e-04 J
+	The total weight update=1.3669e+07
+	The total pulse number=5.2967e+05
+	The total actual conductance update=2.1121e-04
+	The total actual pulse number=4.7754e+05
+	The total actual conductance update per synapse=5.1515e-09
+	The total actual pulse number per synapse=1.1647e+01
+Accuracy at 81 epochs is : 18.28%
+	Read latency=1.0463e+01 s
+	Write latency=2.9624e+02 s
+	Read energy=4.4749e-04 J
+	Write energy=6.2084e-04 J
+	The total weight update=1.3830e+07
+	The total pulse number=5.3289e+05
+	The total actual conductance update=2.1242e-04
+	The total actual pulse number=4.8079e+05
+	The total actual conductance update per synapse=5.1811e-09
+	The total actual pulse number per synapse=1.1727e+01
+Accuracy at 82 epochs is : 18.27%
+	Read latency=1.0593e+01 s
+	Write latency=2.9834e+02 s
+	Read energy=4.5290e-04 J
+	Write energy=6.2850e-04 J
+	The total weight update=1.3990e+07
+	The total pulse number=5.3621e+05
+	The total actual conductance update=2.1373e-04
+	The total actual pulse number=4.8414e+05
+	The total actual conductance update per synapse=5.2129e-09
+	The total actual pulse number per synapse=1.1808e+01
+Accuracy at 83 epochs is : 18.24%
+	Read latency=1.0722e+01 s
+	Write latency=3.0039e+02 s
+	Read energy=4.5832e-04 J
+	Write energy=6.3616e-04 J
+	The total weight update=1.4150e+07
+	The total pulse number=5.3953e+05
+	The total actual conductance update=2.1500e-04
+	The total actual pulse number=4.8743e+05
+	The total actual conductance update per synapse=5.2438e-09
+	The total actual pulse number per synapse=1.1889e+01
+Accuracy at 84 epochs is : 18.17%
+	Read latency=1.0851e+01 s
+	Write latency=3.0243e+02 s
+	Read energy=4.6374e-04 J
+	Write energy=6.4381e-04 J
+	The total weight update=1.4310e+07
+	The total pulse number=5.4278e+05
+	The total actual conductance update=2.1623e-04
+	The total actual pulse number=4.9069e+05
+	The total actual conductance update per synapse=5.2739e-09
+	The total actual pulse number per synapse=1.1968e+01
+Accuracy at 85 epochs is : 18.24%
+	Read latency=1.0980e+01 s
+	Write latency=3.0450e+02 s
+	Read energy=4.6916e-04 J
+	Write energy=6.5147e-04 J
+	The total weight update=1.4470e+07
+	The total pulse number=5.4611e+05
+	The total actual conductance update=2.1751e-04
+	The total actual pulse number=4.9405e+05
+	The total actual conductance update per synapse=5.3051e-09
+	The total actual pulse number per synapse=1.2050e+01
+Accuracy at 86 epochs is : 18.27%
+	Read latency=1.1109e+01 s
+	Write latency=3.0657e+02 s
+	Read energy=4.7456e-04 J
+	Write energy=6.5913e-04 J
+	The total weight update=1.4630e+07
+	The total pulse number=5.4940e+05
+	The total actual conductance update=2.1875e-04
+	The total actual pulse number=4.9738e+05
+	The total actual conductance update per synapse=5.3353e-09
+	The total actual pulse number per synapse=1.2131e+01
+Accuracy at 87 epochs is : 18.39%
+	Read latency=1.1239e+01 s
+	Write latency=3.0852e+02 s
+	Read energy=4.7997e-04 J
+	Write energy=6.6679e-04 J
+	The total weight update=1.4790e+07
+	The total pulse number=5.5252e+05
+	The total actual conductance update=2.1998e-04
+	The total actual pulse number=5.0055e+05
+	The total actual conductance update per synapse=5.3653e-09
+	The total actual pulse number per synapse=1.2208e+01
+Accuracy at 88 epochs is : 18.33%
+	Read latency=1.1368e+01 s
+	Write latency=3.1056e+02 s
+	Read energy=4.8539e-04 J
+	Write energy=6.7445e-04 J
+	The total weight update=1.4949e+07
+	The total pulse number=5.5578e+05
+	The total actual conductance update=2.2125e-04
+	The total actual pulse number=5.0384e+05
+	The total actual conductance update per synapse=5.3964e-09
+	The total actual pulse number per synapse=1.2289e+01
+Accuracy at 89 epochs is : 18.36%
+	Read latency=1.1497e+01 s
+	Write latency=3.1262e+02 s
+	Read energy=4.9080e-04 J
+	Write energy=6.8211e-04 J
+	The total weight update=1.5109e+07
+	The total pulse number=5.5906e+05
+	The total actual conductance update=2.2249e-04
+	The total actual pulse number=5.0716e+05
+	The total actual conductance update per synapse=5.4265e-09
+	The total actual pulse number per synapse=1.2370e+01
+Accuracy at 90 epochs is : 18.42%
+	Read latency=1.1626e+01 s
+	Write latency=3.1467e+02 s
+	Read energy=4.9621e-04 J
+	Write energy=6.8976e-04 J
+	The total weight update=1.5268e+07
+	The total pulse number=5.6236e+05
+	The total actual conductance update=2.2375e-04
+	The total actual pulse number=5.1045e+05
+	The total actual conductance update per synapse=5.4574e-09
+	The total actual pulse number per synapse=1.2450e+01
+Accuracy at 91 epochs is : 18.40%
+	Read latency=1.1755e+01 s
+	Write latency=3.1664e+02 s
+	Read energy=5.0161e-04 J
+	Write energy=6.9741e-04 J
+	The total weight update=1.5427e+07
+	The total pulse number=5.6552e+05
+	The total actual conductance update=2.2496e-04
+	The total actual pulse number=5.1362e+05
+	The total actual conductance update per synapse=5.4867e-09
+	The total actual pulse number per synapse=1.2527e+01
+Accuracy at 92 epochs is : 18.49%
+	Read latency=1.1884e+01 s
+	Write latency=3.1859e+02 s
+	Read energy=5.0701e-04 J
+	Write energy=7.0507e-04 J
+	The total weight update=1.5586e+07
+	The total pulse number=5.6862e+05
+	The total actual conductance update=2.2615e-04
+	The total actual pulse number=5.1674e+05
+	The total actual conductance update per synapse=5.5157e-09
+	The total actual pulse number per synapse=1.2603e+01
+Accuracy at 93 epochs is : 18.60%
+	Read latency=1.2014e+01 s
+	Write latency=3.2047e+02 s
+	Read energy=5.1242e-04 J
+	Write energy=7.1272e-04 J
+	The total weight update=1.5745e+07
+	The total pulse number=5.7150e+05
+	The total actual conductance update=2.2727e-04
+	The total actual pulse number=5.1977e+05
+	The total actual conductance update per synapse=5.5433e-09
+	The total actual pulse number per synapse=1.2677e+01
+Accuracy at 94 epochs is : 18.76%
+	Read latency=1.2143e+01 s
+	Write latency=3.2238e+02 s
+	Read energy=5.1782e-04 J
+	Write energy=7.2038e-04 J
+	The total weight update=1.5904e+07
+	The total pulse number=5.7447e+05
+	The total actual conductance update=2.2851e-04
+	The total actual pulse number=5.2289e+05
+	The total actual conductance update per synapse=5.5734e-09
+	The total actual pulse number per synapse=1.2753e+01
+Accuracy at 95 epochs is : 18.67%
+	Read latency=1.2272e+01 s
+	Write latency=3.2427e+02 s
+	Read energy=5.2323e-04 J
+	Write energy=7.2803e-04 J
+	The total weight update=1.6063e+07
+	The total pulse number=5.7750e+05
+	The total actual conductance update=2.2969e-04
+	The total actual pulse number=5.2593e+05
+	The total actual conductance update per synapse=5.6023e-09
+	The total actual pulse number per synapse=1.2828e+01
+Accuracy at 96 epochs is : 18.82%
+	Read latency=1.2401e+01 s
+	Write latency=3.2613e+02 s
+	Read energy=5.2864e-04 J
+	Write energy=7.3569e-04 J
+	The total weight update=1.6221e+07
+	The total pulse number=5.8041e+05
+	The total actual conductance update=2.3081e-04
+	The total actual pulse number=5.2894e+05
+	The total actual conductance update per synapse=5.6296e-09
+	The total actual pulse number per synapse=1.2901e+01
+Accuracy at 97 epochs is : 18.86%
+	Read latency=1.2530e+01 s
+	Write latency=3.2804e+02 s
+	Read energy=5.3404e-04 J
+	Write energy=7.4334e-04 J
+	The total weight update=1.6380e+07
+	The total pulse number=5.8342e+05
+	The total actual conductance update=2.3203e-04
+	The total actual pulse number=5.3207e+05
+	The total actual conductance update per synapse=5.6592e-09
+	The total actual pulse number per synapse=1.2977e+01
+Accuracy at 98 epochs is : 18.90%
+	Read latency=1.2659e+01 s
+	Write latency=3.3009e+02 s
+	Read energy=5.3944e-04 J
+	Write energy=7.5100e-04 J
+	The total weight update=1.6539e+07
+	The total pulse number=5.8677e+05
+	The total actual conductance update=2.3332e-04
+	The total actual pulse number=5.3541e+05
+	The total actual conductance update per synapse=5.6908e-09
+	The total actual pulse number per synapse=1.3059e+01
+Accuracy at 99 epochs is : 18.92%
+	Read latency=1.2789e+01 s
+	Write latency=3.3209e+02 s
+	Read energy=5.4484e-04 J
+	Write energy=7.5865e-04 J
+	The total weight update=1.6697e+07
+	The total pulse number=5.8996e+05
+	The total actual conductance update=2.3456e-04
+	The total actual pulse number=5.3864e+05
+	The total actual conductance update per synapse=5.7210e-09
+	The total actual pulse number per synapse=1.3137e+01
+Accuracy at 100 epochs is : 19.00%
+	Read latency=1.2918e+01 s
+	Write latency=3.3403e+02 s
+	Read energy=5.5023e-04 J
+	Write energy=7.6631e-04 J
+	The total weight update=1.6855e+07
+	The total pulse number=5.9311e+05
+	The total actual conductance update=2.3577e-04
+	The total actual pulse number=5.4175e+05
+	The total actual conductance update per synapse=5.7505e-09
+	The total actual pulse number per synapse=1.3214e+01
+Accuracy at 101 epochs is : 18.90%
+	Read latency=1.3047e+01 s
+	Write latency=3.3590e+02 s
+	Read energy=5.5565e-04 J
+	Write energy=7.7396e-04 J
+	The total weight update=1.7013e+07
+	The total pulse number=5.9602e+05
+	The total actual conductance update=2.3692e-04
+	The total actual pulse number=5.4479e+05
+	The total actual conductance update per synapse=5.7785e-09
+	The total actual pulse number per synapse=1.3288e+01
+Accuracy at 102 epochs is : 18.91%
+	Read latency=1.3176e+01 s
+	Write latency=3.3792e+02 s
+	Read energy=5.6104e-04 J
+	Write energy=7.8162e-04 J
+	The total weight update=1.7172e+07
+	The total pulse number=5.9926e+05
+	The total actual conductance update=2.3820e-04
+	The total actual pulse number=5.4808e+05
+	The total actual conductance update per synapse=5.8097e-09
+	The total actual pulse number per synapse=1.3368e+01
+Accuracy at 103 epochs is : 18.94%
+	Read latency=1.3305e+01 s
+	Write latency=3.3978e+02 s
+	Read energy=5.6644e-04 J
+	Write energy=7.8927e-04 J
+	The total weight update=1.7330e+07
+	The total pulse number=6.0226e+05
+	The total actual conductance update=2.3931e-04
+	The total actual pulse number=5.5106e+05
+	The total actual conductance update per synapse=5.8368e-09
+	The total actual pulse number per synapse=1.3440e+01
+Accuracy at 104 epochs is : 18.93%
+	Read latency=1.3435e+01 s
+	Write latency=3.4165e+02 s
+	Read energy=5.7182e-04 J
+	Write energy=7.9693e-04 J
+	The total weight update=1.7488e+07
+	The total pulse number=6.0522e+05
+	The total actual conductance update=2.4046e-04
+	The total actual pulse number=5.5406e+05
+	The total actual conductance update per synapse=5.8648e-09
+	The total actual pulse number per synapse=1.3514e+01
+Accuracy at 105 epochs is : 19.23%
+	Read latency=1.3564e+01 s
+	Write latency=3.4355e+02 s
+	Read energy=5.7722e-04 J
+	Write energy=8.0459e-04 J
+	The total weight update=1.7645e+07
+	The total pulse number=6.0829e+05
+	The total actual conductance update=2.4164e-04
+	The total actual pulse number=5.5714e+05
+	The total actual conductance update per synapse=5.8936e-09
+	The total actual pulse number per synapse=1.3589e+01
+Accuracy at 106 epochs is : 19.20%
+	Read latency=1.3693e+01 s
+	Write latency=3.4542e+02 s
+	Read energy=5.8262e-04 J
+	Write energy=8.1224e-04 J
+	The total weight update=1.7803e+07
+	The total pulse number=6.1134e+05
+	The total actual conductance update=2.4275e-04
+	The total actual pulse number=5.6018e+05
+	The total actual conductance update per synapse=5.9206e-09
+	The total actual pulse number per synapse=1.3663e+01
+Accuracy at 107 epochs is : 19.28%
+	Read latency=1.3822e+01 s
+	Write latency=3.4732e+02 s
+	Read energy=5.8802e-04 J
+	Write energy=8.1990e-04 J
+	The total weight update=1.7960e+07
+	The total pulse number=6.1432e+05
+	The total actual conductance update=2.4390e-04
+	The total actual pulse number=5.6326e+05
+	The total actual conductance update per synapse=5.9488e-09
+	The total actual pulse number per synapse=1.3738e+01
+Accuracy at 108 epochs is : 19.29%
+	Read latency=1.3951e+01 s
+	Write latency=3.4918e+02 s
+	Read energy=5.9341e-04 J
+	Write energy=8.2755e-04 J
+	The total weight update=1.8118e+07
+	The total pulse number=6.1727e+05
+	The total actual conductance update=2.4511e-04
+	The total actual pulse number=5.6631e+05
+	The total actual conductance update per synapse=5.9782e-09
+	The total actual pulse number per synapse=1.3813e+01
+Accuracy at 109 epochs is : 19.32%
+	Read latency=1.4080e+01 s
+	Write latency=3.5099e+02 s
+	Read energy=5.9880e-04 J
+	Write energy=8.3521e-04 J
+	The total weight update=1.8275e+07
+	The total pulse number=6.2022e+05
+	The total actual conductance update=2.4626e-04
+	The total actual pulse number=5.6927e+05
+	The total actual conductance update per synapse=6.0064e-09
+	The total actual pulse number per synapse=1.3885e+01
+Accuracy at 110 epochs is : 19.45%
+	Read latency=1.4210e+01 s
+	Write latency=3.5277e+02 s
+	Read energy=6.0418e-04 J
+	Write energy=8.4287e-04 J
+	The total weight update=1.8432e+07
+	The total pulse number=6.2309e+05
+	The total actual conductance update=2.4736e-04
+	The total actual pulse number=5.7218e+05
+	The total actual conductance update per synapse=6.0332e-09
+	The total actual pulse number per synapse=1.3956e+01
+Accuracy at 111 epochs is : 19.49%
+	Read latency=1.4339e+01 s
+	Write latency=3.5459e+02 s
+	Read energy=6.0958e-04 J
+	Write energy=8.5052e-04 J
+	The total weight update=1.8590e+07
+	The total pulse number=6.2600e+05
+	The total actual conductance update=2.4848e-04
+	The total actual pulse number=5.7511e+05
+	The total actual conductance update per synapse=6.0605e-09
+	The total actual pulse number per synapse=1.4027e+01
+Accuracy at 112 epochs is : 19.48%
+	Read latency=1.4468e+01 s
+	Write latency=3.5651e+02 s
+	Read energy=6.1498e-04 J
+	Write energy=8.5817e-04 J
+	The total weight update=1.8748e+07
+	The total pulse number=6.2899e+05
+	The total actual conductance update=2.4966e-04
+	The total actual pulse number=5.7821e+05
+	The total actual conductance update per synapse=6.0892e-09
+	The total actual pulse number per synapse=1.4103e+01
+Accuracy at 113 epochs is : 19.58%
+	Read latency=1.4597e+01 s
+	Write latency=3.5836e+02 s
+	Read energy=6.2036e-04 J
+	Write energy=8.6583e-04 J
+	The total weight update=1.8905e+07
+	The total pulse number=6.3196e+05
+	The total actual conductance update=2.5081e-04
+	The total actual pulse number=5.8115e+05
+	The total actual conductance update per synapse=6.1172e-09
+	The total actual pulse number per synapse=1.4174e+01
+Accuracy at 114 epochs is : 19.66%
+	Read latency=1.4726e+01 s
+	Write latency=3.6017e+02 s
+	Read energy=6.2575e-04 J
+	Write energy=8.7348e-04 J
+	The total weight update=1.9062e+07
+	The total pulse number=6.3483e+05
+	The total actual conductance update=2.5191e-04
+	The total actual pulse number=5.8409e+05
+	The total actual conductance update per synapse=6.1441e-09
+	The total actual pulse number per synapse=1.4246e+01
+Accuracy at 115 epochs is : 19.74%
+	Read latency=1.4856e+01 s
+	Write latency=3.6218e+02 s
+	Read energy=6.3113e-04 J
+	Write energy=8.8115e-04 J
+	The total weight update=1.9219e+07
+	The total pulse number=6.3809e+05
+	The total actual conductance update=2.5317e-04
+	The total actual pulse number=5.8733e+05
+	The total actual conductance update per synapse=6.1749e-09
+	The total actual pulse number per synapse=1.4325e+01
+Accuracy at 116 epochs is : 19.83%
+	Read latency=1.4985e+01 s
+	Write latency=3.6416e+02 s
+	Read energy=6.3652e-04 J
+	Write energy=8.8881e-04 J
+	The total weight update=1.9376e+07
+	The total pulse number=6.4132e+05
+	The total actual conductance update=2.5444e-04
+	The total actual pulse number=5.9054e+05
+	The total actual conductance update per synapse=6.2059e-09
+	The total actual pulse number per synapse=1.4403e+01
+Accuracy at 117 epochs is : 19.84%
+	Read latency=1.5114e+01 s
+	Write latency=3.6598e+02 s
+	Read energy=6.4188e-04 J
+	Write energy=8.9646e-04 J
+	The total weight update=1.9533e+07
+	The total pulse number=6.4428e+05
+	The total actual conductance update=2.5552e-04
+	The total actual pulse number=5.9343e+05
+	The total actual conductance update per synapse=6.2322e-09
+	The total actual pulse number per synapse=1.4474e+01
+Accuracy at 118 epochs is : 19.88%
+	Read latency=1.5243e+01 s
+	Write latency=3.6781e+02 s
+	Read energy=6.4726e-04 J
+	Write energy=9.0411e-04 J
+	The total weight update=1.9690e+07
+	The total pulse number=6.4724e+05
+	The total actual conductance update=2.5663e-04
+	The total actual pulse number=5.9635e+05
+	The total actual conductance update per synapse=6.2592e-09
+	The total actual pulse number per synapse=1.4545e+01
+Accuracy at 119 epochs is : 19.92%
+	Read latency=1.5372e+01 s
+	Write latency=3.6976e+02 s
+	Read energy=6.5264e-04 J
+	Write energy=9.1176e-04 J
+	The total weight update=1.9847e+07
+	The total pulse number=6.5045e+05
+	The total actual conductance update=2.5786e-04
+	The total actual pulse number=5.9955e+05
+	The total actual conductance update per synapse=6.2894e-09
+	The total actual pulse number per synapse=1.4623e+01
+Accuracy at 120 epochs is : 19.93%
+	Read latency=1.5501e+01 s
+	Write latency=3.7171e+02 s
+	Read energy=6.5801e-04 J
+	Write energy=9.1941e-04 J
+	The total weight update=2.0003e+07
+	The total pulse number=6.5373e+05
+	The total actual conductance update=2.5912e-04
+	The total actual pulse number=6.0269e+05
+	The total actual conductance update per synapse=6.3199e-09
+	The total actual pulse number per synapse=1.4700e+01
+Accuracy at 121 epochs is : 19.96%
+	Read latency=1.5631e+01 s
+	Write latency=3.7356e+02 s
+	Read energy=6.6337e-04 J
+	Write energy=9.2707e-04 J
+	The total weight update=2.0159e+07
+	The total pulse number=6.5679e+05
+	The total actual conductance update=2.6029e-04
+	The total actual pulse number=6.0573e+05
+	The total actual conductance update per synapse=6.3486e-09
+	The total actual pulse number per synapse=1.4774e+01
+Accuracy at 122 epochs is : 20.16%
+	Read latency=1.5760e+01 s
+	Write latency=3.7546e+02 s
+	Read energy=6.6874e-04 J
+	Write energy=9.3472e-04 J
+	The total weight update=2.0315e+07
+	The total pulse number=6.5985e+05
+	The total actual conductance update=2.6146e-04
+	The total actual pulse number=6.0875e+05
+	The total actual conductance update per synapse=6.3771e-09
+	The total actual pulse number per synapse=1.4848e+01
+Accuracy at 123 epochs is : 20.09%
+	Read latency=1.5889e+01 s
+	Write latency=3.7734e+02 s
+	Read energy=6.7412e-04 J
+	Write energy=9.4238e-04 J
+	The total weight update=2.0471e+07
+	The total pulse number=6.6293e+05
+	The total actual conductance update=2.6257e-04
+	The total actual pulse number=6.1180e+05
+	The total actual conductance update per synapse=6.4041e-09
+	The total actual pulse number per synapse=1.4922e+01
+Accuracy at 124 epochs is : 20.22%
+	Read latency=1.6018e+01 s
+	Write latency=3.7907e+02 s
+	Read energy=6.7950e-04 J
+	Write energy=9.5004e-04 J
+	The total weight update=2.0628e+07
+	The total pulse number=6.6575e+05
+	The total actual conductance update=2.6362e-04
+	The total actual pulse number=6.1460e+05
+	The total actual conductance update per synapse=6.4298e-09
+	The total actual pulse number per synapse=1.4990e+01
+Accuracy at 125 epochs is : 20.27%
+	Read latency=1.6147e+01 s
+	Write latency=3.8093e+02 s
+	Read energy=6.8486e-04 J
+	Write energy=9.5769e-04 J
+	The total weight update=2.0784e+07
+	The total pulse number=6.6881e+05
+	The total actual conductance update=2.6475e-04
+	The total actual pulse number=6.1762e+05
+	The total actual conductance update per synapse=6.4574e-09
+	The total actual pulse number per synapse=1.5064e+01
+
