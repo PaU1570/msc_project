@@ -28,6 +28,7 @@ def analyze_pulseAmplitudeSweep(args):
     csv_files = du.get_pas_csv_files(input_dir)
 
     # read cutoffs
+    cutoffs = None
     if cutoffs_file is not None:
         cutoffs = pd.read_csv(cutoffs_file)
 
@@ -46,7 +47,7 @@ def analyze_pulseAmplitudeSweep(args):
         else:
             # check if the file is present in the cutoffs
             row = cutoffs[
-                (cutoffs['device_name'] == metadata['device_name']) &
+                #(cutoffs['device_name'] == metadata['device_name']) &
                 (cutoffs['device_id'] == metadata['device_id']) &
                 (cutoffs['test_date'] == metadata['test_date']) &
                 (cutoffs['test_time'] == metadata['test_time'])

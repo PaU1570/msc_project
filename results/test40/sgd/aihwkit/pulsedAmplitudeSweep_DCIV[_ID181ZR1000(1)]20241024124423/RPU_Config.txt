@@ -8,8 +8,6 @@ SingleRPUConfig(
     device=PiecewiseStepDevice(
         construction_seed=2024,
         dw_min=0.08589167856250571,
-        dw_min_dtod=0.0,
-        dw_min_std=0.0,
         reset_std=0.0,
         up_down=-0.07748332896572274,
         w_max=1.010945630298921,
@@ -82,6 +80,6 @@ SingleRPUConfig(
             0.07446153352959602,
             0.2904968774376636
         ],
-        write_noise_std=1.0
+        write_noise_std=10.0
     )
 )

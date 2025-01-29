@@ -17,7 +17,7 @@ class BaseModel:
         self.model = model
         self.seed = seed
         self.optimizer = aihwkit.optim.AnalogSGD(model.parameters())
-        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=10)
+        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=10, gamma=0.5)
         self.use_cuda = 0
         if aihwkit.simulator.rpu_base.cuda.is_compiled():
             self.use_cuda = 1

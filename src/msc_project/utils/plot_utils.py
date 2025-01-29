@@ -224,7 +224,7 @@ def set_axis_properties(ax, args):
         for hline in args.hlines:
             ax.axhline(y=hline, color='gray', linestyle='--', linewidth=0.5)
 
-def plot_summary(args):
+def _plot_summary(fig, ax, args):
 
     isFile = os.path.isfile(args.input)
     isDir = os.path.isdir(args.input)
@@ -250,8 +250,6 @@ def plot_summary(args):
 
         xerr = data['stdAccuracy'].to_list() if args.x == 'accuracy' and isDir else None
         yerr = data['stdAccuracy'].to_list() if args.y == 'accuracy' and isDir else None
-
-        fig, ax = plt.subplots(figsize=(8, 6))
 
         huelabel = args.huelabel if args.huelabel is not None else args.hue
         if args.hue is not None and data[args.hue].dtype == 'float64':
@@ -279,24 +277,24 @@ def plot_summary(args):
                 ax.errorbar(type_data[args.x], type_data[args.y], xerr=xerr, yerr=yerr, fmt='o', capsize=2, color=color, ecolor=color, label=unique_type)
             ax.legend(title=huelabel)
 
-        set_axis_properties(ax, args)
-
-        if args.savefig is not None:
-            plt.tight_layout()
-            plt.savefig(args.savefig, facecolor=fig.get_facecolor())
-
-        plt.show()
 
     if args.all:
         cols = ['stepSize','pulseWidth','onOffRatio','accuracy', 'A_LTP', 'A_LTD']
         g = sns.pairplot(data, hue=args.hue, vars=cols)
         g.figure.suptitle(args.title if args.title is not None else f'{args.input}')
-        if args.savefig is not None:
-            plt.tight_layout()
-            plt.savefig(args.savefig)
-        plt.show()
 
-def plot_epochs(args):
+
+def plot_summary(args):
+    fig, ax = plt.subplots(figsize=(8, 6))
+    _plot_summary(fig, ax, args)
+    set_axis_properties(ax, args)
+    if args.savefig is not None:
+        plt.tight_layout()
+        plt.savefig(args.savefig, facecolor=fig.get_facecolor())
+
+    plt.show()
+
+def _plot_epochs(fig, ax, args):
 
     mode = 'dir'
     if os.path.isdir(args.input):
@@ -367,8 +365,6 @@ def plot_epochs(args):
     data = filter_data(data, args.filter, args.exclude, reset_index=False)
     data = data.sort_values(by=['device_id', 'test_time'])
 
-    fig, ax = plt.subplots(figsize=(8, 6))
-
     huelabel = args.huelabel if args.huelabel is not None else args.hue
     if args.hue is not None and data[args.hue].dtype == 'float64' and mode == 'dir':
         cmap = colormaps.get_cmap('plasma')
@@ -402,15 +398,20 @@ def plot_epochs(args):
             ax.plot(epochs, yvals[i], label=labels[i])
         ax.legend(title=huelabel)
         
+
+
+def plot_epochs(args):
+    fig, ax = plt.subplots(figsize=(8, 6))
+    _plot_epochs(fig, ax, args)
     args.xlabel = 'Epochs'
     set_axis_properties(ax, args)
-
     if args.savefig is not None:
         plt.tight_layout()
         plt.savefig(args.savefig)
     plt.show()
 
-def plot_pytorch(args):
+
+def _plot_pytorch(fig, ax, args):
     mode = 'dir'
     if os.path.isdir(args.input):
         files = du.get_metrics_csv_files(args.input)
@@ -423,6 +424,7 @@ def plot_pytorch(args):
 
     if type(args.y) is not list:
         args.y = [args.y]
+
     if mode == 'dir' and len(args.y) > 1:
         print("Error: Only one y-axis value can be selected when using a directory as input.")
         exit(1)
@@ -457,8 +459,6 @@ def plot_pytorch(args):
         print(f"Error: {args.hue} is not a valid hue. Options are {list(metadata.keys())}")
         exit(1)
     
-    fig, ax = plt.subplots(figsize=(8, 6))
-
     huelabel = args.huelabel if args.huelabel is not None else args.hue
     if mode == 'file':
         colors = plt.cm.rainbow(np.linspace(0, 1, len(args.y)))
@@ -519,19 +519,23 @@ def plot_pytorch(args):
             by_label = dict(zip(labels, handles))
             ax.legend(by_label.values(), by_label.keys(), title=huelabel)
 
-    set_axis_properties(ax, args)
 
+
+def plot_pytorch(args):
+    fig, ax = plt.subplots(figsize=(8, 6))
+    _plot_pytorch(fig, ax, args)
+    set_axis_properties(ax, args)
     if args.savefig is not None:
         plt.tight_layout()
         plt.savefig(args.savefig)
     plt.show()
-
+    plt.show()
 
 ######################################################
 # Functions for plotting weights #####################
 ######################################################
 
-def _plot_weight_hist(ax, w, layers=(True, True, True), label=None, color=None):
+def _plot_weight_hist(ax, w, layers=(True, True, True), label=None, color=None, histtype='stepfilled'):
     if type(w) is list:
         l1 = w[0][0]
         l2 = w[1][0]
@@ -542,16 +546,17 @@ def _plot_weight_hist(ax, w, layers=(True, True, True), label=None, color=None):
         l3 = w['4.analog_module'][0]
 
     bins = np.linspace(-1.5, 1.5, 100)
+    alpha = 0.5 if histtype == 'stepfilled' else 1
 
     if layers[0]:
-        ax.hist(l1.flatten(), bins=bins, alpha=0.5, label=label, color=color)
+        ax.hist(l1.flatten(), bins=bins, alpha=alpha, label=label, color=color, histtype=histtype)
     if layers[1]:
-        ax.hist(l2.flatten(), bins=bins, alpha=0.5, label=label, color=color)
+        ax.hist(l2.flatten(), bins=bins, alpha=alpha, label=label, color=color, histtype=histtype)
     if layers[2]:
-        ax.hist(l3.flatten(), bins=bins, alpha=0.5, label=label, color=color)
+        ax.hist(l3.flatten(), bins=bins, alpha=alpha, label=label, color=color, histtype=histtype)
 
 
-def plot_weight_hist(weights, labels=None, suptitle=None, huevals=None, cmap=None, norm=None, colors=None):
+def plot_weight_hist(weights, labels=None, suptitle=None, huevals=None, cmap=None, norm=None, colors=None, histtype='stepfilled'):
     fig, ax = plt.subplots(3, 2, figsize=(15, 20))
     if labels is None:
         labels = [''] * len(weights)
@@ -567,7 +572,7 @@ def plot_weight_hist(weights, labels=None, suptitle=None, huevals=None, cmap=Non
             layers = (row == 0, row == 1, row == 2)
             for col, cax in enumerate(rax):
                 w_idx = 0 if col == 0 else -1
-                _plot_weight_hist(cax, weight[w_idx], layers=layers, label=label, color=color)
+                _plot_weight_hist(cax, weight[w_idx], layers=layers, label=label, color=color, histtype=histtype)
                 cax.set(title=f"Layer {row} {'Initial' if w_idx == 0 else 'Final'}")
                 cax.legend()
                 cax.set(xlabel='Weight', ylabel='Count', xlim=(-1.5, 1.5))

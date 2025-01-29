@@ -62,3 +62,7 @@ test40: compare floating point, mixed-precision, and plain sgd for three devices
     - ID181ZR1000,24.10.2024,12:21:13, with symmetry point 0.07
     - ID181ZR1000,24.10.2024,12:51:01, with symmetry point 0.24
     - ID181ZR1000,24.10.2024,12:44:23, with symmetry point 0.62
+    - ID170ZR500,24.10.2024,13:22:32, with the lowest dw_min (0.03)
+
+test41: ID170ZR500 13:22:32 adam lr sweep (0.01, 0.05, 0.1, 0.2, 0.4, 0.6, 1, 2) with beta1=0.8 and beta2=0.999
+test42: all LBE247 files; adam 0.01/0.8/0.999; piecewise fit; learn_out_scaling=True

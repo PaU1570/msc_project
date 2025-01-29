@@ -93,8 +93,12 @@ def fit_piecewise_device(conductance, pulses, degree=DEFAULT_FIT_DEGREE):
     piecewise_up = np.abs(fit_grad_ltp(cond_steps))
     piecewise_down = np.abs(fit_grad_ltd(cond_steps))
 
+    dw_min = min(piecewise_up.min(), piecewise_down.min())
+    piecewise_up /= dw_min
+    piecewise_down /= dw_min
+
     # parameters to optimize (format: 'x': (x_init, x_min, x_max))
-    params = {'dw_min': (0.1, 0.001, 1.0),
+    params = {'dw_min': dw_min,
               'up_down': (0.0, -0.99, 0.99),
               'w_max': (1.0, 0.1, 2.0),
               'w_min': (-1.0, -2.0, -0.1)}
@@ -107,12 +111,6 @@ def fit_piecewise_device(conductance, pulses, degree=DEFAULT_FIT_DEGREE):
         PiecewiseStepDevice(
             piecewise_up=list(piecewise_up),
             piecewise_down=list(piecewise_down)))
-    
-    # rescale dw_min and conductance gradient
-    scale = (np.mean(piecewise_up) + np.mean(piecewise_down)) / 2
-    device_config_fit.dw_min *= scale
-    device_config_fit.piecewise_up = list(piecewise_up / scale)
-    device_config_fit.piecewise_down = list(piecewise_down / scale)
         
     return result, device_config_fit, model_response
 

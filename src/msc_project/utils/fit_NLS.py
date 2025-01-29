@@ -169,7 +169,8 @@ def iterative_fit(data, pmax=None, iters=10, p0_tmin=None, p0_tmax=None):
 
 def iterative_fit_lorentzian(data, pmax=None, iters=5, p0_lorentz=None, exclude_voltages=None):
     """
-    Fit polarization data (lorentzian), extract tau_lorentz fit, and then use that to obtain better initial guesses for polarization fit.
+    Fit polarization data (lorentzian), extract tau_lorentz fit.
+    Actually doesn't do any iterations currently.
     """
     # initial guess
     p0 = [0.2, 0.1, -7, 2]
