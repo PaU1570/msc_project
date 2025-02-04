@@ -67,3 +67,5 @@ test40: compare floating point, mixed-precision, and plain sgd for three devices
 test41: ID170ZR500 13:22:32 adam lr sweep (0.01, 0.05, 0.1, 0.2, 0.4, 0.6, 1, 2) with beta1=0.8 and beta2=0.999
 test42: all LBE247 files; adam 0.01/0.8/0.999; piecewise fit; learn_out_scaling=True
 test43: like test42 but with improved (?) fit.
+test44: write_noise_std sweep while keeping the other noises at default.
+TODO: mixed-precision with improved fit

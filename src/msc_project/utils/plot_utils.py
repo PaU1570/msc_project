@@ -109,15 +109,17 @@ def filter_data(data, filter_list, exclusion_list, reset_index=True):
 
     Args:
         data (pd.DataFrame): The data to filter
-        filter_list (list): A list of filters, each containing a column name and a value. I.e. [['column1', 'value1'], ['column2', 'value2'], ...]
-        exclusion_list (list): A list of exclusions, each containing a column name and a value. I.e. [['column1', 'value1'], ['column2', 'value2'], ...].
+        filter_list (list): A list of filters, each containing a column name and a value(s). I.e. [['column1', 'value1'], ['column2', 'value2', 'value3', ...], ...]
+        exclusion_list (list): A list of exclusions, each containing a column name and a value(s). I.e. [['column1', 'value1', ...], ['column2', 'value2', ...], ...].
         
     Returns:
         pd.DataFrame: The filtered data
     """
 
     if filter_list is not None:
-        for filter_column, filter_value in filter_list:
+        for filter in filter_list:
+            filter_column = filter[0]
+            filter_values = filter[1:]
             if filter_column not in data.columns and filter_column != 'fit_R2':
                 print(f"Error: {filter_column} is not a column in the data.")
                 exit(1)
@@ -126,33 +128,35 @@ def filter_data(data, filter_list, exclusion_list, reset_index=True):
             if filter_column == 'fit_R2_LTD' or filter_column == 'fit_R2_LTP' or filter_column == 'fit_R2':
                 comp = '>'
 
-            print(f'Filtering data based on {filter_column} {comp} {filter_value}')
+            print(f'Filtering data based on {filter_column} {comp} {filter_values}')
             try:
-                filter_value = pd.to_numeric(filter_value)
+                filter_values = pd.to_numeric(filter_values)
             except ValueError:
                 pass
             if comp == '=':
-                data = data[data[filter_column] == filter_value]
+                data = data[data[filter_column].isin(filter_values)]
             elif comp == '>':
                 if filter_column == 'fit_R2':
-                    data = data[(data['fit_R2_LTD'] > filter_value) & (data['fit_R2_LTP'] > filter_value)]
+                    data = data[(data['fit_R2_LTD'] > filter_values[0]) & (data['fit_R2_LTP'] > filter_values[0])]
                 else:
-                    data = data[data[filter_column] > filter_value]
+                    data = data[data[filter_column] > filter_values[0]]
             if data.empty:
-                print(f"Error: No data found for {filter_column} {comp} {filter_value}.")
+                print(f"Error: No data found for {filter_column} {comp} {filter_values}.")
                 exit(1)
 
     if exclusion_list is not None:
-        for exclusion_column, exclusion_value in exclusion_list:
+        for exclusion in exclusion_list:
+            exclusion_column = exclusion[0]
+            exclusion_values = exclusion[1:]
             if exclusion_column not in data.columns:
                 print(f"Warning: {exclusion_column} is not a column in the data. No data will be excluded based on this column.")
             else:
-                print(f'Excluding data based on {exclusion_column} = {exclusion_value}')
+                print(f'Excluding data based on {exclusion_column} = {exclusion_values}')
                 try:
-                    exclusion_value = pd.to_numeric(exclusion_value)
+                    exclusion_values = pd.to_numeric(exclusion_values)
                 except ValueError:
                     pass
-                data = data[data[exclusion_column] != exclusion_value]
+                data = data[data[exclusion_column].isin(exclusion_values) == False]
     
     if reset_index:
         data = data.reset_index(drop=True)
