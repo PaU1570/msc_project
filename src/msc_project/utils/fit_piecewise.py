@@ -124,6 +124,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Fit piecewise device to conductance data.')
     parser.add_argument('filename', type=str, help='path to the Summary.dat file')
     parser.add_argument('--degree', type=int, default=DEFAULT_FIT_DEGREE, help='degree of the polynomial fit')
+    parser.add_argument('--savefig', type=str, default=None, help='path to save the figure')
     args = parser.parse_args()
 
     # plot 1: conductance vs pulses with fit
@@ -135,4 +136,7 @@ if __name__ == '__main__':
     ax.plot(model_response, label='Fit', color='b')
     ax.set(xlabel="Pulse Number", ylabel="[Norm.] Conductance", title="Conductance vs Pulse Number")
     ax.legend()
-    plt.show()
+    if args.savefig:
+        plt.savefig(args.savefig)
+    else:
+        plt.show()
