@@ -46,10 +46,8 @@ def get_id(col, row):
 
 def get_minmax_I(df, V, get_abs=True):
     df = df[np.isclose(df['V1'], V, atol=0.001)]
-    if get_abs:
-        return abs(df['I1'].min()), abs(df['I1'].max())
-    else:
-        return df['I1'].min(), df['I1'].max()
+    idata = abs(df['I1']) if get_abs else df['Iabs']
+    return idata.min(), idata.max()
 
 
 # Get map files
@@ -100,12 +98,18 @@ for f in csv_files:
             # print(f"I range: {imin_n:.2e} - {imax_n:.2e} (V={-V_READ})")
             # print(f"I range: {imin_p:.2e} - {imax_p:.2e} (V={V_READ})")
             print()
-            ax.barh(-V_READ, width=imax_n-imin_n, height=0.1, left=imin_n, color='blue')
-            ax.barh(V_READ, width=imax_p-imin_p, height=0.1, left=imin_p, color='blue')
+            ax.barh(-0.1, width=imax_n-imin_n, height=0.1, left=imin_n, color='C1')
+            ax.barh(0.1, width=imax_p-imin_p, height=0.1, left=imin_p, color='C1')
             # arc2 current ranges: orange (min, 10%), yellow (10%, 1%), green (1% up)
             ax.barh(0, width=ARC2_10p-ARC2_MIN, height=0.05, left=ARC2_MIN, color='orange')
             ax.barh(0, width=ARC2_1p-ARC2_10p, height=0.05, left=ARC2_10p, color='yellow')
             ax.barh(0, width=COMPLIANCE_I-ARC2_1p, height=0.05, left=ARC2_1p, color='green')
+            # Add text on top of the bars
+            irange_p = imax_p - imin_p
+            irange_n = imax_n - imin_n
+            ax.text(min(imin_n, imin_p), -0.1, f'$\Delta I_{{-{V_READ}V}}$={irange_n/1e-12:.0f}pA', va='center', ha='left', color='black', fontsize=8)
+            ax.text(min(imin_n, imin_p), 0.1, f'$\Delta I_{{{V_READ}V}}$={irange_p/1e-12:.0f}pA', va='center', ha='left', color='black', fontsize=8)
+            
             ax.set(xscale='linear', xlim=(min(imin_n, imin_p), max(imax_n, imax_p)), title=f"{device_id} ({device_num})")
 
             ax.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
