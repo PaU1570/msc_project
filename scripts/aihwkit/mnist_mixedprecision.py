@@ -258,7 +258,8 @@ if __name__ == "__main__":
     metrics = np.concatenate((metrics, test_acc), axis=1)
 
     # Save training metrics
-    df = pd.DataFrame(metrics, columns=['epoch', 'train_loss', 'val_loss', 'val_acc', 'test_acc', 'pulses', 'pulses_pos', 'pulses_neg'])
+    df = pd.DataFrame(metrics, columns=['epoch', 'train_loss', 'val_loss', 'val_acc', 'pulses', 'pulses_pos', 'pulses_neg', 'test_acc'])
+    df = df[['epoch', 'train_loss', 'val_loss', 'val_acc', 'test_acc', 'pulses', 'pulses_pos', 'pulses_neg']]
     if output_dir is not None:
         df.to_csv(os.path.join(output_dir, 'metrics.csv'), index=False)
 
