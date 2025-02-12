@@ -34,15 +34,16 @@ class BaseModel:
         except:
             print("Model does not have analog weights.")
             return None
-        
+    
     def get_pulses(self):
-        return [tile.get_total_pulses().sum().item() for tile in self.model.analog_tiles()]
-    
-    def get_pos_pulses(self):
-        return [tile.get_total_positive_pulses().sum().item() for tile in self.model.analog_tiles()]
-    
-    def get_neg_pulses(self):
-        return [tile.get_total_negative_pulses().sum().item() for tile in self.model.analog_tiles()]
+        pulses = 0
+        pulses_pos = 0
+        pulses_neg = 0
+        for tile in self.model.analog_tiles():
+            pulses += int(tile.get_total_pulses().sum().item())
+            pulses_pos += int(tile.get_total_positive_pulses().sum().item())
+            pulses_neg += int(tile.get_total_negative_pulses().sum().item())
+        return pulses, pulses_pos, pulses_neg
         
     def preprocess_input(self, input):
         return input
@@ -113,12 +114,11 @@ class BaseModel:
             metrics[epoch_number, 1] = total_loss / len(train_set) # train_loss
             metrics[epoch_number, 2] = val_loss / len(valid_set) # valid_loss
             metrics[epoch_number, 3] = predicted_ok / total_images # valid_accuracy
-            pulses = np.sum(self.get_pulses())
-            pulses_pos = np.sum(self.get_pos_pulses())
-            pulses_neg = np.sum(self.get_neg_pulses())
+            pulses, pulses_pos, pulses_neg = self.get_pulses()
             metrics[epoch_number, 4] = pulses # pulses
             metrics[epoch_number, 5] = pulses_pos
             metrics[epoch_number, 6] = pulses_neg
+            print(f"\t- Pulses: {pulses}, Pos: {pulses_pos}, Neg: {pulses_neg}")
 
         self.metrics = metrics
         self.weights = weights
