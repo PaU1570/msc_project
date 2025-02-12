@@ -119,6 +119,7 @@ if __name__ == "__main__":
     parser.add_argument('--lr', type=float, default=0.5, help='Learning rate')
     parser.add_argument('--beta1', type=float, default=0.8, help='Beta1 for Adam optimizer')
     parser.add_argument('--beta2', type=float, default=0.999, help='Beta2 for Adam optimizer')
+    parser.add_argument('--asymmetric_granularity', action='store_true', help='Use asymmetric granularity')
     args = parser.parse_args()
 
     filename = args.filename
@@ -138,7 +139,7 @@ if __name__ == "__main__":
     conductance, pulses = read_conductance_data(filename)
 
     # Fit the device data
-    result, device_config, model_response = fit_piecewise_device(conductance, pulses)
+    result, device_config, model_response, granularity_up, granularity_down = fit_piecewise_device(conductance, pulses, get_granularity=True)
 
     # Add noise to the device configuration
     device_config = add_noise(device_config, model_response, conductance,
@@ -191,6 +192,10 @@ if __name__ == "__main__":
                 asymmetric_pulsing_dir = AsymmetricPulseType(args.asymmetric_pulsing_dir),
                 asymmetric_pulsing_up = args.asymmetric_pulsing_up,
                 asymmetric_pulsing_down = args.asymmetric_pulsing_down,
+                asymmetric_granularity=args.asymmetric_granularity,
+                granularity = (granularity_up+granularity_down)/2,
+                granularity_up=granularity_up,
+                granularity_down=granularity_down,
                 construction_seed=SEED),
             forward=IOParameters(),
             backward=IOParameters(),
@@ -253,7 +258,7 @@ if __name__ == "__main__":
     metrics = np.concatenate((metrics, test_acc), axis=1)
 
     # Save training metrics
-    df = pd.DataFrame(metrics, columns=['epoch', 'train_loss', 'val_loss', 'val_acc', 'test_acc'])
+    df = pd.DataFrame(metrics, columns=['epoch', 'train_loss', 'val_loss', 'val_acc', 'test_acc', 'pulses', 'pulses_pos', 'pulses_neg'])
     if output_dir is not None:
         df.to_csv(os.path.join(output_dir, 'metrics.csv'), index=False)
 

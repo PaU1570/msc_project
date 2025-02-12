@@ -70,7 +70,7 @@ def fit_conductance_change(conductance, pulses, degree=DEFAULT_FIT_DEGREE):
 
     return fit_grad_ltd, fit_grad_ltp
 
-def fit_piecewise_device(conductance, pulses, degree=DEFAULT_FIT_DEGREE):
+def fit_piecewise_device(conductance, pulses, degree=DEFAULT_FIT_DEGREE, get_granularity=False):
     """
     Fit a piecewise device to the conductance data.
     
@@ -111,8 +111,14 @@ def fit_piecewise_device(conductance, pulses, degree=DEFAULT_FIT_DEGREE):
         PiecewiseStepDevice(
             piecewise_up=list(piecewise_up),
             piecewise_down=list(piecewise_down)))
-        
-    return result, device_config_fit, model_response
+    
+    if not get_granularity:
+        return result, device_config_fit, model_response
+    else:
+        # get granularity near 0
+        granularity_up = np.abs(fit_grad_ltp(0))
+        granularity_down = np.abs(fit_grad_ltd(0))
+        return result, device_config_fit, model_response, granularity_up, granularity_down
 
 def get_fit(filename):
     conductance, pulses = read_conductance_data(filename)

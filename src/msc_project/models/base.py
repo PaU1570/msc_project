@@ -35,11 +35,20 @@ class BaseModel:
             print("Model does not have analog weights.")
             return None
         
+    def get_pulses(self):
+        return [tile.get_total_pulses().sum().item() for tile in self.model.analog_tiles()]
+    
+    def get_pos_pulses(self):
+        return [tile.get_total_positive_pulses().sum().item() for tile in self.model.analog_tiles()]
+    
+    def get_neg_pulses(self):
+        return [tile.get_total_negative_pulses().sum().item() for tile in self.model.analog_tiles()]
+        
     def preprocess_input(self, input):
         return input
     
     def train(self, train_set, valid_set, epochs=3, save_weights=False):
-        metrics = np.zeros((epochs, 4))
+        metrics = np.zeros((epochs, 7))
         weights = [self.model.get_weights()]
         analog_weights = [self.get_analog_weights()]
 
@@ -104,6 +113,12 @@ class BaseModel:
             metrics[epoch_number, 1] = total_loss / len(train_set) # train_loss
             metrics[epoch_number, 2] = val_loss / len(valid_set) # valid_loss
             metrics[epoch_number, 3] = predicted_ok / total_images # valid_accuracy
+            pulses = np.sum(self.get_pulses())
+            pulses_pos = np.sum(self.get_pos_pulses())
+            pulses_neg = np.sum(self.get_neg_pulses())
+            metrics[epoch_number, 4] = pulses # pulses
+            metrics[epoch_number, 5] = pulses_pos
+            metrics[epoch_number, 6] = pulses_neg
 
         self.metrics = metrics
         self.weights = weights
