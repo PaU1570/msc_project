@@ -204,6 +204,12 @@ def read_rpu_txt(filename):
                 d['reference_std'] = get_float(line)
             if "write_noise_std=" in line:
                 d['write_noise_std'] = get_float(line)
+            if "granularity=" in line and "asymmetric_granularity" not in line:
+                d['granularity'] = get_float(line)
+            if "granularity_up=" in line:
+                d['granularity_up'] = get_float(line)
+            if "granularity_down=" in line:
+                d['granularity_down'] = get_float(line)
     
     return d
 
@@ -232,8 +238,8 @@ def _get_final_metrics(metrics_files):
     Returns:
         final_metrics (dict): Dictionary containing the final metrics (epochs, steps, test_acc, test_loss) in the same order as the files.
     """
-    read_keys = ["epoch", "step", "test_acc", "test_loss", "val_acc", "val_loss", "train_loss"]
-    write_keys = ["epochs", "steps", "test_acc", "test_loss", "val_acc", "val_loss", "train_loss"]
+    read_keys = ["epoch", "step", "test_acc", "test_loss", "val_acc", "val_loss", "train_loss", "pulses", "pulses_pos", "pulses_neg"]
+    write_keys = ["epochs", "steps", "test_acc", "test_loss", "val_acc", "val_loss", "train_loss", "pulses", "pulses_pos", "pulses_neg"]
     final_metrics = dict() # dict.fromkeys(write_keys, None)
     for file in metrics_files:
         metrics = pd.read_csv(file)
@@ -272,3 +278,31 @@ def get_pytorch_df(directory):
     df = df.apply(pd.to_numeric, errors='ignore')
 
     return df
+
+
+def add_energy_to_metrics(metrics, summaries):
+    """
+    Add energy calculations to metrics containing pulse count.
+    
+    Args:
+        metrics (pd.DataFrame): DataFrame containing the metrics.
+        summaries (pd.DataFrame): DataFrame containing the summaries.
+    """
+    for m, s in zip(metrics, summaries):
+        # approximate upper bound of energy by using the most negative voltage and modified schottky emission model
+        vmin = abs(float(s[1]["Pulse Amplitude (V)"].min()))
+        ALPHA = 3e-4 # [A * s * cm^-3 * K^(3/2)]
+        MU = 8.9e-3 # mu(m*/m0)^(3/2) [cm^2 * s^-1 * V^-1]
+        PHI_B = 0.19 # [eV]
+        EPSILON_0 = 552634.9406 # [e^2 * eV^-1 * cm^-1]
+        EPSILON_R = 18.2
+        T = 300 # [K]
+        K = 8.617e-5 # [eV * K^-1]
+        THICKNESS = 5e-7 # [cm] (5nm)
+
+        j = ALPHA * np.power(T, 3/2) * (vmin/THICKNESS) * MU * np.exp(-(PHI_B - np.sqrt((vmin/THICKNESS)/(4*np.pi*EPSILON_0*EPSILON_R))) / (K*T))
+        area = 1
+        i = j * area
+        r = vmin / i
+        pwidth = float(s[0]["pulseWidth"])
+        m["energy"] = vmin**2 / r * pwidth * m["pulses"]

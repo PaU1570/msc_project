@@ -37,6 +37,7 @@ def create_parser():
     common_parser.add_argument('--aspect', type=str, help='Aspect ratio of the plot', default='auto')
     common_parser.add_argument('--hlines', type=float, nargs='*', help='Add horizontal lines to the plot', default=None)
     common_parser.add_argument('--vlines', type=float, nargs='*', help='Add vertical lines to the plot', default=None)
+    common_parser.add_argument('--fmt', type=str, help='Format of the data points', default=None)
     # data selection arguments
     common_parser.add_argument('--filter', type=str, help='Filter the data based on a column (multiple filters can be specified)', default=None, action='append', nargs='*')
     common_parser.add_argument('--exclude', type=str, help='Exclude the data based on a column (multiple filters can be specified)', default=None, action='append', nargs='*')
@@ -75,15 +76,24 @@ def create_parser():
                                                                               'test_loss',
                                                                               'train_loss',
                                                                               'val_acc',
-                                                                              'val_loss'], default='epoch')
+                                                                              'val_loss',
+                                                                              'pulses',
+                                                                              'pulses_pos',
+                                                                              'pulses_neg',
+                                                                              'energy'], default='epoch')
     parser_pytorch.add_argument('-y', type=str, help='Y axis value', choices=['epoch',
                                                                               'step',
                                                                               'test_acc',
                                                                               'test_loss',
                                                                               'train_loss',
                                                                               'val_acc',
-                                                                              'val_loss'], default='val_acc', nargs='*')
+                                                                              'val_loss',
+                                                                              'pulses',
+                                                                              'pulses_pos',
+                                                                              'pulses_neg',
+                                                                              'energy'], default='val_acc', nargs='*')
     parser_pytorch.add_argument('--smooth', type=int, help='Number of points to use for smoothing')
+    parser_pytorch.add_argument('--notcumulative', action='store_true', help='Plot only the change per epoch, not the cumulative value')
     parser_pytorch.set_defaults(func=plot_pytorch)
 
     args = parser.parse_args()
@@ -244,6 +254,8 @@ def _plot_summary(fig, ax, args):
     data = filter_data(data, args.filter, args.exclude)
     data = data.sort_values(by=['device_id', 'test_time'])
 
+    fmt = args.fmt if args.fmt is not None else 'o'
+
     if not args.all:
         if args.x not in data.columns :
             print(f"Error: {args.x} is not a column in the data.")
@@ -270,7 +282,7 @@ def _plot_summary(fig, ax, args):
                 yerr = np.zeros(len(data[args.y]))
 
             for x, y, ex, ey, color in zip(data[args.x], data[args.y], xerr, yerr, colors):
-                ax.errorbar(x, y, xerr=ex, yerr=ey, fmt='o', capsize=2, color=color, ecolor=color)
+                ax.errorbar(x, y, xerr=ex, yerr=ey, fmt=fmt, capsize=2, color=color, ecolor=color)
 
         else:
             unique_types = data[args.hue].unique() if args.hue is not None else ['data']
@@ -278,7 +290,7 @@ def _plot_summary(fig, ax, args):
             colors = plt.cm.rainbow(np.linspace(0, 1, len(unique_types)))
             for unique_type, color in zip(unique_types, colors):
                 type_data = data[data[args.hue] == unique_type] if args.hue is not None else data
-                ax.errorbar(type_data[args.x], type_data[args.y], xerr=xerr, yerr=yerr, fmt='o', capsize=2, color=color, ecolor=color, label=unique_type)
+                ax.errorbar(type_data[args.x], type_data[args.y], xerr=xerr, yerr=yerr, fmt=fmt, capsize=2, color=color, ecolor=color, label=unique_type)
             ax.legend(title=huelabel)
 
 
@@ -434,7 +446,7 @@ def _plot_pytorch(fig, ax, args):
         exit(1)
 
     metrics = [pd.read_csv(f) for f in files]
-    metrics = [m[m[args.x].notna()] for m in metrics]
+    # metrics = [m[m[args.x].notna()] for m in metrics]
 
     # get metadata from RPU_Config.txt files
     rpu_config_files = du.get_rpu_txt_files(args.input)
@@ -443,7 +455,18 @@ def _plot_pytorch(fig, ax, args):
 
     # get metadata from Summary.dat files
     summary_files = du.get_summary_files(args.input)
-    summaries = [du.read_summary_file(s)[0] for s in summary_files]
+    summaries = [du.read_summary_file(s) for s in summary_files]
+
+    # add energy to metrics
+    if 'energy' in args.y or 'energy' in args.x:
+        du.add_energy_to_metrics(metrics, summaries)
+
+    summaries = [s[0] for s in summaries]
+
+    if args.notcumulative:
+        for m in metrics:
+            for y in args.y:
+                m[y] = m[y].diff().fillna(0)
 
     try:
         summaries = {key: [d[key] for d in summaries] for key in summaries[0].keys()}
