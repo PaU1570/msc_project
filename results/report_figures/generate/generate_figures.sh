@@ -30,4 +30,4 @@ FILENAME="aihwkit_ID170ZR5000_accuracy_energy.png"
 python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test46/symmetric/aihwkit" \
     -x energy -y val_acc --filter device_id ID170ZR5000 --hue pulseWidth \
     --huescale log --scale lin-log \
-    --xlabel "Energy (upper bound)" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID170ZR5000 Accuracy vs. Energy"
+    --xlabel "Energy/Area (upper bound) [\$J/cm^2\$]" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID170ZR5000 Accuracy vs. Energy"

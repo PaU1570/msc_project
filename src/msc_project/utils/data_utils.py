@@ -301,8 +301,7 @@ def add_energy_to_metrics(metrics, summaries):
         THICKNESS = 5e-7 # [cm] (5nm)
 
         j = ALPHA * np.power(T, 3/2) * (vmin/THICKNESS) * MU * np.exp(-(PHI_B - np.sqrt((vmin/THICKNESS)/(4*np.pi*EPSILON_0*EPSILON_R))) / (K*T))
-        area = 1
+        area = 1 # [cm^2] TODO
         i = j * area
-        r = vmin / i
         pwidth = float(s[0]["pulseWidth"])
-        m["energy"] = vmin**2 / r * pwidth * m["pulses"]
+        m["energy"] = vmin * i * pwidth * m["pulses"]
