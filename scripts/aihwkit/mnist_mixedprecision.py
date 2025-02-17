@@ -120,6 +120,7 @@ if __name__ == "__main__":
     parser.add_argument('--beta1', type=float, default=0.8, help='Beta1 for Adam optimizer')
     parser.add_argument('--beta2', type=float, default=0.999, help='Beta2 for Adam optimizer')
     parser.add_argument('--asymmetric_granularity', action='store_true', help='Use asymmetric granularity')
+    parser.add_argument('--granularity_mult', type=float, default=1, help='Multiplier for the granularity')
     args = parser.parse_args()
 
     filename = args.filename
@@ -193,9 +194,9 @@ if __name__ == "__main__":
                 asymmetric_pulsing_up = args.asymmetric_pulsing_up,
                 asymmetric_pulsing_down = args.asymmetric_pulsing_down,
                 asymmetric_granularity=args.asymmetric_granularity,
-                granularity = (granularity_up+granularity_down)/2,
-                granularity_up=granularity_up,
-                granularity_down=granularity_down,
+                granularity = (granularity_up+granularity_down)/2 * args.granularity_mult,
+                granularity_up=granularity_up * args.granularity_mult,
+                granularity_down=granularity_down * args.granularity_mult,
                 construction_seed=SEED),
             forward=IOParameters(),
             backward=IOParameters(),

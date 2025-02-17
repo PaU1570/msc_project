@@ -70,6 +70,7 @@ test43: like test42 but with improved (?) fit.
 test44: write_noise_std sweep while keeping the other noises at default.
 test45: mixed-precision (0 noise) with symmetric and asymmetric granularity. For symmetric, use (granularity_up + granularity_down)/2 (unfinished)
 test46: test45 but counting pulses
+test47: mp with symmetric threshold, use half of the granularity average. No noise.
 
 TODO: mixed-precision with improved fit (?)
 TODO: get conductance at vmin and vmax for all devices
