@@ -77,36 +77,107 @@ python $PLOT_SCRIPT summary "${RESULTS_DIR}/test46/symmetric.csv" \
     --ylim 0.94 0.975 \
     --xlabel "Max ($\Delta w_0^u$, $\Delta w_0^d$)" --ylabel "Accuracy" --huelabel "Device ID" --title "AIHWKit Accuracy vs. $\Delta w_0$" \
     --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
-echo "Generated figure: ${FILENAME}"
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
 
+# ID161ZR15000
 FILENAME="aihwkit_ID161ZR15000_accuracy_energy.png"
 python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test46/symmetric/aihwkit" \
-    -x energy -y val_acc --filter device_id ID161ZR15000 --hue pulseWidth \
-    --huescale log --scale lin-log \
+    -x energy -y val_acc --filter device_id ID161ZR15000 --hue pulseWidth --huescale log --scale lin-log \
     --xlabel "Energy (upper bound) [J]" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID161ZR15000 Accuracy vs. Energy" \
     --shapes_sizes "${DATA_DIR}/LBE247_shapes_and_sizes.csv" --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
-echo "Generated figure: ${FILENAME}"
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
 
+FILENAME="aihwkit_ID161ZR15000_accuracy_epoch.png"
+python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test46/symmetric/aihwkit" \
+    -x epoch -y val_acc --filter device_id ID161ZR15000 --hue pulseWidth --huescale log \
+    --xlabel "Epoch" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID161ZR15000 Accuracy vs. Epoch" \
+    --shapes_sizes "${DATA_DIR}/LBE247_shapes_and_sizes.csv" --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
+
+FILENAME="aihwkit_ID161ZR15000_accuracy_pulses.png"
+python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test46/symmetric/aihwkit" \
+    -x pulses -y val_acc --filter device_id ID161ZR15000 --hue pulseWidth --huescale log \
+    --xlabel "Number of Applied Pulses" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID161ZR15000 Accuracy vs. Pulses" \
+    --shapes_sizes "${DATA_DIR}/LBE247_shapes_and_sizes.csv" --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
+
+# ID181ZR1000
 FILENAME="aihwkit_ID181ZR1000_accuracy_energy.png"
 python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test46/symmetric/aihwkit" \
-    -x energy -y val_acc --filter device_id ID181ZR1000 --hue pulseWidth \
-    --huescale log --scale lin-log \
+    -x energy -y val_acc --filter device_id ID181ZR1000 --hue pulseWidth --huescale log --scale lin-log \
+    --exclude 'test_time' '12:37:23' '12:44:23' \
     --xlabel "Energy (upper bound) [J]" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID181ZR1000 Accuracy vs. Energy" \
     --shapes_sizes "${DATA_DIR}/LBE247_shapes_and_sizes.csv" --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
-echo "Generated figure: ${FILENAME}"
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
 
+FILENAME="aihwkit_ID181ZR1000_accuracy_epoch.png"
+python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test46/symmetric/aihwkit" \
+    -x epoch -y val_acc --filter device_id ID181ZR1000 --hue pulseWidth --huescale log \
+    --exclude 'test_time' '12:37:23' '12:44:23' \
+    --xlabel "Epoch" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID181ZR1000 Accuracy vs. Epoch" \
+    --shapes_sizes "${DATA_DIR}/LBE247_shapes_and_sizes.csv" --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
+
+FILENAME="aihwkit_ID181ZR1000_accuracy_pulses.png"
+python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test46/symmetric/aihwkit" \
+    -x pulses -y val_acc --filter device_id ID181ZR1000 --hue pulseWidth --huescale log \
+    --exclude 'test_time' '12:37:23' '12:44:23' \
+    --xlabel "Number of Applied Pulses" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID181ZR1000 Accuracy vs. Pulses" \
+    --shapes_sizes "${DATA_DIR}/LBE247_shapes_and_sizes.csv" --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
+
+# ID301XR1000Oct
 FILENAME="aihwkit_ID301XR1000Oct_accuracy_energy.png"
 python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test46/symmetric/aihwkit" \
-    -x energy -y val_acc --filter device_id ID301XR1000Oct --hue pulseWidth \
-    --huescale log --scale lin-log \
+    -x energy -y val_acc --filter device_id ID301XR1000Oct --hue pulseWidth --huescale log --scale lin-log \
+    --exclude 'test_time' '15:35:56' '16:05:42' \
     --xlabel "Energy (upper bound) [J]" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID301XR1000Oct Accuracy vs. Energy" \
     --shapes_sizes "${DATA_DIR}/LBE247_shapes_and_sizes.csv" --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
-echo "Generated figure: ${FILENAME}"
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
 
+FILENAME="aihwkit_ID301XR1000Oct_accuracy_epoch.png"
+python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test46/symmetric/aihwkit" \
+    -x epoch -y val_acc --filter device_id ID301XR1000Oct --hue pulseWidth --huescale log \
+    --exclude 'test_time' '15:35:56' '16:05:42' \
+    --xlabel "Epoch" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID301XR1000Oct Accuracy vs. Epoch" \
+    --shapes_sizes "${DATA_DIR}/LBE247_shapes_and_sizes.csv" --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
+
+FILENAME="aihwkit_ID301XR1000Oct_accuracy_pulses.png"
+python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test46/symmetric/aihwkit" \
+    -x pulses -y val_acc --filter device_id ID301XR1000Oct --hue pulseWidth --huescale log \
+    --exclude 'test_time' '15:35:56' '16:05:42' \
+    --xlabel "Number of Applied Pulses" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID301XR1000Oct Accuracy vs. Pulses" \
+    --shapes_sizes "${DATA_DIR}/LBE247_shapes_and_sizes.csv" --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
+
+# ID171ZR5000
 FILENAME="aihwkit_ID170ZR5000_accuracy_energy.png"
 python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test46/symmetric/aihwkit" \
-    -x energy -y val_acc --filter device_id ID170ZR5000 --hue pulseWidth \
-    --huescale log --scale lin-log \
+    -x energy -y val_acc --filter device_id ID170ZR5000 --hue pulseWidth --huescale log --scale lin-log \
     --xlabel "Energy (upper bound) [J]" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID170ZR5000 Accuracy vs. Energy" \
     --shapes_sizes "${DATA_DIR}/LBE247_shapes_and_sizes.csv" --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
-echo "Generated figure: ${FILENAME}"
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
+
+FILENAME="aihwkit_ID170ZR5000_accuracy_epoch.png"
+python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test46/symmetric/aihwkit" \
+    -x epoch -y val_acc --filter device_id ID170ZR5000 --hue pulseWidth --huescale log \
+    --xlabel "Epoch" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID170ZR5000 Accuracy vs. Epoch" \
+    --shapes_sizes "${DATA_DIR}/LBE247_shapes_and_sizes.csv" --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
+
+FILENAME="aihwkit_ID170ZR5000_accuracy_pulses.png"
+python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test46/symmetric/aihwkit" \
+    -x pulses -y val_acc --filter device_id ID170ZR5000 --hue pulseWidth --huescale log \
+    --xlabel "Number of Applied Pulses" --ylabel "Accuracy" --huelabel "Pulse Width (s)" --title "ID170ZR5000 Accuracy vs. Pulses" \
+    --shapes_sizes "${DATA_DIR}/LBE247_shapes_and_sizes.csv" --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
+
+# onOffRatio vs pulseWidth
+FILENAME="aihwkit_onOffRatio_pulseWidth.png"
+python $PLOT_SCRIPT summary "${RESULTS_DIR}/test46/symmetric.csv" \
+    -x pulseWidth -y onOffRatio --hue device_id --scale lin-log \
+    --filter device_id ID301XR1000Oct ID161ZR15000 ID170ZR5000 ID181ZR1000 --fmt 'o-' \
+    --xlabel "Pulse Width (s)" --ylabel "On/Off Ratio" --huelabel "Device ID" --title "AIHWKIT On/Off Ratio vs. Pulse Width" \
+    --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"

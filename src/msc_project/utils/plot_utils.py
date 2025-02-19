@@ -38,13 +38,17 @@ def create_parser():
     common_parser.add_argument('--hlines', type=float, nargs='*', help='Add horizontal lines to the plot', default=None)
     common_parser.add_argument('--vlines', type=float, nargs='*', help='Add vertical lines to the plot', default=None)
     common_parser.add_argument('--fmt', type=str, help='Format of the data points', default=None)
+    common_parser.add_argument('--figsize', type=int, nargs=2, help='Size of the figure', default=(8, 6))
+    common_parser.add_argument('--legend_loc', type=str, help='Location of the legend', default='best')
     # data selection arguments
     common_parser.add_argument('--filter', type=str, help='Filter the data based on a column (multiple filters can be specified)', default=None, action='append', nargs='*')
     common_parser.add_argument('--exclude', type=str, help='Exclude the data based on a column (multiple filters can be specified)', default=None, action='append', nargs='*')
     common_parser.add_argument('--hue', type=str, help='Which attribute to use for coloring the data points', default=None)
     common_parser.add_argument('--huescale', type=str, choices=['linear', 'log'], default='linear', help='Scale of the hue')
+    common_parser.add_argument('--shapes_sizes', type=str, help='Path to the csv file containing shape and size information')
     # save figure argument
     common_parser.add_argument('--savefig', type=str, help='Save the figure to a file', default=None)
+    common_parser.add_argument('--noshow', action='store_true', help='Do not show the plot')
 
     # subparser arguments
     parser_summary = subparsers.add_parser('summary', help='Plot any combination of columns from a csv summary file', parents=[common_parser])
@@ -258,8 +262,12 @@ def _plot_summary(fig, ax, args):
 
     if not args.all:
         if args.x not in data.columns :
-            print(f"Error: {args.x} is not a column in the data.")
-            exit(1)
+            if args.x == 'energy':
+                shapes_sizes = None if args.shapes_sizes is None else pd.read_csv(args.shapes_sizes, usecols=['device_id', 'shape', 'size'], index_col='device_id').to_dict(orient='index')
+                du.add_energy_to_summary(data, shapes_sizes)
+            else:
+                print(f"Error: {args.x} is not a column in the data.")
+                exit(1)
         if args.y not in data.columns :
             print(f"Error: {args.y} is not a column in the data.")
             exit(1)
@@ -291,24 +299,28 @@ def _plot_summary(fig, ax, args):
             for unique_type, color in zip(unique_types, colors):
                 type_data = data[data[args.hue] == unique_type] if args.hue is not None else data
                 ax.errorbar(type_data[args.x], type_data[args.y], xerr=xerr, yerr=yerr, fmt=fmt, capsize=2, color=color, ecolor=color, label=unique_type)
-            ax.legend(title=huelabel)
+            ax.legend(title=huelabel, loc=args.legend_loc)
 
 
     if args.all:
-        cols = ['stepSize','pulseWidth','onOffRatio','accuracy', 'A_LTP', 'A_LTD']
+        cols = ['stepSize','pulseWidth','onOffRatio','accuracy', 'val_acc', 'A_LTP', 'A_LTD', 'NL_LTP', 'NL_LTD', 'num_LTP', 'num_LTD', 'granularity', 'pulses']
+        cols = [c for c in cols if c in data.columns]
         g = sns.pairplot(data, hue=args.hue, vars=cols)
         g.figure.suptitle(args.title if args.title is not None else f'{args.input}')
 
 
 def plot_summary(args):
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=args.figsize)
     _plot_summary(fig, ax, args)
     set_axis_properties(ax, args)
+    plt.tight_layout()
     if args.savefig is not None:
-        plt.tight_layout()
         plt.savefig(args.savefig, facecolor=fig.get_facecolor())
 
-    plt.show()
+    if not args.noshow:
+        plt.show()
+    else:
+        plt.close()
 
 def _plot_epochs(fig, ax, args):
 
@@ -406,25 +418,29 @@ def _plot_epochs(fig, ax, args):
         # make sure repeated labels are only shown once
         handles, labels = ax.get_legend_handles_labels()
         by_label = dict(zip(labels, handles))
-        ax.legend(by_label.values(), by_label.keys(), title=huelabel)
+        ax.legend(by_label.values(), by_label.keys(), title=huelabel, loc=args.legend_loc)
 
     else:
         labels = args.y
         for i in range(len(yvals)):
             ax.plot(epochs, yvals[i], label=labels[i])
-        ax.legend(title=huelabel)
+        ax.legend(title=huelabel, loc=args.legend_loc)
         
 
 
 def plot_epochs(args):
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=args.figsize)
     _plot_epochs(fig, ax, args)
     args.xlabel = 'Epochs'
     set_axis_properties(ax, args)
+    plt.tight_layout()
     if args.savefig is not None:
-        plt.tight_layout()
         plt.savefig(args.savefig)
-    plt.show()
+    
+    if not args.noshow:
+        plt.show()
+    else:
+        plt.close()
 
 
 def _plot_pytorch(fig, ax, args):
@@ -459,7 +475,8 @@ def _plot_pytorch(fig, ax, args):
 
     # add energy to metrics
     if 'energy' in args.y or 'energy' in args.x:
-        du.add_energy_to_metrics(metrics, summaries)
+        shapes_sizes = None if args.shapes_sizes is None else pd.read_csv(args.shapes_sizes, usecols=['device_id', 'shape', 'size'], index_col='device_id').to_dict(orient='index')
+        du.add_energy_to_metrics(metrics, summaries, shapes_sizes)
 
     summaries = [s[0] for s in summaries]
 
@@ -497,7 +514,7 @@ def _plot_pytorch(fig, ax, args):
                 if args.smooth is not None:
                     smoothed_metrics = m.rolling(window=args.smooth).mean()
                     ax.plot(smoothed_metrics[args.x], smoothed_metrics[y], color=colors[i])
-        ax.legend()
+        ax.legend(loc=args.legend_loc)
     else:
         hue_type = 'none' if args.hue is None else 'numeric' if metadata[args.hue].dtype == 'float64' else 'categorical'
         if hue_type == 'none':
@@ -544,19 +561,22 @@ def _plot_pytorch(fig, ax, args):
             # make sure repeated labels are only shown once
             handles, labels = ax.get_legend_handles_labels()
             by_label = dict(zip(labels, handles))
-            ax.legend(by_label.values(), by_label.keys(), title=huelabel)
+            ax.legend(by_label.values(), by_label.keys(), title=huelabel, loc=args.legend_loc)
 
 
 
 def plot_pytorch(args):
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=args.figsize)
     _plot_pytorch(fig, ax, args)
     set_axis_properties(ax, args)
+    plt.tight_layout()
     if args.savefig is not None:
-        plt.tight_layout()
         plt.savefig(args.savefig)
-    plt.show()
-    plt.show()
+    
+    if not args.noshow:
+        plt.show()
+    else:
+        plt.close()
 
 ######################################################
 # Functions for plotting weights #####################

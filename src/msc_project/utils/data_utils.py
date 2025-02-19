@@ -279,29 +279,68 @@ def get_pytorch_df(directory):
 
     return df
 
+def _compute_area(shape, size):
+    """ Compute are of device (circle, octagon, or star). """
+    if shape == "Circ":
+        return np.pi * size**2
+    if shape == "Oct":
+        return (34/9) * size**2 # Octagon 'ear' is 1/3 of radius
+    if shape == "Star":
+        return (2.938926261 * (size/2)**2) + 10 * (0.5245*size * 0.309*size)/2 # area of decagon + the 10 spikes
+    
+    raise ValueError(f"Unknown shape {shape}")
 
-def add_energy_to_metrics(metrics, summaries):
+def _compute_j(v):
+    """ Compute current density from voltage using modified Schottky emission model. """
+    ALPHA = 3e-4 # [A * s * cm^-3 * K^(3/2)]
+    MU = 8.9e-3 # mu(m*/m0)^(3/2) [cm^2 * s^-1 * V^-1]
+    PHI_B = 0.19 # [eV]
+    EPSILON_0 = 552634.9406 # [e^2 * eV^-1 * cm^-1]
+    EPSILON_R = 18.2
+    T = 300 # [K]
+    K = 8.617e-5 # [eV * K^-1]
+    THICKNESS = 5e-7 # [cm] (5nm)
+
+    j = ALPHA * np.power(T, 3/2) * (v/THICKNESS) * MU * np.exp(-(PHI_B - np.sqrt((v/THICKNESS)/(4*np.pi*EPSILON_0*EPSILON_R))) / (K*T))
+    return j
+
+def add_energy_to_summary(data, shapes_n_sizes=None):
+    """
+    Add energy calculations to summary data.
+
+    Args:
+        data (pd.DataFrame): DataFrame containing the summary data.
+        shapes_n_sizes (dict): Dictionary in the format {'device_id': {'size': size, 'shape': shape}}.
+    """
+    vmin = abs(data['VEndNeg (V)'])
+    j = vmin.apply(_compute_j)
+    area = 1 # [cm^2]
+    if shapes_n_sizes is not None:
+        data['shape'] = data['device_id'].map(lambda x: shapes_n_sizes[x]['shape'])
+        data['size'] = data['device_id'].map(lambda x: shapes_n_sizes[x]['size'])
+        area = data.apply(lambda x: _compute_area(x['shape'], x['size']), axis=1) * 1e-14 # convert to cm^2
+    elif 'shape' in data.columns and 'size' in data.columns:
+        area = data.apply(lambda x: _compute_area(x['shape'], x['size']), axis=1) * 1e-14
+    
+    data['energy'] = vmin * j * area * data['pulseWidth'] * data['pulses']
+
+def add_energy_to_metrics(metrics, summaries, shapes_n_sizes=None):
     """
     Add energy calculations to metrics containing pulse count.
     
     Args:
         metrics (pd.DataFrame): DataFrame containing the metrics.
         summaries (pd.DataFrame): DataFrame containing the summaries.
+        shapes_n_sizes (dict): Dictionary in the format {'device_id': {'size': size, 'shape': shape}}.
     """
     for m, s in zip(metrics, summaries):
         # approximate upper bound of energy by using the most negative voltage and modified schottky emission model
         vmin = abs(float(s[1]["Pulse Amplitude (V)"].min()))
-        ALPHA = 3e-4 # [A * s * cm^-3 * K^(3/2)]
-        MU = 8.9e-3 # mu(m*/m0)^(3/2) [cm^2 * s^-1 * V^-1]
-        PHI_B = 0.19 # [eV]
-        EPSILON_0 = 552634.9406 # [e^2 * eV^-1 * cm^-1]
-        EPSILON_R = 18.2
-        T = 300 # [K]
-        K = 8.617e-5 # [eV * K^-1]
-        THICKNESS = 5e-7 # [cm] (5nm)
-
-        j = ALPHA * np.power(T, 3/2) * (vmin/THICKNESS) * MU * np.exp(-(PHI_B - np.sqrt((vmin/THICKNESS)/(4*np.pi*EPSILON_0*EPSILON_R))) / (K*T))
-        area = 1 # [cm^2] TODO
-        i = j * area
+        j = _compute_j(vmin)
+        area = 1 # [cm^2]
+        if shapes_n_sizes is not None:
+            shape = shapes_n_sizes[s[0]["device_id"]]['shape']
+            size = shapes_n_sizes[s[0]["device_id"]]['size']
+            area = _compute_area(shape, size) * 1e-14 # convert to cm^2
         pwidth = float(s[0]["pulseWidth"])
-        m["energy"] = vmin * i * pwidth * m["pulses"]
+        m["energy"] = vmin * j * area * pwidth * m["pulses"]
