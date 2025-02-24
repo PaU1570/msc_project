@@ -25,7 +25,7 @@ from aihwkit.optim import AnalogSGD, AnalogAdam
 from aihwkit.simulator.configs import IOParameters, UpdateParameters, PulseType, DigitalRankUpdateRPUConfig
 from aihwkit.simulator.parameters.mapping import MappingParameter
 from aihwkit.simulator.parameters.enums import AsymmetricPulseType
-from aihwkit.simulator.configs.compounds import ReferenceUnitCell, MixedPrecisionCompound
+from aihwkit.simulator.configs.compounds import ReferenceUnitCell, MixedPrecisionCompound, OneSidedUnitCell
 
 from msc_project.utils.fit_piecewise import read_conductance_data, fit_piecewise_device
 from msc_project.models.base import BaseMNIST
@@ -114,6 +114,8 @@ if __name__ == "__main__":
     parser.add_argument('--asymmetric_pulsing_up', type=int, default=1, help='Asymmetric pulsing up number')
     parser.add_argument('--asymmetric_pulsing_down', type=int, default=1, help='Asymmetric pulsing down number')
     parser.add_argument('--use_reference_device', action='store_true', help='Use a ReferenceUnitCell to substract symmetry point from weight')
+    parser.add_argument('--use_onesided_device', action='store_true', help='Use OneSidedUnitCell model')
+    parser.add_argument('--onesided_device_side', type=str, choices=['up', 'down'], default='down', help='OneSidedUnitCell side')
     parser.add_argument('--weight_scaling_omega', type=float, default=0, help='Weight scaling omega')
     parser.add_argument('--learn_out_scaling', action='store_true', help='Learn output scaling')
     parser.add_argument('--optimizer', type=str, choices=['sgd', 'adam'], default='sgd', help='Optimizer to use')
@@ -193,6 +195,21 @@ if __name__ == "__main__":
         up_params.pulse_type = PulseType.STOCHASTIC
     else:
         up_params.pulse_type = PulseType.DETERMINISTIC_IMPLICIT
+
+    if args.use_onesided_device:
+        if args.onesided_device_side == 'down':
+            tmp = device_config.piecewise_up
+            device_config.piecewise_up = device_config.piecewise_down
+            device_config.piecewise_down = tmp
+            tmp = device_config.w_max
+            device_config.w_max = -device_config.w_min
+            device_config.w_min = -tmp
+        device_config = OneSidedUnitCell(unit_cell_devices=[device_config],
+                                         refresh_update=up_params,
+                                         refresh_upper_thres=0.75,
+                                         refresh_lower_thres=0.25,
+                                         copy_inverted=False,
+                                         construction_seed=SEED)
 
     rpu_config = DigitalRankUpdateRPUConfig(
             device=MixedPrecisionCompound(

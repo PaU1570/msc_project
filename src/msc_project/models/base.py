@@ -36,14 +36,17 @@ class BaseModel:
             return None
     
     def get_pulses(self):
-        pulses = 0
-        pulses_pos = 0
-        pulses_neg = 0
-        for tile in self.model.analog_tiles():
-            pulses += int(tile.get_total_pulses().sum().item())
-            pulses_pos += int(tile.get_total_positive_pulses().sum().item())
-            pulses_neg += int(tile.get_total_negative_pulses().sum().item())
-        return pulses, pulses_pos, pulses_neg
+        try:
+            pulses = 0
+            pulses_pos = 0
+            pulses_neg = 0
+            for tile in self.model.analog_tiles():
+                pulses += int(tile.get_total_pulses().sum().item())
+                pulses_pos += int(tile.get_total_positive_pulses().sum().item())
+                pulses_neg += int(tile.get_total_negative_pulses().sum().item())
+            return pulses, pulses_pos, pulses_neg
+        except:
+            return -1, -1, -1
         
     def preprocess_input(self, input):
         return input

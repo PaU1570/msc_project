@@ -93,7 +93,13 @@ def fit_piecewise_device(conductance, pulses, degree=DEFAULT_FIT_DEGREE, get_gra
     piecewise_up = np.abs(fit_grad_ltp(cond_steps))
     piecewise_down = np.abs(fit_grad_ltd(cond_steps))
 
-    dw_min = min(piecewise_up.min(), piecewise_down.min())
+    # get granularity near 0
+    granularity_up = np.abs(fit_grad_ltp(0))
+    granularity_down = np.abs(fit_grad_ltd(0))
+    min_granularity = min(granularity_up, granularity_down)
+    
+    # dw_min = min(piecewise_up.min(), piecewise_down.min())
+    dw_min = min_granularity
     piecewise_up /= dw_min
     piecewise_down /= dw_min
 
@@ -115,9 +121,6 @@ def fit_piecewise_device(conductance, pulses, degree=DEFAULT_FIT_DEGREE, get_gra
     if not get_granularity:
         return result, device_config_fit, model_response
     else:
-        # get granularity near 0
-        granularity_up = np.abs(fit_grad_ltp(0))
-        granularity_down = np.abs(fit_grad_ltd(0))
         return result, device_config_fit, model_response, granularity_up, granularity_down
 
 def get_fit(filename):
