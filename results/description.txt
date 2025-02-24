@@ -72,6 +72,7 @@ test44: write_noise_std sweep while keeping the other noises at default.
 test45: mixed-precision (0 noise) with symmetric and asymmetric granularity. For symmetric, use (granularity_up + granularity_down)/2 (unfinished)
 test46: test45 but counting pulses
 test47: mp with symmetric threshold, use half of the granularity average. No noise.
+test48: repeat test46 multiple times with 0 and 0.3 noise, but only for the devices that performed significantly different between symmetric and asymmetric on test46
 
 TODO: mixed-precision with improved fit (?)
 TODO: test46 with 0.3 noise
