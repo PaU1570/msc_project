@@ -22,9 +22,8 @@ from torch.optim.lr_scheduler import StepLR
 from aihwkit.simulator.configs import build_config
 from aihwkit.nn.conversion import convert_to_analog_mapped
 from aihwkit.optim import AnalogSGD, AnalogAdam
-from aihwkit.simulator.configs import IOParameters, UpdateParameters, PulseType, SingleRPUConfig, ConstantStepDevice
+from aihwkit.simulator.configs import IOParameters, UpdateParameters, PulseType, SingleRPUConfig
 from aihwkit.simulator.parameters.mapping import MappingParameter
-from aihwkit.simulator.parameters.enums import AsymmetricPulseType
 from aihwkit.simulator.configs.compounds import ReferenceUnitCell, OneSidedUnitCell
 
 from msc_project.utils.fit_piecewise import read_conductance_data, fit_piecewise_device
@@ -108,7 +107,7 @@ if __name__ == "__main__":
     parser.add_argument('--up_down_dtod', type=float, default=0.01, help='Device-to-device variation of the up/down asymmetry')
     parser.add_argument('--write_noise_std_mult', type=float, default=1, help='Multiplier for the write noise standard deviation')
     parser.add_argument('--write_noise_std', type=float, default=None, help='Write noise standard deviation. If given, overrides write_noise_std_mult')
-    parser.add_argument('--pulse_type', type=str, choices=['none', 'noneWithDevice', 'stochastic', 'stochasticCompressed', 'deterministicImplicit', 'meanCount'], default='deterministicImplicit', help='Pulse type to use')
+    parser.add_argument('--pulse_type', type=str, choices=['none', 'noneWithDevice', 'stochastic', 'stochasticCompressed', 'deterministicImplicit'], default='deterministicImplicit', help='Pulse type to use')
     parser.add_argument('--save_weights', action='store_true', help='Save the weights at each epoch')
     parser.add_argument('--asymmetric_pulsing_dir', type=str, choices=['Up', 'Down', 'None'], default='None', help='Asymmetric pulsing direction')
     parser.add_argument('--asymmetric_pulsing_up', type=int, default=1, help='Asymmetric pulsing up number')
@@ -190,13 +189,8 @@ if __name__ == "__main__":
         up_params.pulse_type = PulseType.STOCHASTIC
     elif args.pulse_type == 'stochasticCompressed':
         up_params.pulse_type == PulseType.STOCHASTIC_COMPRESSED
-    elif args.pulse_type == 'meanCount':
-        up_params.pulse_type = PulseType.MEAN_COUNT
     else:
         up_params.pulse_type = PulseType.DETERMINISTIC_IMPLICIT
-
-    # up_params.desired_bl = int(100)
-    # up_params.update_bl_management = False
 
     if args.use_onesided_device:
         if args.onesided_device_side == 'down':
@@ -210,11 +204,13 @@ if __name__ == "__main__":
                                          refresh_update=up_params,
                                          refresh_upper_thres=0.75,
                                          refresh_lower_thres=0.25,
-                                         copy_inverted=False,
+                                         refresh_every=1,
                                          construction_seed=SEED)
 
     rpu_config = SingleRPUConfig(
             device=device_config,
+            forward=IOParameters(),
+            backward=IOParameters(),
             update=up_params,
             mapping=MappingParameter(weight_scaling_omega=args.weight_scaling_omega,
                                      weight_scaling_lr_compensation=(args.weight_scaling_omega != 0),
@@ -222,12 +218,6 @@ if __name__ == "__main__":
         )
         
     model = convert_to_analog_mapped(model, rpu_config=rpu_config)
-    # model = convert_to_analog_mapped(model, rpu_config=SingleRPUConfig(device=ConstantStepDevice(dw_min=0.4,
-    #                                                                                             w_min_dtod=0,
-    #                                                                                             w_max_dtod=0,
-    #                                                                                             dw_min_dtod=0,
-    #                                                                                             dw_min_std=0),
-    #                                                                                             update=up_params))
 
     if args.use_reference_device:
         initial_weights = model.get_weights()

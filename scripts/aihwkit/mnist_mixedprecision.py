@@ -24,7 +24,6 @@ from aihwkit.nn.conversion import convert_to_analog_mapped
 from aihwkit.optim import AnalogSGD, AnalogAdam
 from aihwkit.simulator.configs import IOParameters, UpdateParameters, PulseType, DigitalRankUpdateRPUConfig
 from aihwkit.simulator.parameters.mapping import MappingParameter
-from aihwkit.simulator.parameters.enums import AsymmetricPulseType
 from aihwkit.simulator.configs.compounds import ReferenceUnitCell, MixedPrecisionCompound, OneSidedUnitCell
 
 from msc_project.utils.fit_piecewise import read_conductance_data, fit_piecewise_device
@@ -214,13 +213,7 @@ if __name__ == "__main__":
     rpu_config = DigitalRankUpdateRPUConfig(
             device=MixedPrecisionCompound(
                 device=device_config,
-                asymmetric_pulsing_dir = AsymmetricPulseType(args.asymmetric_pulsing_dir),
-                asymmetric_pulsing_up = args.asymmetric_pulsing_up,
-                asymmetric_pulsing_down = args.asymmetric_pulsing_down,
-                asymmetric_granularity = args.asymmetric_granularity,
                 granularity = args.granularity_override if args.granularity_override is not None else (granularity_up+granularity_down)/2 * args.granularity_mult,
-                granularity_up = args.granularity_up_override if args.granularity_up_override is not None else granularity_up * args.granularity_mult,
-                granularity_down = args.granularity_down_override if args.granularity_down_override is not None else granularity_down * args.granularity_mult,
                 construction_seed = SEED),
             forward=IOParameters(),
             backward=IOParameters(),
