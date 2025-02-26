@@ -629,7 +629,7 @@ def plot_weight_hist(weights, labels=None, suptitle=None, huevals=None, cmap=Non
 
     plt.show()
 
-def animate_weight_hist(weights, labels=None, suptitle='', huevals=None, cmap=None, norm=None, colors=None):
+def animate_weight_hist(weights, labels=None, suptitle='', huevals=None, cmap=None, norm=None, colors=None, fps=5):
     fig, ax = plt.subplots(3, 1, figsize=(10, 20), sharex=True)
     ax[0].set(ylabel='Count', xlim=(-1.5, 1.5), title='Layer 0')
     ax[1].set(ylabel='Count', xlim=(-1.5, 1.5), title='Layer 1')
@@ -660,7 +660,7 @@ def animate_weight_hist(weights, labels=None, suptitle='', huevals=None, cmap=No
         fig.suptitle(f"{suptitle} - Epoch {i}", fontsize=16, y=0.92)
 
     anim = animation.FuncAnimation(fig, get_frame, frames=len(weights[0]), repeat=False)
-    anim.save(f'{suptitle}.gif', writer='ffmpeg', fps=5)
+    anim.save(f'{suptitle}.gif', writer='ffmpeg', fps=fps)
     
 
 if __name__ == '__main__':
