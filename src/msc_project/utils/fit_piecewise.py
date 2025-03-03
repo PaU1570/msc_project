@@ -92,6 +92,8 @@ def fit_piecewise_device(conductance, pulses, degree=DEFAULT_FIT_DEGREE, get_gra
     cond_steps = np.linspace(-1, 1, N_ELEMENTS)
     piecewise_up = np.abs(fit_grad_ltp(cond_steps))
     piecewise_down = np.abs(fit_grad_ltd(cond_steps))
+    piecewise_up[-1] = 0
+    piecewise_down[0] = 0
 
     # get granularity near 0
     granularity_up = np.abs(fit_grad_ltp(0))
@@ -115,6 +117,7 @@ def fit_piecewise_device(conductance, pulses, degree=DEFAULT_FIT_DEGREE, get_gra
         pulses,
         conductance,
         PiecewiseStepDevice(
+            construction_seed=2024,
             piecewise_up=list(piecewise_up),
             piecewise_down=list(piecewise_down)))
     
