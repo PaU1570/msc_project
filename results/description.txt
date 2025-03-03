@@ -73,6 +73,8 @@ test45: mixed-precision (0 noise) with symmetric and asymmetric granularity. For
 test46: test45 but counting pulses
 test47: mp with symmetric threshold, use half of the granularity average. No noise.
 test48: repeat test46 multiple times with 0 and 0.3 noise, but only for the devices that performed significantly different between symmetric and asymmetric on test46
+test49os: check branch 'onesided'
+test50: fixed piecewise fit (piecewise_up[-1] = piecewise_down[0] = 0), no noise, plain sgd with lr 0.05
 
 TODO: mixed-precision with improved fit (?)
 TODO: test46 with 0.3 noise
