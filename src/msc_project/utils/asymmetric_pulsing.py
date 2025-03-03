@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from aihwkit.utils.visualization import compute_pulse_response, get_tile_for_plotting
 from aihwkit.simulator.configs import build_config
+from aihwkit.simulator.configs import SingleRPUConfig
+
 
 def plot_asymmetric(device, ax=None, n_steps=30, n_traces=1, noise_free=True, w_init=None, asym_up=1, asym_down=1, asym_only=False, **kwargs):
     """
@@ -89,7 +91,7 @@ def plot_asymmetric(device, ax=None, n_steps=30, n_traces=1, noise_free=True, w_
 
     return ax
 
-def plot_symmetry_point(device, ax=None, n_steps=30, n_traces=1, noise_free=True, pre_alternating_pulses=0, alternating_pulses=None, sp_search_len=5, w_init=None, **kwargs):
+def plot_symmetry_point(device, ax=None, n_steps=30, n_traces=1, noise_free=True, pre_alternating_pulses=0, alternating_pulses=None, sp_search_len=5, w_init=None, algorithm='mp', **kwargs):
     """
     Plot a sequence of positive pulses, then negative, then alternating. Also finds where the symetry point is.
 
@@ -110,7 +112,12 @@ def plot_symmetry_point(device, ax=None, n_steps=30, n_traces=1, noise_free=True
     alternating_pulses = n_steps if alternating_pulses is None else alternating_pulses
     total_iters = 2 * n_steps + pre_alternating_pulses + alternating_pulses
 
-    rpu_config = build_config('mp', device=device)
+    if algorithm == 'mp':
+        rpu_config = build_config('mp', device=device)
+    elif algorithm == 'sgd':
+        rpu_config = SingleRPUConfig(device=device)
+    else:
+        raise ValueError(f"Unknown algorithm: {algorithm}")
 
     analog_tile = get_tile_for_plotting(rpu_config, n_traces, False, noise_free=noise_free, w_init=w_init)
 

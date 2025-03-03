@@ -31,7 +31,7 @@ if [ ! -d "$output_directory" ]; then
     mkdir -p "$output_directory"
 fi
 
-N_BATCH=1
+N_BATCH=2
 
 # find all Summary.dat files in the directory
 files=$(find ${data_directory} -type f -name "*_Summary.dat")
