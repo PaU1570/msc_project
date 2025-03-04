@@ -31,7 +31,7 @@ if [ ! -d "$output_directory" ]; then
     mkdir -p "$output_directory"
 fi
 
-N_BATCH=1
+N_BATCH=2
 
 # find all Summary.dat files in the directory
 files=$(find ${data_directory} -type f -name "*_Summary.dat")
@@ -48,8 +48,9 @@ for file in $files; do
     --write_noise_std ${write_noise_std} \
     --w_min_dtod ${w_min_dtod} \
     --w_max_dtod ${w_max_dtod} \
-    --pulse_type deterministicImplicit \
-    --lr 0.1 \
+    --pulse_type stochasticCompressed \
+    --lr 0.05 \
+    --numthreads 20 \
     --save_weights ; then
         echo -e "\e[31mError\e[0m analyzing file"
     else
@@ -58,6 +59,6 @@ for file in $files; do
 done
 
 # run python script to create csv file
-#python ${PARENT_DIR}/src/msc_project/utils/run_aihwkit_to_csv.py "${output_directory}" "${output_directory}"/$(basename $output_directory).csv
+# python ${PARENT_DIR}/src/msc_project/utils/run_aihwkit_to_csv.py "${output_directory}" "${output_directory}"/$(basename $output_directory).csv
 wait
 echo "All done!"
