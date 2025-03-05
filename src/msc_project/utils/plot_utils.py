@@ -394,7 +394,7 @@ def _plot_epochs(fig, ax, args):
     data = data.sort_values(by=['device_id', 'test_time'])
 
     huelabel = args.huelabel if args.huelabel is not None else args.hue
-    if args.hue is not None and data[args.hue].dtype == 'float64' and mode == 'dir':
+    if args.hue is not None and pd.api.types.is_numeric_dtype(data[args.hue].dtype) and mode == 'dir':
         cmap = colormaps.get_cmap('plasma')
         if args.huescale == 'log':
             norm = clr.LogNorm(data[args.hue].min(), data[args.hue].max())
