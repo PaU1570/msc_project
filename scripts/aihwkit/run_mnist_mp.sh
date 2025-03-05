@@ -31,7 +31,7 @@ if [ ! -d "$output_directory" ]; then
     mkdir -p "$output_directory"
 fi
 
-N_BATCH=1
+N_BATCH=2
 
 # find all Summary.dat files in the directory
 files=$(find ${data_directory} -type f -name "*_Summary.dat")
@@ -58,6 +58,6 @@ for file in $files; do
 done
 
 # run python script to create csv file
-#python ${PARENT_DIR}/src/msc_project/utils/run_aihwkit_to_csv.py "${output_directory}" "${output_directory}"/$(basename $output_directory).csv
+python $(dirname "$PARENT_DIR")/src/msc_project/utils/run_aihwkit_to_csv.py "${output_directory}" "${output_directory}"/$(basename $output_directory).csv
 
 echo "All done!"
