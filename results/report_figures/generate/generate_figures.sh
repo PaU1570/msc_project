@@ -72,10 +72,9 @@ echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
 ### AIHWKIT PLOTS ###
 #####################
 FILENAME="aihwkit_accuracy_dw.png"
-python $PLOT_SCRIPT summary "${RESULTS_DIR}/test46/symmetric.csv" \
+python $PLOT_SCRIPT summary "${RESULTS_DIR}/test52/test52.csv" \
     -x granularity_up -y val_acc --hue device_id \
-    --ylim 0.94 0.975 \
-    --xlabel "Max ($\Delta w_0^u$, $\Delta w_0^d$)" --ylabel "Accuracy" --huelabel "Device ID" --title "AIHWKit Accuracy vs. $\Delta w_0$" \
+    --xlabel "Max ($\Delta w_0^u$, $\Delta w_0^d$)" --ylabel "Accuracy" --huelabel "Device ID" --title "AIHWKit Accuracy vs. $\Delta w_0$ (mixed-precision)" \
     --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
 echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
 
@@ -175,9 +174,22 @@ echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
 
 # onOffRatio vs pulseWidth
 FILENAME="aihwkit_onOffRatio_pulseWidth.png"
-python $PLOT_SCRIPT summary "${RESULTS_DIR}/test46/symmetric.csv" \
+python $PLOT_SCRIPT summary "${RESULTS_DIR}/test52/test52.csv" \
     -x pulseWidth -y onOffRatio --hue device_id --scale lin-log \
     --filter device_id ID301XR1000Oct ID161ZR15000 ID170ZR5000 ID181ZR1000 --fmt 'o-' \
     --xlabel "Pulse Width (s)" --ylabel "On/Off Ratio" --huelabel "Device ID" --title "AIHWKIT On/Off Ratio vs. Pulse Width" \
     --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
 echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
+
+# accuracy vs symmetry point
+FILENAME="aihwkit_accuracy_sp.png"
+python $PLOT_SCRIPT summary "${RESULTS_DIR}/test50/test50.csv" \
+    -x symmetry_point -y val_acc --hue device_id \
+    --xlabel "Symmetry Point" --ylabel "Accuracy" --huelabel "Device ID" --title "AIHWKIT Accuracy vs. Symmetry Point" \
+    --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+
+FILENAME="aihwkit_accuracy_sp_mp.png"
+python $PLOT_SCRIPT summary "${RESULTS_DIR}/test52/test52.csv" \
+    -x symmetry_point -y val_acc --hue device_id \
+    --xlabel "Symmetry Point" --ylabel "Accuracy" --huelabel "Device ID" --title "AIHWKIT Accuracy vs. Symmetry Point (mixed-precision)" \
+    --savefig "${FIGURES_DIR}/${FILENAME}" --noshow

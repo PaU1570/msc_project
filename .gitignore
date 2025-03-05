@@ -4,6 +4,7 @@
 *.bin
 *.out
 /data/
+!/data/LBE_analyzed_2nd_run_only/
 __pycache__/
 .DS_STORE
 tmp*

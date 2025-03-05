@@ -75,7 +75,11 @@ test47: mp with symmetric threshold, use half of the granularity average. No noi
 test48: repeat test46 multiple times with 0 and 0.3 noise, but only for the devices that performed significantly different between symmetric and asymmetric on test46
 test49os: check branch 'onesided'
 test50: fixed piecewise fit (piecewise_up[-1] = piecewise_down[0] = 0), no noise, plain sgd with lr 0.05
+test51: test50 with learn_out_scaling=True
+test52: mixed-precision with fixed fit
 
+TODO: neurosim ideal device noise sweep
+TODO: neurosim ideal device numlevel asymmetry sweep
 TODO: mixed-precision with improved fit (?)
 TODO: test46 with 0.3 noise
 TODO: aihwkit with similar network size as neurosim
