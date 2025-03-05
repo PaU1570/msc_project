@@ -1,0 +1,21 @@
+Setup title	pulsedAmplitudeSweep_DCIV
+test date	24.10.2024
+test time	14:08:36
+Device ID	_ID165ZR10000
+Count	0
+TriggerOutput	0
+TriggerPolarity	positive
+Measurement parameters
+groundWGFMU,pulseWGFMU,startVolage1,endVoltage1,startVolage2,endVoltage2,stepSize,riseTime,fallTime,pulseWidth,pulseDelay,VpreCond1,VpreCond2,riseTimePrecond,fallTimePrecon,pulseWidthPreCond,bothSides,repetitions,preConEveryLoop,groundVoltageDuringPulse,measName,
+SMU2,WGFMU1,0.700000,5.000000,-0.600000,-3.600000,0.042000,0.000000020,0.000000020,0.000000020,0.001000000,0.000000,0.000000,0.000100000,0.000100000,0.005000000,0,2,0,0.000000,2em8s,
+Measurement Data
+index, pulse amplitude (V), R_low (ohm), R_high (ohm)
+    0,  0.700,25174522.376,28918199.090
+    1,  0.742,25199009.175,28934096.808
+    2,  0.784,25222080.418,28954370.807
+    3,  0.826,25242071.465,28980803.116
+    4,  0.868,25262030.410,28995172.304
+    5,  0.910,25278889.347,29026986.389
+    6,  0.952,25305628.731,29056590.616
+    7,  0.994,25319340.178,29074162.373
+    8,  1.036,      -1.000,      -1.000

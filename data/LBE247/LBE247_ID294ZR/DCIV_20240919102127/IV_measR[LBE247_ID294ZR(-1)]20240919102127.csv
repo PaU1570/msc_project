@@ -1,0 +1,10 @@
+Setup title	IV_measR
+test date	19.09.2024
+test time	10:21:27
+Device ID	LBE247_ID294ZR
+Count	-1
+Pulse amplitude	0.000000
+Pulse width	0.000000000
+Measurement parameters
+groundSMU,sweepSMU,IntegrationMode,IntegrationFactor,MeasRange,startVolage,endVoltage,groundVoltage,nPoints,compliance,measName,
+SMU2,SMU1,PLC,4,0.000000,-1.000000,1.000000,0.000000,21,0.100000,Meas 11,

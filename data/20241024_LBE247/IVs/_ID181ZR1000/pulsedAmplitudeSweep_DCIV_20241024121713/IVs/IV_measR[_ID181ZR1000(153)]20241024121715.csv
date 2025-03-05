@@ -1,0 +1,16 @@
+Setup title	IV_measR
+test date	24.10.2024
+test time	12:21:04
+Device ID	_ID181ZR1000
+Count	153
+Pulse amplitude	-3.042000
+Pulse width	0.000000200
+Measurement parameters
+groundSMU,sweepSMU,IntegrationMode,IntegrationFactor,MeasRange,startVolage,endVoltage,groundVoltage,nPoints,compliance,measName,
+SMU2,SMU3,PLC,4,0.000000,-0.100000,0.100000,0.000000,4,0.100000,2em7s,
+Measurement Data
+Index, Bias, SMU3 I (nA), SMU3 R (Mohm)
+ 0, -0.100000, -0.039008000000, 2563.576702
+ 1, -0.033325, -0.009150000000, 3642.076503
+ 2, 0.033325, 0.011354000000, 2935.088955
+ 3, 0.100000, 0.034387000000, 2908.075726

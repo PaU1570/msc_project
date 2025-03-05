@@ -1,0 +1,41 @@
+Setup title	pulsedAmplitudeSweep_DCIV
+test date	19.09.2024
+test time	13:05:34
+Device ID	LBE247_ID300YR1000Oct
+Count	1
+TriggerOutput	0
+TriggerPolarity	positive
+Measurement parameters
+groundWGFMU,pulseWGFMU,startVolage1,endVoltage1,startVolage2,endVoltage2,stepSize,riseTime,fallTime,pulseWidth,pulseDelay,VpreCond1,VpreCond2,riseTimePrecond,fallTimePrecon,pulseWidthPreCond,bothSides,repetitions,preConEveryLoop,groundVoltageDuringPulse,measName,
+SMU2,WGFMU1,0.000000,3.000000,0.000000,-2.000000,0.100000,0.000000020,0.000000020,0.000500000,0.001000000,0.000000,0.000000,0.000100000,0.000100000,0.005000000,0,5,0,0.000000,5e-4s-3V-m2V,
+Measurement Data
+index, pulse amplitude (V), R_low (ohm), R_high (ohm)
+    0,  0.000,5467468562.056,6422607578.677
+    1,  0.100,     791.553,     792.984
+    2,  0.200,     793.897,     795.001
+    3,  0.300,     794.969,     796.128
+    4,  0.400,     795.172,     796.622
+    5,  0.500,     795.969,     797.512
+    6,  0.600,     796.451,     797.696
+    7,  0.700,     796.470,     797.569
+    8,  0.800,     796.489,     797.868
+    9,  0.900,     796.514,     797.734
+   10,  1.000,     796.216,     797.467
+   11,  1.100,     796.400,     797.499
+   12,  1.200,     796.248,     797.461
+   13,  1.300,     796.883,     797.874
+   14,  1.400,     796.090,     797.416
+   15,  1.500,     797.207,     798.512
+   16,  1.600,     795.817,     797.359
+   17,  1.700,     796.381,     797.467
+   18,  1.800,     796.984,     797.868
+   19,  1.900,     797.474,     798.811
+   20,  2.000,     797.741,     798.875
+   21,  2.100,     798.378,     799.623
+   22,  2.200,     799.450,     800.923
+   23,  2.300,     798.837,     799.936
+   24,  2.400,     798.314,     799.469
+   25,  2.500,     800.756,     802.008
+   26,  2.600,     802.040,     803.290
+   27,  2.700,     803.368,     804.933
+   28,  2.800,      -1.000,      -1.000

@@ -1,0 +1,16 @@
+Setup title	IV_measR
+test date	19.09.2024
+test time	14:03:19
+Device ID	LBE247_ID301R1000Oct
+Count	68
+Pulse amplitude	1.500000
+Pulse width	0.000019850
+Measurement parameters
+groundSMU,sweepSMU,IntegrationMode,IntegrationFactor,MeasRange,startVolage,endVoltage,groundVoltage,nPoints,compliance,measName,
+SMU2,SMU1,PLC,4,0.000000,-0.100000,0.100000,0.000000,4,0.100000,1p2V-m1p5V,
+Measurement Data
+Index, Bias, SMU1 I (nA), SMU1 R (Mohm)
+ 0, -0.100000, -0.006580000000, 15197.568389
+ 1, -0.033325, -0.001530000000, 21781.045752
+ 2, 0.033325, 0.001810000000, 18411.602210
+ 3, 0.100000, 0.005740000000, 17421.602787
