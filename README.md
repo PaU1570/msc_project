@@ -35,3 +35,6 @@ There are different scripts available in ```scripts/aihwkit/```. For example, to
 ./scripts/aihwkit/run_mnist_mp.sh <analyzed data directory> <output directory> [epochs (25)] [dw_min_dtod (0.3)] [dw_min_std (0.3)] [write_noise_std (0.0)] [w_min_dtod (0.3)] [w_max_dtod (0.3)]
 ```
 Some options (e.g. pulse counting, asymmetric pulsing) require the custom version of aihwkit. Follow the development setup instructions form their documentation and make sure you are using the custom version. Other scripts work fine with the default version installed from conda/pypi.
+
+## Plotting
+The script ```src/msc_project/utils/plot_utils.py``` is able to generate a wide range of plots based on the simulation results. The commands to generate most plots in the report can be found in ```results/report_figures/generate/generate_figures.sh```.

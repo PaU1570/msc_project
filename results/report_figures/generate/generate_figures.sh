@@ -53,9 +53,9 @@ python $PLOT_SCRIPT summary "${RESULTS_DIR}/test33/run_1.csv" \
 echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
 
 FILENAME="neurosim_accuracy_nonlinearity_artificial.png"
-python $PLOT_SCRIPT summary "${RESULTS_DIR}/test33/run_1.csv" \
-    -x NL_max -y accuracy --hue device_id \
-    --xlabel "Nonlineality: max(LTP, LTD)" --ylabel "Accuracy" --huelabel "Device ID" --title "NeuroSim Accuracy vs. Max. Nonlinearity" \
+python $PLOT_SCRIPT summary "${RESULTS_DIR}/test9/n30/" \
+    -x nl -y accuracy \
+    --xlabel "Nonlineality parameter" --ylabel "Accuracy" --title "Accuracy vs. Max. Nonlinearity: Artificial Device" \
     --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
 echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
 
