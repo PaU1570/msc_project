@@ -4,7 +4,12 @@
 *.bin
 *.out
 /data/
+!/data/LBE247
+!/data/20241024_LBE247
 !/data/LBE_analyzed_2nd_run_only/
+!/data/20241024_LBE247_cutoffs.csv
+!/data/LBE247_cutoffs.csv
+!/data/LBE247_shapes_and_sizes.csv
 __pycache__/
 .DS_STORE
 tmp*
