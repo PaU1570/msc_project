@@ -22,10 +22,9 @@ from torch.optim.lr_scheduler import StepLR
 from aihwkit.simulator.configs import build_config
 from aihwkit.nn.conversion import convert_to_analog_mapped
 from aihwkit.optim import AnalogSGD, AnalogAdam
-from aihwkit.simulator.configs import IOParameters, UpdateParameters, PulseType, DigitalRankUpdateRPUConfig
+from aihwkit.simulator.configs import IOParameters, UpdateParameters, PulseType, SingleRPUConfig
 from aihwkit.simulator.parameters.mapping import MappingParameter
-from aihwkit.simulator.parameters.enums import AsymmetricPulseType
-from aihwkit.simulator.configs.compounds import ReferenceUnitCell, MixedPrecisionCompound, OneSidedUnitCell
+from aihwkit.simulator.configs.compounds import ReferenceUnitCell, OneSidedUnitCell
 
 from msc_project.utils.fit_piecewise import read_conductance_data, fit_piecewise_device
 from msc_project.models.base import BaseMNIST
@@ -108,7 +107,7 @@ if __name__ == "__main__":
     parser.add_argument('--up_down_dtod', type=float, default=0.01, help='Device-to-device variation of the up/down asymmetry')
     parser.add_argument('--write_noise_std_mult', type=float, default=1, help='Multiplier for the write noise standard deviation')
     parser.add_argument('--write_noise_std', type=float, default=None, help='Write noise standard deviation. If given, overrides write_noise_std_mult')
-    parser.add_argument('--pulse_type', type=str, choices=['none', 'noneWithDevice', 'stochastic', 'deterministicImplicit'], default='deterministicImplicit', help='Pulse type to use')
+    parser.add_argument('--pulse_type', type=str, choices=['none', 'noneWithDevice', 'stochastic', 'stochasticCompressed', 'deterministicImplicit'], default='deterministicImplicit', help='Pulse type to use')
     parser.add_argument('--save_weights', action='store_true', help='Save the weights at each epoch')
     parser.add_argument('--asymmetric_pulsing_dir', type=str, choices=['Up', 'Down', 'None'], default='None', help='Asymmetric pulsing direction')
     parser.add_argument('--asymmetric_pulsing_up', type=int, default=1, help='Asymmetric pulsing up number')
@@ -122,13 +121,7 @@ if __name__ == "__main__":
     parser.add_argument('--lr', type=float, default=0.5, help='Learning rate')
     parser.add_argument('--beta1', type=float, default=0.8, help='Beta1 for Adam optimizer')
     parser.add_argument('--beta2', type=float, default=0.999, help='Beta2 for Adam optimizer')
-    parser.add_argument('--asymmetric_granularity', action='store_true', help='Use asymmetric granularity')
-    parser.add_argument('--granularity_mult', type=float, default=1, help='Multiplier for the granularity')
-    parser.add_argument('--granularity_override', type=float, default=None, help='Override the granularity')
-    parser.add_argument('--granularity_up_override', type=float, default=None, help='Override the up granularity')
-    parser.add_argument('--granularity_down_override', type=float, default=None, help='Override the down granularity')
     parser.add_argument('--numthreads', type=int, default=24, help='Number of threads to use')
-    parser.add_argument('--seed', type=int, default=SEED, help='Random seed')
     args = parser.parse_args()
 
     torch.set_num_threads(args.numthreads)
@@ -150,7 +143,7 @@ if __name__ == "__main__":
     conductance, pulses = read_conductance_data(filename)
 
     # Fit the device data
-    result, device_config, model_response, granularity_up, granularity_down = fit_piecewise_device(conductance, pulses, get_granularity=True)
+    result, device_config, model_response = fit_piecewise_device(conductance, pulses)
 
     # Add noise to the device configuration
     device_config = add_noise(device_config, model_response, conductance,
@@ -163,10 +156,9 @@ if __name__ == "__main__":
                               write_noise_std_mult=args.write_noise_std_mult)
     
     if args.use_reference_device:
-        ax, sp = plot_symmetry_point(device_config, ax=None, n_steps=0, pre_alternating_pulses=0, alternating_pulses=50, w_init=0)
+        ax, sp = plot_symmetry_point(device_config, ax=None, n_steps=0, pre_alternating_pulses=0, alternating_pulses=100, w_init=0)
         print(f'Symmetry point: {sp}')
-        device_config = ReferenceUnitCell([device_config], construction_seed=args.seed)
-        # set reference weights to symmetry point (TODO)
+        device_config = ReferenceUnitCell([device_config], construction_seed=SEED)
 
     # Plot the fit
     if output_dir is not None and args.save_fit:
@@ -194,8 +186,11 @@ if __name__ == "__main__":
         up_params.pulse_type = PulseType.NONE_WITH_DEVICE
     elif args.pulse_type == 'stochastic':
         up_params.pulse_type = PulseType.STOCHASTIC
+    elif args.pulse_type == 'stochasticCompressed':
+        up_params.pulse_type == PulseType.STOCHASTIC_COMPRESSED
     else:
         up_params.pulse_type = PulseType.DETERMINISTIC_IMPLICIT
+
 
     if args.use_onesided_device:
         if args.onesided_device_side == 'down':
@@ -209,20 +204,11 @@ if __name__ == "__main__":
                                          refresh_update=up_params,
                                          refresh_upper_thres=0.75,
                                          refresh_lower_thres=0.25,
-                                         copy_inverted=False,
-                                         construction_seed=args.seed)
+                                         refresh_every=1,
+                                         construction_seed=SEED)
 
-    rpu_config = DigitalRankUpdateRPUConfig(
-            device=MixedPrecisionCompound(
-                device=device_config,
-                asymmetric_pulsing_dir = AsymmetricPulseType(args.asymmetric_pulsing_dir),
-                asymmetric_pulsing_up = args.asymmetric_pulsing_up,
-                asymmetric_pulsing_down = args.asymmetric_pulsing_down,
-                asymmetric_granularity = args.asymmetric_granularity,
-                granularity = args.granularity_override if args.granularity_override is not None else (granularity_up+granularity_down)/2 * args.granularity_mult,
-                granularity_up = args.granularity_up_override if args.granularity_up_override is not None else granularity_up * args.granularity_mult,
-                granularity_down = args.granularity_down_override if args.granularity_down_override is not None else granularity_down * args.granularity_mult,
-                construction_seed = args.seed),
+    rpu_config = SingleRPUConfig(
+            device=device_config,
             forward=IOParameters(),
             backward=IOParameters(),
             update=up_params,
@@ -250,7 +236,7 @@ if __name__ == "__main__":
         model.set_weights(initial_weights)
 
     # Create the MNIST model
-    mnist_model = BaseMNIST(model, seed=args.seed)
+    mnist_model = BaseMNIST(model, seed=SEED)
 
     # Define the training dataset
     train_loader, valid_loader, test_loader = mnist_model.get_dataset()
