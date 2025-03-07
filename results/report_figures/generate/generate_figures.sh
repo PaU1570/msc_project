@@ -184,12 +184,14 @@ echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
 # accuracy vs symmetry point
 FILENAME="aihwkit_accuracy_sp.png"
 python $PLOT_SCRIPT summary "${RESULTS_DIR}/test50/test50.csv" \
-    -x symmetry_point -y val_acc --hue device_id \
-    --xlabel "Symmetry Point" --ylabel "Accuracy" --huelabel "Device ID" --title "AIHWKIT Accuracy vs. Symmetry Point" \
+    -x symmetry_point -y val_acc --hue device_id --fmt "o-" \
+    --xlabel "Symmetry Point" --ylabel "Accuracy" --huelabel "Device ID" --title "AIHWKIT Accuracy vs. Symmetry Point (Plain SGD)" \
     --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
 
 FILENAME="aihwkit_accuracy_sp_mp.png"
 python $PLOT_SCRIPT summary "${RESULTS_DIR}/test52/test52.csv" \
-    -x symmetry_point -y val_acc --hue device_id \
+    -x symmetry_point -y val_acc --hue device_id --fmt "o-" \
     --xlabel "Symmetry Point" --ylabel "Accuracy" --huelabel "Device ID" --title "AIHWKIT Accuracy vs. Symmetry Point (mixed-precision)" \
     --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"

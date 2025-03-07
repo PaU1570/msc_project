@@ -78,9 +78,13 @@ test50: fixed piecewise fit (piecewise_up[-1] = piecewise_down[0] = 0), no noise
 test51: test50 with learn_out_scaling=True
 test52: mixed-precision with fixed fit
 test53: neurosim dtod noise sweep
+test54: neurosim ideal device numlevel asymmetry sweep
+test55: ID161ZR15000 with symmetry point shifting
+test56: test55 but for all devices, lr=0.1
 
+TODO: asymmetric 1up2down write_noise_sweep (ID294YR)
+TODO: floating point model
+TODO: symmetry point shifting for ID161ZR15000
 TODO: neurosim ideal device ctoc noise sweep
-TODO: neurosim ideal device numlevel asymmetry sweep
-TODO: mixed-precision with improved fit (?)
 TODO: test46 with 0.3 noise
 TODO: aihwkit with similar network size as neurosim

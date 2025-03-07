@@ -256,7 +256,7 @@ def _plot_summary(fig, ax, args):
         data = read_average_data(args.input)
 
     data = filter_data(data, args.filter, args.exclude)
-    data = data.sort_values(by=['device_id', 'test_time'])
+    data = data.sort_values(by=['device_id', args.x, 'test_time'])
 
     fmt = args.fmt if args.fmt is not None else 'o'
 
@@ -582,7 +582,7 @@ def plot_pytorch(args):
 # Functions for plotting weights #####################
 ######################################################
 
-def _plot_weight_hist(ax, w, layers=(True, True, True), label=None, color=None, histtype='stepfilled'):
+def _plot_weight_hist(ax, w, layers=(True, True, True), label=None, color=None, histtype='stepfilled', binnum=100):
     if type(w) is list:
         l1 = w[0][0]
         l2 = w[1][0]
@@ -592,7 +592,7 @@ def _plot_weight_hist(ax, w, layers=(True, True, True), label=None, color=None, 
         l2 = w['2.analog_module'][0]
         l3 = w['4.analog_module'][0]
 
-    bins = np.linspace(-1.5, 1.5, 100)
+    bins = np.linspace(-1.5, 1.5, binnum)
     alpha = 0.5 if histtype == 'stepfilled' else 1
 
     if layers[0]:

@@ -1,0 +1,12 @@
+device_id,test_date,test_time,val1,val2,epochs,accuracy,filename
+ltd30ltp30_output.dat,'none','none',30.0,30.0,125,82.16,ltd30ltp30_output.dat
+ltd30ltp40_output.dat,'none','none',30.0,40.0,125,72.77,ltd30ltp40_output.dat
+ltd40ltp30_output.dat,'none','none',40.0,30.0,125,89.2,ltd40ltp30_output.dat
+ltd30ltp50_output.dat,'none','none',30.0,50.0,125,68.25,ltd30ltp50_output.dat
+ltd50ltp30_output.dat,'none','none',50.0,30.0,125,89.62,ltd50ltp30_output.dat
+ltd30ltp60_output.dat,'none','none',30.0,60.0,125,67.41,ltd30ltp60_output.dat
+ltd60ltp30_output.dat,'none','none',60.0,30.0,125,89.76,ltd60ltp30_output.dat
+ltd30ltp70_output.dat,'none','none',30.0,70.0,125,55.17,ltd30ltp70_output.dat
+ltd70ltp30_output.dat,'none','none',70.0,30.0,125,89.25,ltd70ltp30_output.dat
+ltd30ltp80_output.dat,'none','none',30.0,80.0,125,52.34,ltd30ltp80_output.dat
+ltd80ltp30_output.dat,'none','none',80.0,30.0,125,88.95,ltd80ltp30_output.dat
