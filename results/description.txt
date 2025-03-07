@@ -81,10 +81,10 @@ test53: neurosim dtod noise sweep
 test54: neurosim ideal device numlevel asymmetry sweep
 test55: ID161ZR15000 with symmetry point shifting
 test56: test55 but for all devices, lr=0.1
+test57: asymmetric pulsing ID294YR 11:13:50
 
 TODO: asymmetric 1up2down write_noise_sweep (ID294YR)
 TODO: floating point model
-TODO: symmetry point shifting for ID161ZR15000
 TODO: neurosim ideal device ctoc noise sweep
 TODO: test46 with 0.3 noise
 TODO: aihwkit with similar network size as neurosim

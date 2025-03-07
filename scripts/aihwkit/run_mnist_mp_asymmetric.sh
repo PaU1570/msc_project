@@ -35,7 +35,7 @@ if [ ! -d "$output_directory" ]; then
     mkdir -p "$output_directory"
 fi
 
-N_BATCH=4
+N_BATCH=1
 
 # find all Summary.dat files in the directory
 files=$(find ${data_directory} -type f -name "*_Summary.dat")
@@ -56,7 +56,8 @@ for file in $files; do
     --asymmetric_pulsing_up ${asymmetric_up} \
     --asymmetric_pulsing_down ${asymmetric_down} \
     --pulse_type deterministicImplicit \
-    --save_weights ; then
+    --save_weights \
+    --numthreads 20 ; then
         echo -e "\e[31mError\e[0m analyzing file"
     else
         echo -e "\e[32mDone\e[0m"
