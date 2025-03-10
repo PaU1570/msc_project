@@ -61,6 +61,6 @@ for file in $files; do
 done
 
 # run python script to create csv file
-#python ${PARENT_DIR}/src/msc_project/utils/run_aihwkit_to_csv.py "${output_directory}" "${output_directory}"/$(basename $output_directory).csv
+python $(dirname "$SCRIPT_DIR")/src/msc_project/utils/run_aihwkit_to_csv.py "${output_directory}" "${output_directory}"/$(basename $output_directory).csv
 
 echo "All done!"

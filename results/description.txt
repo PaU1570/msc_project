@@ -82,6 +82,7 @@ test54: neurosim ideal device numlevel asymmetry sweep
 test55: ID161ZR15000 with symmetry point shifting
 test56: test55 but for all devices, lr=0.1
 test57: asymmetric pulsing ID294YR 11:13:50
+test58: ID161ZR15000 asymmetric pulsing
 
 TODO: asymmetric 1up2down write_noise_sweep (ID294YR)
 TODO: floating point model
