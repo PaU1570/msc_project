@@ -107,7 +107,7 @@ if __name__ == "__main__":
     parser.add_argument('--up_down_dtod', type=float, default=0.01, help='Device-to-device variation of the up/down asymmetry')
     parser.add_argument('--write_noise_std_mult', type=float, default=1, help='Multiplier for the write noise standard deviation')
     parser.add_argument('--write_noise_std', type=float, default=None, help='Write noise standard deviation. If given, overrides write_noise_std_mult')
-    parser.add_argument('--pulse_type', type=str, choices=['none', 'noneWithDevice', 'stochastic', 'stochasticCompressed', 'deterministicImplicit'], default='deterministicImplicit', help='Pulse type to use')
+    parser.add_argument('--pulse_type', type=str, choices=['none', 'noneWithDevice', 'stochastic', 'stochasticCompressed', 'deterministicImplicit'], default='stochasticCompressed', help='Pulse type to use')
     parser.add_argument('--save_weights', action='store_true', help='Save the weights at each epoch')
     parser.add_argument('--asymmetric_pulsing_dir', type=str, choices=['Up', 'Down', 'None'], default='None', help='Asymmetric pulsing direction')
     parser.add_argument('--asymmetric_pulsing_up', type=int, default=1, help='Asymmetric pulsing up number')

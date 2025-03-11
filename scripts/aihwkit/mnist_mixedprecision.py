@@ -108,7 +108,7 @@ if __name__ == "__main__":
     parser.add_argument('--up_down_dtod', type=float, default=0.01, help='Device-to-device variation of the up/down asymmetry')
     parser.add_argument('--write_noise_std_mult', type=float, default=1, help='Multiplier for the write noise standard deviation')
     parser.add_argument('--write_noise_std', type=float, default=None, help='Write noise standard deviation. If given, overrides write_noise_std_mult')
-    parser.add_argument('--pulse_type', type=str, choices=['none', 'noneWithDevice', 'stochastic', 'deterministicImplicit'], default='deterministicImplicit', help='Pulse type to use')
+    parser.add_argument('--pulse_type', type=str, choices=['none', 'noneWithDevice', 'stochastic', 'stochasticCompressed', 'deterministicImplicit'], default='stochasticCompressed', help='Pulse type to use')
     parser.add_argument('--save_weights', action='store_true', help='Save the weights at each epoch')
     parser.add_argument('--asymmetric_pulsing_dir', type=str, choices=['Up', 'Down', 'None'], default='None', help='Asymmetric pulsing direction')
     parser.add_argument('--asymmetric_pulsing_up', type=int, default=1, help='Asymmetric pulsing up number')
@@ -163,10 +163,9 @@ if __name__ == "__main__":
                               write_noise_std_mult=args.write_noise_std_mult)
     
     if args.use_reference_device:
-        ax, sp = plot_symmetry_point(device_config, ax=None, n_steps=0, pre_alternating_pulses=0, alternating_pulses=50, w_init=0)
+        ax, sp = plot_symmetry_point(device_config, ax=None, n_steps=0, pre_alternating_pulses=0, alternating_pulses=100, w_init=0)
         print(f'Symmetry point: {sp}')
         device_config = ReferenceUnitCell([device_config], construction_seed=args.seed)
-        # set reference weights to symmetry point (TODO)
 
     # Plot the fit
     if output_dir is not None and args.save_fit:
@@ -194,6 +193,8 @@ if __name__ == "__main__":
         up_params.pulse_type = PulseType.NONE_WITH_DEVICE
     elif args.pulse_type == 'stochastic':
         up_params.pulse_type = PulseType.STOCHASTIC
+    elif args.pulse_type == 'stochasticCompressed':
+        up_params.pulse_type == PulseType.STOCHASTIC_COMPRESSED
     else:
         up_params.pulse_type = PulseType.DETERMINISTIC_IMPLICIT
 
@@ -218,10 +219,10 @@ if __name__ == "__main__":
                 asymmetric_pulsing_dir = AsymmetricPulseType(args.asymmetric_pulsing_dir),
                 asymmetric_pulsing_up = args.asymmetric_pulsing_up,
                 asymmetric_pulsing_down = args.asymmetric_pulsing_down,
-                asymmetric_granularity = args.asymmetric_granularity,
+                # asymmetric_granularity = args.asymmetric_granularity,
                 granularity = args.granularity_override if args.granularity_override is not None else (granularity_up+granularity_down)/2 * args.granularity_mult,
-                granularity_up = args.granularity_up_override if args.granularity_up_override is not None else granularity_up * args.granularity_mult,
-                granularity_down = args.granularity_down_override if args.granularity_down_override is not None else granularity_down * args.granularity_mult,
+                # granularity_up = args.granularity_up_override if args.granularity_up_override is not None else granularity_up * args.granularity_mult,
+                # granularity_down = args.granularity_down_override if args.granularity_down_override is not None else granularity_down * args.granularity_mult,
                 construction_seed = args.seed),
             forward=IOParameters(),
             backward=IOParameters(),
@@ -236,18 +237,19 @@ if __name__ == "__main__":
     if args.use_reference_device:
         initial_weights = model.get_weights()
         model.apply_to_analog_tiles(lambda tile: tile.set_hidden_update_index(1))
-        ref_weights = model.get_weights()
-        for key, val in ref_weights.items():
-            for t in val:
-                if t is not None:
-                    t.fill_(sp)
-        model.set_weights(ref_weights)
+
+        # set reference weights to symmetry point
+        for _, layer in model.named_analog_layers():
+            w = layer.get_weights()
+            w[0].fill_(sp)
+            layer.set_weights(w[0], w[1])
+
         model.apply_to_analog_tiles(lambda tile: tile.set_hidden_update_index(0))
-        for key, val in initial_weights.items():
-            for t in val:
-                if t is not None:
-                    t = t - sp
-        model.set_weights(initial_weights)
+
+        # offset initial weights to be around 0 (not sure why the factor of 2 is needed)
+        for _, layer in model.named_analog_layers():
+            w = layer.get_weights()
+            layer.set_weights(w[0].add(2*sp), w[1])
 
     # Create the MNIST model
     mnist_model = BaseMNIST(model, seed=args.seed)

@@ -195,3 +195,25 @@ python $PLOT_SCRIPT summary "${RESULTS_DIR}/test52/test52.csv" \
     --xlabel "Symmetry Point" --ylabel "Accuracy" --huelabel "Device ID" --title "AIHWKIT Accuracy vs. Symmetry Point (mixed-precision)" \
     --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
 echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
+
+FILENAME="aihwkit_spshift_accuracy_epoch.png"
+python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test56/aihwkit" \
+    -x epoch -y val_acc --hue device_id \
+    --xlabel "Epoch" --ylabel "Accuracy" --huelabel "Device ID" --title "AIHWKIT Symmetry Point Shifting Training" \
+    --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
+
+# onesided
+FILENAME="aihwkit_onesided_epochs.png"
+python $PLOT_SCRIPT pytorch "${RESULTS_DIR}/test49os/noise_0/aihwkit" \
+    -x epoch -y val_acc --hue device_id \
+    --xlabel "Epoch" --ylabel "Accuracy" --huelabel "Device ID" --title "AIHWKKIT OneSidedUnitCell Training" \
+    --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"
+
+FILENAME="aihwkit_onesided_acc_vs_gran.png"
+python $PLOT_SCRIPT summary "${RESULTS_DIR}/test49os/noise_0.csv" \
+    -x granularity_down -y val_acc --hue device_id \
+    --xlabel "Granularity" --ylabel "Accuracy" --huelabel "Device ID" --title "AIHWKKIT OneSidedUnitCell Accuracy vs. Granularity" \
+    --savefig "${FIGURES_DIR}/${FILENAME}" --noshow
+echo "\e[32mGenerated figure:\e[0m ${FILENAME}"

@@ -160,7 +160,6 @@ if __name__ == "__main__":
         ax, sp = plot_symmetry_point(device_config, ax=None, n_steps=0, pre_alternating_pulses=0, alternating_pulses=50, w_init=0)
         print(f'Symmetry point: {sp}')
         device_config = ReferenceUnitCell([device_config], construction_seed=SEED)
-        # set reference weights to symmetry point (TODO)
 
     # Plot the fit
     if output_dir is not None and args.save_fit:
@@ -232,18 +231,19 @@ if __name__ == "__main__":
     if args.use_reference_device:
         initial_weights = model.get_weights()
         model.apply_to_analog_tiles(lambda tile: tile.set_hidden_update_index(1))
-        ref_weights = model.get_weights()
-        for key, val in ref_weights.items():
-            for t in val:
-                if t is not None:
-                    t.fill_(sp)
-        model.set_weights(ref_weights)
+
+        # set reference weights to symmetry point
+        for _, layer in model.named_analog_layers():
+            w = layer.get_weights()
+            w[0].fill_(sp)
+            layer.set_weights(w[0], w[1])
+
         model.apply_to_analog_tiles(lambda tile: tile.set_hidden_update_index(0))
-        for key, val in initial_weights.items():
-            for t in val:
-                if t is not None:
-                    t = t - sp
-        model.set_weights(initial_weights)
+
+        # offset initial weights to be around 0 (not sure why the factor of 2 is needed)
+        for _, layer in model.named_analog_layers():
+            w = layer.get_weights()
+            layer.set_weights(w[0].add(2*sp), w[1])
 
     # Create the MNIST model
     mnist_model = BaseMNIST(model, seed=SEED)
