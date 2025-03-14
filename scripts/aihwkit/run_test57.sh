@@ -14,8 +14,11 @@ output_directory="$2"
 pulses_up="$3"
 pulses_down="$4"
 
-noise_values=(0 0.5 1 1.5 2 2.5 3)
+noise_values=(0.5 1 1.5 2 2.5 3)
 
+N_BATCH=2
 for write_noise_std_mult in "${noise_values[@]}"; do
-    bash "$ANALYSIS_SCRIPT_SOURCE" "$data_directory" "$output_directory/${pulses_up}up${pulses_down}down/write_noise_std_${write_noise_std_mult}" 25 0 0 "$write_noise_std_mult" 0 0 "$pulses_up" "$pulses_down"
+    ((i=i%N_BATCH)); ((i++==0)) && wait
+    bash "$ANALYSIS_SCRIPT_SOURCE" "$data_directory" "$output_directory/${pulses_up}up${pulses_down}down/write_noise_std_${write_noise_std_mult}" 25 0 0 "$write_noise_std_mult" 0 0 "$pulses_up" "$pulses_down" &
+    # bash "$ANALYSIS_SCRIPT_SOURCE" "$data_directory" "$output_directory/1up0down/write_noise_std_${write_noise_std_mult}" 25 0 0 "$write_noise_std_mult" 0 0 1 0 &
 done
