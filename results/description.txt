@@ -84,6 +84,7 @@ test56: test55 but for all devices, lr=0.1
 test57: asymmetric pulsing ID294YR 11:13:50
 test58: ID161ZR15000 asymmetric pulsing
 test59: ID161ZR15000 11:19:00 (sp=0.44) mixed-precision batch size and granularity sweep
+test60: onesided with mixed-precision, 0 noise
 
 TODO: asymmetric 1up2down write_noise_sweep (ID294YR)
 TODO: floating point model
