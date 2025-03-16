@@ -48,41 +48,40 @@ def plot_asymmetric(device, ax=None, n_steps=30, n_traces=1, noise_free=True, w_
                 direction_w_asymmetric.append(-1)
     direction_w_asymmetric = np.array(direction_w_asymmetric)
 
-    w_trace = compute_pulse_response(analog_tile, direction, use_forward=True).reshape(-1, n_traces)
+    w_trace = compute_pulse_response(analog_tile, direction, use_forward=False).reshape(-1, n_traces)
+    compute_pulse_response(analog_tile_asymmetric, np.array([1, -1]), use_forward=False) # not sure why this is needed but it fixes some problems
     w_trace_asymmetric = compute_pulse_response(
-        analog_tile_asymmetric, direction_w_asymmetric, use_forward=True).reshape(-1, n_traces)
+        analog_tile_asymmetric, direction_w_asymmetric, use_forward=False).reshape(-1, n_traces)
+    print(w_trace_asymmetric)
 
-    pulse_numbers = np.arange(total_iters)
-    asym_step = 1/(asym_up + asym_down)
-    # asymmetric_pulse_numbers = np.concatenate(
-    #     (np.arange(asym_step, total_iters/2 + asym_step, asym_step), np.arange(total_iters/2+1, total_iters+1)))
-    asymmetric_pulse_numbers = [0] * (asym_up + asym_down)
-    for i, d in enumerate(direction[1:]):
-        if d == -1:
-            asymmetric_pulse_numbers.append(i+1)
-        else:
-            for j in range(asym_up + asym_down):
-                asymmetric_pulse_numbers.append(i+(j+1)*asym_step)
+    pulse_numbers = np.arange(total_iters+1)
+    n = asym_up + asym_down
+    asymmetric_pulse_numbers = [0]
+    whole_pulses_mask = [True]
+    for d, p in zip(direction, pulse_numbers[1:]):
+        if d == 1:
+            for i in range(1, n):
+                asymmetric_pulse_numbers.append((p-1) + (i/n))
+                whole_pulses_mask.append(False)
+        asymmetric_pulse_numbers.append(p)
+        whole_pulses_mask.append(True)
     asymmetric_pulse_numbers = np.array(asymmetric_pulse_numbers)
 
-    tol = asym_step/2
-    effective_idx = np.where(np.isclose(asymmetric_pulse_numbers % 1, 0, rtol=tol) |
-                             np.isclose(asymmetric_pulse_numbers % 1, 1, rtol=tol))[0]
-    w_trace_asymmetric_effective = w_trace_asymmetric[effective_idx]
-    asymmetric_pulse_numbers_effective = asymmetric_pulse_numbers[effective_idx]
+    # add initial position
+    w_trace_asymmetric = np.vstack((np.array([[w_init]]), w_trace_asymmetric))
 
     if asym_only:
         if ax is None:
             raise ValueError("ax must be provided when asym_only is True")
         ax.plot(asymmetric_pulse_numbers, w_trace_asymmetric, color=kwargs.get('color', None), lw=0.8)
-        ax.plot(asymmetric_pulse_numbers_effective, w_trace_asymmetric_effective, marker='o', **kwargs)
+        ax.plot(pulse_numbers, w_trace_asymmetric[whole_pulses_mask], marker='o', **kwargs)
     else:
         if ax is None:
             fig, ax = plt.subplots(1, 1, figsize=(10, 5))
-        ax.plot(pulse_numbers, w_trace, marker='o', color='r', label='Symmetric pulse scheme')
+        ax.plot(pulse_numbers[:-1], w_trace, marker='o', color='r', label='Symmetric pulse scheme')
         ax.plot(asymmetric_pulse_numbers, w_trace_asymmetric, color='b', lw=0.8)
 
-        ax.plot(asymmetric_pulse_numbers_effective, w_trace_asymmetric_effective,
+        ax.plot(pulse_numbers, w_trace_asymmetric[whole_pulses_mask],
                 marker='o', color='b', label='Asymmetric pulse scheme')
 
         ax.legend()
